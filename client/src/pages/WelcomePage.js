@@ -28,6 +28,7 @@ function WelcomePage() {
             <button className={classes["get-started-button"]}>Get Started</button>
           </Link>
         </div>
+        {/* just cheking client */}
       </main>
       <LandingFooter />
     </React.Fragment>
