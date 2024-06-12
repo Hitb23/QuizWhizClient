@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import WelcomePage from "./pages/WelcomePage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -8,7 +8,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 const Routing = () => {
   return(
-    <React.Fragment>
+    <Router>
       <Routes>
         <Route exact path="/" element={<WelcomePage />} />
         <Route exact path="/login" element={<LoginPage />} />
@@ -16,7 +16,7 @@ const Routing = () => {
         <Route exact path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route exact path="/reset-password" element={<ResetPasswordPage />} />
       </Routes>
-    </React.Fragment>
+    </Router>
   );
 }
 
