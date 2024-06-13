@@ -1,12 +1,11 @@
 import "./App.css";
+import { Route, RouterProvider, Routes } from "react-router-dom";
 import { router } from "./constants/Routing";
-import { Route, RouterProvider } from "react-router-dom";
+import Welcome from "./pages/welcome";
 
 const App = () => {
   return (
-    <div>
-      <RouterProvider router={router} />
-    </div>
+     <RouterProvider router={router} />
   );
 };
 

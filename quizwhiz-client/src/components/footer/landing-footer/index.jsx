@@ -1,5 +1,5 @@
 import React from "react";
-import classes from "./LandingFooter.module.css";
+import classes from "./index.module.css";
 import { Link } from "react-router-dom";
 import { Facebook, LinkedIn, Instagram, Youtube } from "../../../assets";
 

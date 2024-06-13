@@ -1,6 +1,6 @@
 import React from "react";
 import { Logo } from "../../../assets";
-import classes from "./LandingHeader.module.css";
+import classes from "./style.module.css";
 import { Link } from "react-router-dom";
 
 const LandingHeader = () => {
