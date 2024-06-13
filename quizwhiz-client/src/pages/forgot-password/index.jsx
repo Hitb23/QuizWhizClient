@@ -2,72 +2,20 @@ import React, { useState } from "react";
 import AuthHeader from "../../components/header/auth-header";
 import classes from "./style.module.css";
 import { Link } from "react-router-dom";
+import { Formik, Form, Field } from "formik";
+import * as yup from "yup";
 
 const ForgotPassword = () => {
-  const [formValues, setFormValues] = useState({
-    email: {
-      value: "",
-      error: false,
-      requiredErrorMessage: "Email is required",
-      invalidErrorMessage: "Please enter valid email",
-    },
+  const validationSchema = yup.object().shape({
+    email: yup
+      .string()
+      .trim()
+      .required("Email is required")
+      .email("Please enter a valid email"),
   });
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validateField = (name, value) => {
-    switch (name) {
-      case "email":
-        if (value.trim() === "")
-          return { isValid: false, errorType: "required" };
-        if (!validateEmail(value))
-          return { isValid: false, errorType: "invalid" };
-        return { isValid: true, errorType: null };
-      default:
-        return { isValid: true, errorType: null };
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const validation = validateField(name, value);
-    setFormValues({
-      ...formValues,
-      [name]: {
-        ...formValues[name],
-        value,
-        error: !validation.isValid,
-        errorType: validation.errorType,
-      },
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const formFields = Object.keys(formValues);
-    let newFormValues = { ...formValues };
-
-    for (let index = 0; index < formFields.length; index++) {
-      const currentField = formFields[index];
-      const currentValue = formValues[currentField].value;
-      const validation = validateField(currentField, currentValue);
-
-      newFormValues = {
-        ...newFormValues,
-        [currentField]: {
-          ...newFormValues[currentField],
-          error: !validation.isValid,
-          errorType: validation.errorType,
-        },
-      };
-    }
-
-    setFormValues(newFormValues);
-    console.log("Email: " + formValues.email.value);
+  const handleSubmit = (values) => {
+    console.log("Email: " + values.email);
   };
 
   return (
@@ -81,39 +29,46 @@ const ForgotPassword = () => {
             Forgot Password?
           </div>
           <div>
-            <form onSubmit={handleSubmit}>
-              <div className={`d-flex justify-content-center`}>
-                <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-5 pb-5">
-                  <label htmlFor="email" className="form-label fw-bold">
-                    Email
-                  </label>
-                  <input
-                    type="text"
-                    className={`${classes["form-input"]} form-control form-control-md p-3`}
-                    id="email"
-                    name="email"
-                    onChange={handleChange}
-                    placeholder="name@example.com"
-                    autoComplete="off"
-                    value={formValues.email.value}
-                  />
-                  {formValues.email.error && (
-                    <span className="text-danger">
-                      {formValues.email.errorType === "required"
-                        ? formValues.email.requiredErrorMessage
-                        : formValues.email.invalidErrorMessage}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div className={`d-flex justify-content-center`}>
-                <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
-                  <button type="submit" className={classes["forgot-password-button"]}>
-                    Send Email Link
-                  </button>
-                </div>
-              </div>
-            </form>
+            <Formik
+              initialValues={{ email: "" }}
+              validationSchema={validationSchema}
+              onSubmit={handleSubmit}
+            >
+              {({ errors, touched, isValid, isSubmitting }) => (
+                <Form>
+                  <div className={`d-flex justify-content-center`}>
+                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-5 pb-5">
+                      <label htmlFor="email" className="form-label fw-bold">
+                        Email
+                      </label>
+                      <Field
+                        as="input"
+                        type="text"
+                        className={`${classes["form-input"]} form-control form-control-md p-3`}
+                        id="email"
+                        name="email"
+                        placeholder="name@example.com"
+                        autoComplete="off"
+                      />
+                      {touched.email && errors.email ? (
+                      <span className="text-danger">{errors.email}</span>
+                    ) : null}
+                    </div>
+                  </div>
+                  <div className={`d-flex justify-content-center`}>
+                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
+                      <button
+                        type="submit"
+                        className={`${classes["forgot-password-button"]} ${!isValid || isSubmitting? classes["disabled-button"] : ""}`}
+                        disabled={!isValid || isSubmitting}
+                      >
+                        Send Email Link
+                      </button>
+                    </div>
+                  </div>
+                </Form>
+              )}
+            </Formik>
             <div className={`d-flex justify-content-center`}>
               <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
                 <Link to="/login">
