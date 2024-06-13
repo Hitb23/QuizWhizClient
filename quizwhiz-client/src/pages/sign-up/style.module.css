@@ -1,8 +1,8 @@
 .main-component {
-  padding: 3rem 1rem 3rem 1rem;
+  padding: 1rem 1rem 3rem 1rem;
 }
 
-.forgot-password-title {
+.sign-up-title {
   color: #ED6744;
   font-size: 50px;
   padding-top: 1rem;
@@ -19,12 +19,13 @@
     box-shadow: 0 0 16px 0 rgba(228, 55, 55, 0.18), 0 2px 4px 0 rgba(228, 55, 55, 0.12);
 }
 
-.back-to-login-label {
+.forgot-password-label,
+.sign-up-label {
   font-size: 18px;
   cursor: pointer;
 }
 
-.forgot-password-button {
+.sign-up-button {
   padding: 0.8rem 2.5rem 0.8rem 2.5rem;
   font-size: 20px;
   background-color: #ED6744;
@@ -33,12 +34,17 @@
   border: 1px solid #ED6744;
 }
 
+.sign-up-button:hover {
+  background-color: #ffffff;
+  color: #ed6744;
+}
+
 @media (max-height: 750px) {
   .main-component {
     padding: 1rem;
   }
 
-  .forgot-password-title {
+  .sign-up-title {
     padding-top: 0rem;
   }
 }

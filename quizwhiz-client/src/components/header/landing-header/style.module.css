@@ -39,6 +39,17 @@
   border: 1px solid #ED6744;
 }
 
+.log-in-button:hover {
+  background-color: #ed6744;
+  color: #ffffff;
+}
+
+.sign-up-button:hover {
+  background-color: #ffffff;
+  color: #ed6744;
+}
+
+
 @media (max-width: 450px) {
   .header {
     padding: 0rem;

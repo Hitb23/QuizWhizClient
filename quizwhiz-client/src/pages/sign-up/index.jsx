@@ -1,6 +1,6 @@
 import React from "react";
-import AuthHeader from "../../components/headers/auth/AuthHeader";
-import classes from "./SignUpPage.module.css";
+import AuthHeader from "../../components/header/auth-header";
+import classes from "./style.module.css";
 import { Link } from "react-router-dom";
 
 const SignUp = () => {

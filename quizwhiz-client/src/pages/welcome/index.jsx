@@ -1,12 +1,12 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import LandingHeader from "../../components/headers/main/LandingHeader";
-import LandingFooter from "../../components/footers/main/LandingFooter";
-import classes from "./Welcome.module.css";
+import LandingHeader from "../../components/header/landing-header";
+import LandingFooter from "../../components/footer/landing-footer";
+import classes from "./style.module.css";
 import { WelcomePoster } from "../../assets";
 import { Button } from "bootstrap";
 import { Link } from "react-router-dom";
- 
+
 const Welcome =  () => {
   return (
     <React.Fragment>

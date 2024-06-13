@@ -46,6 +46,11 @@
   border: 1px solid #ED6744;
 }
 
+.get-started-button:hover {
+  background-color: #ffffff;
+  color: #ed6744;
+}
+
 
 @media (max-width: 1300px) {
   .welcome-message {

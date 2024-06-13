@@ -1,8 +1,11 @@
 import React, { useState, Fragment } from "react";
-import AuthHeader from "../../components/headers/auth/AuthHeader";
-import classes from "./Login.module.css";
+import AuthHeader from "../../components/header/auth-header";
+import classes from "./style.module.css";
 import { Link } from "react-router-dom";
-import axios from "../../api/axios";
+import axios from "../../services/axios";
+import login from "../../services/login.service";
+import { jwtDecode } from "jwt-decode";
+import jwtDecoder from "../../services/jwtDecoder";
 
 const Login = () => {
   const [formValues, setFormValues] = useState({
@@ -93,15 +96,10 @@ const Login = () => {
     const password = formValues.password.value;
 
     try {
-      const response = await axios.post(
-        "/Auth/login/",
-        JSON.stringify({ email, password }),
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-
-      console.log(response.data);
+      const response = await login({email, password});
+      localStorage.setItem("token", response.data.token);
+      const decoded = jwtDecode(response.data.token);
+      const data = jwtDecoder();
       setErrorMessage("");
     } catch (error) {
       setErrorMessage("Invalid Email or Password");

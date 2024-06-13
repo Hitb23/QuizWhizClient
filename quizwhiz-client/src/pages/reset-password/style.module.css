@@ -33,6 +33,11 @@
   border: 1px solid #ED6744;
 }
 
+.reset-password-button:hover {
+  background-color: #ffffff;
+  color: #ed6744;
+}
+
 @media (max-height: 750px) {
   .main-component {
     padding: 1rem;
