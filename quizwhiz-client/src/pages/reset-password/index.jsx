@@ -2,87 +2,34 @@ import React, {useState ,Fragment } from "react";
 import AuthHeader from "../../components/header/auth-header";
 import classes from "./style.module.css";
 import { Link } from "react-router-dom";
+import { Formik, Form, Field } from "formik";
+import * as yup from "yup";
 
 const ResetPassword = () => {
-  const [formValues, setFormValues] = useState({
-    password: {
-      value: "",
-      error: false,
-      requiredErrorMessage: "Password is required",
-      invalidErrorMessage:
-        "Password must have uppercase, lowercase, number, and special character",
-    },
-    confirmPassword: {
-      value: "",
-      error: false,
-      requiredErrorMessage: "Please confirm the entered password",
-      notSameErrorMessage: "Password does not match",
-    },
+  const validationSchema = yup.object().shape({
+    password: yup
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .matches(
+        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&_]+$/,
+        "Password must have an uppercase, a lowercase, a number, and a special character."
+      )
+      .required("Password is required"),
+    confirmPassword: yup
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .required("Confirm Password is required")
+      .oneOf([yup.ref("password"), null], "Password does not match"),
   });
 
-  const validatePassword = (password) => {
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()]).{8,}$/;
-    return passwordRegex.test(password);
+  const initialValues = {
+    password: "",
+    confirmPassword: "",
   };
 
-  const validateField = (name, value) => {
-    switch (name) {
-      case "password":
-        if (value.trim() === "")
-          return { isValid: false, errorType: "required" };
-        if (!validatePassword(value))
-          return { isValid: false, errorType: "invalid" };
-        return { isValid: true, errorType: null };
-      case "confirmPassword":
-        if (value.trim() === "")
-          return { isValid: false, errorType: "required" };
-        if (formValues.password.value === "")
-          return {isValid: false, errorType: "required"};
-        if (value != formValues.password.value)
-          return {isValid: false, errorType: "notSame"}
-        return { isValid: true, errorType: null };
-      default:
-        return { isValid: true, errorType: null };
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const validation = validateField(name, value);
-    setFormValues({
-      ...formValues,
-      [name]: {
-        ...formValues[name],
-        value,
-        error: !validation.isValid,
-        errorType: validation.errorType,
-      },
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const formFields = Object.keys(formValues);
-    let newFormValues = { ...formValues };
-
-    for (let index = 0; index < formFields.length; index++) {
-      const currentField = formFields[index];
-      const currentValue = formValues[currentField].value;
-      const validation = validateField(currentField, currentValue);
-
-      newFormValues = {
-        ...newFormValues,
-        [currentField]: {
-          ...newFormValues[currentField],
-          error: !validation.isValid,
-          errorType: validation.errorType,
-        },
-      };
-    }
-
-    setFormValues(newFormValues);
+  const handleSubmit = (values) => {
+    console.log(values.password);
+    console.log(values.confirmPassword);
   };
 
   return (
@@ -96,68 +43,66 @@ const ResetPassword = () => {
             Reset Password
           </div>
           <div>
-            <form onSubmit={handleSubmit}>
-              <div className={`d-flex justify-content-center`}>
-                <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                  <label htmlFor="password" className="form-label fw-bold">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    name="password"
-                    className={`${classes["form-input"]} form-control form-control-md p-3`}
-                    id="password"
-                    value={formValues.password.value}
-                    onChange={handleChange}
-                    placeholder="Password"
-                  />
-                  {formValues.password.error && (
-                    <span className="text-danger">
-                      {formValues.password.errorType === "required"
-                        ? formValues.password.requiredErrorMessage
-                        : formValues.password.invalidErrorMessage}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div className={`d-flex justify-content-center`}>
-                <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                  <label
-                    htmlFor="confirmpassword"
-                    className="form-label fw-bold"
-                  >
-                    Confirm Password
-                  </label>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    value={formValues.confirmPassword.value}
-                    className={`${classes["form-input"]} form-control form-control-md p-3`}
-                    id="confirmpassword"
-                    placeholder="Password"
-                    onChange={handleChange}
-                  />
-                  {formValues.confirmPassword.error && (
-                    <span className="text-danger">
-                      {formValues.confirmPassword.errorType === "required"
-                        ? formValues.confirmPassword.requiredErrorMessage
-                        : formValues.confirmPassword.notSameErrorMessage}
-                    </span>
-                  )}
-
-                </div>
-              </div>
-            </form>
-            <div className={`d-flex justify-content-center`}>
-              <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
-                <button
-                  type="submit"
-                  className={classes["reset-password-button"]}
-                >
-                  Reset Password
-                </button>
-              </div>
-            </div>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={handleSubmit}
+            >
+              {({ errors, touched, isValid, isSubmitting }) => (
+                <Form>
+                  <div className={`d-flex justify-content-center`}>
+                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                      <label htmlFor="password" className="form-label fw-bold">
+                        Password
+                      </label>
+                      <Field
+                        as="input"
+                        type="password"
+                        name="password"
+                        className={`${classes["form-input"]} form-control form-control-md p-3`}
+                        id="password"
+                        placeholder="Password"
+                      />
+                      {touched.password && errors.password ? (
+                      <span className="text-danger">{errors.password}</span>
+                    ) : null}
+                    </div>
+                  </div>
+                  <div className={`d-flex justify-content-center`}>
+                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                      <label
+                        htmlFor="confirmpassword"
+                        className="form-label fw-bold"
+                      >
+                        Confirm Password
+                      </label>
+                      <Field
+                        as="input"
+                        type="password"
+                        name="confirmPassword"
+                        className={`${classes["form-input"]} form-control form-control-md p-3`}
+                        id="confirmPassword"
+                        placeholder="Password"
+                      />
+                      {touched.confirmPassword && errors.confirmPassword ? (
+                      <span className="text-danger">{errors.confirmPassword}</span>
+                    ) : null}
+                    </div>
+                  </div>
+                  <div className={`d-flex justify-content-center`}>
+                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
+                      <button
+                        type="submit"
+                        disabled={!isValid || isSubmitting}
+                        className={`${classes["reset-password-button"]} ${!isValid || isSubmitting ? classes["disabled-button"] : ""}`}
+                      >
+                        Reset Password
+                      </button>
+                    </div>
+                  </div>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
       </main>

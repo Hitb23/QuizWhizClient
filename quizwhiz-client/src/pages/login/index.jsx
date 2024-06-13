@@ -4,96 +4,30 @@ import classes from "./style.module.css";
 import { Link } from "react-router-dom";
 import axios from "../../services/axios";
 import login from "../../services/login.service";
-import { jwtDecode } from "jwt-decode";
-import jwtDecoder from "../../services/jwtDecoder";
+import { Formik, Form, Field } from "formik";
+import * as yup from "yup";
 
 const Login = () => {
-  const [formValues, setFormValues] = useState({
-    email: {
-      value: "",
-      error: false,
-      requiredErrorMessage: "Email is required",
-      invalidErrorMessage: "Please enter valid email",
-    },
-    password: {
-      value: "",
-      error: false,
-      requiredErrorMessage: "Password is required",
-      invalidErrorMessage:
-        "Password must have uppercase, lowercase, number, and special character",
-    },
-  });
-
   const [errorMessage, setErrorMessage] = useState("");
 
-  const validatePassword = (password) => {
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()]).{8,}$/;
-    return passwordRegex.test(password);
-  };
+  const validationSchema = yup.object().shape({
+    email: yup
+      .string()
+      .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter valid email")
+      .required("Email is required"),
+    password: yup
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .matches(
+        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&_]+$/,
+        "Password must have an uppercase, a lowercase, a number, and a special character."
+      )
+      .required("Password is required"),
+  });
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validateField = (name, value) => {
-    switch (name) {
-      case "email":
-        if (value.trim() === "")
-          return { isValid: false, errorType: "required" };
-        if (!validateEmail(value))
-          return { isValid: false, errorType: "invalid" };
-        return { isValid: true, errorType: null };
-      case "password":
-        if (value.trim() === "")
-          return { isValid: false, errorType: "required" };
-        if (!validatePassword(value))
-          return { isValid: false, errorType: "invalid" };
-        return { isValid: true, errorType: null };
-      default:
-        return { isValid: true, errorType: null };
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const validation = validateField(name, value);
-    setFormValues({
-      ...formValues,
-      [name]: {
-        ...formValues[name],
-        value,
-        error: !validation.isValid,
-        errorType: validation.errorType,
-      },
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const formFields = Object.keys(formValues);
-    let newFormValues = { ...formValues };
-
-    for (let index = 0; index < formFields.length; index++) {
-      const currentField = formFields[index];
-      const currentValue = formValues[currentField].value;
-      const validation = validateField(currentField, currentValue);
-
-      newFormValues = {
-        ...newFormValues,
-        [currentField]: {
-          ...newFormValues[currentField],
-          error: !validation.isValid,
-          errorType: validation.errorType,
-        },
-      };
-    }
-
-    setFormValues(newFormValues);
-    const email = formValues.email.value;
-    const password = formValues.password.value;
+  const handleSubmit = async (values) => {
+    const email = values.email;
+    const password = values.password;
 
     try {
       const response = await login({email, password});
@@ -117,83 +51,93 @@ const Login = () => {
             Log In
           </div>
           <div>
-            <form onSubmit={handleSubmit}>
-              <div className={`d-flex justify-content-center`}>
-                <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                  <label htmlFor="email" className="form-label fw-bold">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    className={`${classes["form-input"]} form-control form-control-md p-3`}
-                    id="email"
-                    name="email"
-                    placeholder="name@example.com"
-                    autoComplete="off"
-                    onChange={handleChange}
-                    value={formValues.email.value}
-                  />
-                  {formValues.email.error && (
-                    <span className="text-danger">
-                      {formValues.email.errorType === "required"
-                        ? formValues.email.requiredErrorMessage
-                        : formValues.email.invalidErrorMessage}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div className={`d-flex justify-content-center`}>
-                <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                  <label htmlFor="password" className="form-label fw-bold">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    className={`${classes["form-input"]} form-control form-control-md p-3`}
-                    id="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formValues.password.value}
-                    onChange={handleChange}
-                  />
-                  {formValues.password.error && (
-                    <span className="text-danger">
-                      {formValues.password.errorType === "required"
-                        ? formValues.password.requiredErrorMessage
-                        : formValues.password.invalidErrorMessage}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div className={`d-flex justify-content-center`}>
-              <span
-                value={errorMessage}
-                className={`${
-                  errorMessage ? classes["error-message"] : "offscreen"
-                }`}
-              >
-                {errorMessage}
-              </span>
-            </div>
-              <div className={`d-flex justify-content-center`}>
-                <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex flex-row-reverse">
-                  <Link to="/forgot-password">
-                    <label
-                      className={`form-label fw-bold text-end text-decoration-none text-black pe-auto ${classes["forgot-password-label"]}`}
+            <Formik
+              initialValues={{ email: "", password: "" }}
+              validationSchema={validationSchema}
+              onSubmit={handleSubmit}
+            >
+              {({ values, errors, touched, isValid, isSubmitting }) => (
+                <Form>
+                  <div className={`d-flex justify-content-center`}>
+                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                      <label htmlFor="email" className="form-label fw-bold">
+                        Email
+                      </label>
+                      <Field
+                        as="input"
+                        type="email"
+                        className={`${classes["form-input"]} form-control form-control-md p-3`}
+                        id="email"
+                        name="email"
+                        placeholder="name@example.com"
+                        autoComplete="off"
+                        onKeyUp={() => {
+                          setErrorMessage("");
+                        }}
+                      />
+                      {touched.email && errors.email ? (
+                      <span className="text-danger">{errors.email}</span>
+                    ) : null}
+                    </div>
+                  </div>
+                  <div className={`d-flex justify-content-center`}>
+                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                      <label htmlFor="password" className="form-label fw-bold">
+                        Password
+                      </label>
+                      <Field
+                        as="input"
+                        type="password"
+                        className={`${classes["form-input"]} form-control form-control-md p-3`}
+                        id="password"
+                        name="password"
+                        placeholder="Password"
+                        autoComplete="off"
+                        onKeyUp={() => {
+                          setErrorMessage("");
+                        }}
+                      />
+                      {touched.password && errors.password ? (
+                      <span className="text-danger">{errors.password}</span>
+                    ) : null}
+                    </div>
+                  </div>
+                  <div className={`d-flex justify-content-center`}>
+                    <span
+                      value={errorMessage}
+                      className={`${
+                        errorMessage ? classes["error-message"] : "offscreen"
+                      }`}
                     >
-                      Forgot Password?
-                    </label>
-                  </Link>
-                </div>
-              </div>
-              <div className={`d-flex justify-content-center`}>
-                <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
-                  <button type="submit" className={classes["log-in-button"]}>
-                    Log In
-                  </button>
-                </div>
-              </div>
-            </form>
+                      {errorMessage}
+                    </span>
+                  </div>
+                  <div className={`d-flex justify-content-center`}>
+                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex flex-row-reverse">
+                      <Link to="/forgot-password">
+                        <label
+                          className={`form-label fw-bold text-end text-decoration-none text-black pe-auto ${classes["forgot-password-label"]}`}
+                        >
+                          Forgot Password?
+                        </label>
+                      </Link>
+                    </div>
+                  </div>
+                  <div className={`d-flex justify-content-center`}>
+                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
+                      <button
+                        type="submit"
+                        className={`${classes["log-in-button"]} ${!isValid || isSubmitting? classes["disabled-button"] : ""}`}
+                        disabled={!isValid || isSubmitting}
+                      >
+                        Log In
+                      </button>
+                    </div>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+
             <div className={`d-flex justify-content-center`}>
               <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
                 <div className="d-flex align-items-center">
