@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import AuthHeader from "../components/headers/AuthHeader";
-import classes from "./LoginPage.module.css";
+import React, { useState, Fragment } from "react";
+import AuthHeader from "../../components/headers/auth/AuthHeader";
+import classes from "./Login.module.css";
 import { Link } from "react-router-dom";
-import axios from "../services/apiServices";
+import axios from "../../api/axios";
 
-const LoginPage = () => {
+const Login = () => {
   const [formValues, setFormValues] = useState({
     email: {
       value: "",
@@ -109,7 +109,7 @@ const LoginPage = () => {
   };
 
   return (
-    <React.Fragment>
+    <Fragment>
       <AuthHeader />
       <main className={`${classes["main-component"]} container-fluid`}>
         <div className={`row justify-content-center`}>
@@ -123,7 +123,7 @@ const LoginPage = () => {
               <div className={`d-flex justify-content-center`}>
                 <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
                   <label htmlFor="email" className="form-label fw-bold">
-                    Email Address
+                    Email
                   </label>
                   <input
                     type="email"
@@ -168,6 +168,16 @@ const LoginPage = () => {
                 </div>
               </div>
               <div className={`d-flex justify-content-center`}>
+              <span
+                value={errorMessage}
+                className={`${
+                  errorMessage ? classes["error-message"] : "offscreen"
+                }`}
+              >
+                {errorMessage}
+              </span>
+            </div>
+              <div className={`d-flex justify-content-center`}>
                 <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex flex-row-reverse">
                   <Link to="/forgot-password">
                     <label
@@ -187,16 +197,6 @@ const LoginPage = () => {
               </div>
             </form>
             <div className={`d-flex justify-content-center`}>
-              <span
-                value={errorMessage}
-                className={`${
-                  errorMessage ? classes["error-message"] : "offscreen"
-                }`}
-              >
-                {errorMessage}
-              </span>
-            </div>
-            <div className={`d-flex justify-content-center`}>
               <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
                 <div className="d-flex align-items-center">
                   Don't you have an account?
@@ -213,8 +213,8 @@ const LoginPage = () => {
           </div>
         </div>
       </main>
-    </React.Fragment>
+    </Fragment>
   );
 };
 
-export default LoginPage;
+export default Login;
