@@ -34,10 +34,11 @@ const Login = () => {
   const handleSubmit = async (values) => {
     const email = values.email;
     const password = values.password;
-
+    
     try {
       const response = await login({ email, password });
       localStorage.setItem("token", response.data.token);
+
       const data = await jwtDecoder();
 
       const userRole =
@@ -55,6 +56,7 @@ const Login = () => {
       }
 
       //navigate("/");
+
     } catch (error) {
       toast.error("Invalid email or password", {
         position: "top-right",
