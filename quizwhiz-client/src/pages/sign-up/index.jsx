@@ -1,12 +1,18 @@
 import React from "react";
 import AuthHeader from "../../components/header/auth-header";
 import classes from "./style.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
+import { signup } from "../../services/auth.service";
 import * as yup from "yup";
+
 import userNameValidity from "../../services/userNameValidity";
 
+import { ToastContainer, toast } from "react-toastify";
+
+
 const SignUp = () => {
+  const navigate = useNavigate();
   const validationSchema = yup.object().shape({
     email: yup
       .string()
@@ -44,9 +50,26 @@ const SignUp = () => {
   };
 
   const handleSubmit = async (values) => {
-    console.log(values.email);
-    console.log(values.password);
-    console.log(values.confirmPassword);
+
+    const email = values.email;
+    const password = values.password;
+    const confirmPassword = values.confirmPassword;
+
+    try {
+      const response = await signup({ email, password, confirmPassword });
+      navigate("/login");
+    } catch (error) {
+      toast.error("Invalid email or password", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+
   };
   const handleEmailChange = () => {
     // initialValues.setFieldValue('email', e.target.value);
@@ -183,6 +206,7 @@ const SignUp = () => {
           </div>
         </div>
       </main>
+      <ToastContainer />
     </React.Fragment>
   );
 };
