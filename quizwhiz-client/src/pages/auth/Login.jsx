@@ -1,7 +1,7 @@
-import React, { useState, Fragment } from "react";
+import { useState, Fragment } from "react";
 import AuthHeader from "../../components/headers/auth/AuthHeader";
 import classes from "./Login.module.css";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import axios from "../../api/axios";
 
 const Login = () => {
@@ -168,15 +168,15 @@ const Login = () => {
                 </div>
               </div>
               <div className={`d-flex justify-content-center`}>
-              <span
-                value={errorMessage}
-                className={`${
-                  errorMessage ? classes["error-message"] : "offscreen"
-                }`}
-              >
-                {errorMessage}
-              </span>
-            </div>
+                <span
+                  value={errorMessage}
+                  className={`${
+                    errorMessage ? classes["error-message"] : "offscreen"
+                  }`}
+                >
+                  {errorMessage}
+                </span>
+              </div>
               <div className={`d-flex justify-content-center`}>
                 <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex flex-row-reverse">
                   <Link to="/forgot-password">
@@ -199,15 +199,18 @@ const Login = () => {
             <div className={`d-flex justify-content-center`}>
               <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
                 <div className="d-flex align-items-center">
-                  Don't you have an account?
+                  Dont you have an account?
                 </div>
-                <Link to="/sign-up">
+                <NavLink
+                  to="/sign-up"
+                  activeClassName={classes["log-in-label-selected"]}
+                >
                   <label
-                    className={`form-label fw-bold text-end text-decoration-none m-0 text-black pe-auto ${classes["log-in-label"]}`}
+                    className={`form-label fw-bold text-end m-0 text-black pe-auto ${classes["log-in-label"]}`}
                   >
                     Sign Up
                   </label>
-                </Link>
+                </NavLink>
               </div>
             </div>
           </div>

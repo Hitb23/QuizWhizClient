@@ -1,7 +1,7 @@
-import React, {useState ,Fragment } from "react";
+import React, {useState  } from "react";
 import AuthHeader from "../../components/headers/auth/AuthHeader";
 import classes from "./ResetPassword.module.css";
-import { Link } from "react-router-dom";
+
 
 const ResetPassword = () => {
   const [formValues, setFormValues] = useState({
