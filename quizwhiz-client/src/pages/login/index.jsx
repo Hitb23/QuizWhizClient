@@ -6,6 +6,8 @@ import axios from "../../services/axios";
 import login from "../../services/login.service";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -30,13 +32,21 @@ const Login = () => {
     const password = values.password;
 
     try {
-      const response = await login({email, password});
+      const response = await login({ email, password });
       localStorage.setItem("token", response.data.token);
       const decoded = jwtDecode(response.data.token);
       const data = jwtDecoder();
       setErrorMessage("");
     } catch (error) {
-      setErrorMessage("Invalid Email or Password");
+      toast.error("Invalid email or password", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
@@ -60,7 +70,7 @@ const Login = () => {
                 <Form>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                      <label htmlFor="email" className="form-label fw-bold">
+                      <label htmlFor="email" className={`form-label fw-bold ${classes["black-font"]}`}>
                         Email
                       </label>
                       <Field
@@ -76,13 +86,13 @@ const Login = () => {
                         }}
                       />
                       {touched.email && errors.email ? (
-                      <span className="text-danger">{errors.email}</span>
-                    ) : null}
+                        <span className="text-danger">{errors.email}</span>
+                      ) : null}
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                      <label htmlFor="password" className="form-label fw-bold">
+                      <label htmlFor="password" className={`form-label fw-bold ${classes["black-font"]}`}>
                         Password
                       </label>
                       <Field
@@ -98,8 +108,8 @@ const Login = () => {
                         }}
                       />
                       {touched.password && errors.password ? (
-                      <span className="text-danger">{errors.password}</span>
-                    ) : null}
+                        <span className="text-danger">{errors.password}</span>
+                      ) : null}
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>
@@ -127,7 +137,11 @@ const Login = () => {
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
                       <button
                         type="submit"
-                        className={`${classes["log-in-button"]} ${!isValid || isSubmitting? classes["disabled-button"] : ""}`}
+                        className={`${classes["log-in-button"]} ${
+                          !isValid || isSubmitting
+                            ? classes["disabled-button"]
+                            : ""
+                        }`}
                         disabled={!isValid || isSubmitting}
                       >
                         Log In
@@ -140,7 +154,7 @@ const Login = () => {
 
             <div className={`d-flex justify-content-center`}>
               <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
-                <div className="d-flex align-items-center">
+                <div className={`d-flex align-items-center ${classes["black-font"]}`}>
                   Don't you have an account?
                 </div>
                 <Link to="/sign-up">
@@ -155,6 +169,7 @@ const Login = () => {
           </div>
         </div>
       </main>
+      <ToastContainer />
     </Fragment>
   );
 };
