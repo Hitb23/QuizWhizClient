@@ -46,6 +46,10 @@
   color: #ed6744;
 }
 
+.black-font{
+  color: #000000;
+}
+
 @media (max-height: 750px) {
   .main-component {
     padding: 1rem;

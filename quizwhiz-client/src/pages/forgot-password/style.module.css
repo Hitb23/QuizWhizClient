@@ -48,6 +48,10 @@
   color: #ed6744;
 }
 
+.black-font{
+  color: #000000;
+}
+
 .disabled-button{
   background-color: #e0e0e0;
   color: black;

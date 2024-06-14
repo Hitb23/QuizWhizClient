@@ -58,7 +58,7 @@ const SignUp = () => {
                 <Form>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                      <label htmlFor="email" className="form-label fw-bold">
+                      <label htmlFor="email" className={`form-label fw-bold ${classes["black-font"]}`}>
                         Email
                       </label>
                       <Field
@@ -77,7 +77,7 @@ const SignUp = () => {
                   </div>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                      <label htmlFor="password" className="form-label fw-bold">
+                      <label htmlFor="password" className={`form-label fw-bold ${classes["black-font"]}`}>
                         Password
                       </label>
                       <Field
@@ -97,7 +97,7 @@ const SignUp = () => {
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
                       <label
                         htmlFor="confirmPassword"
-                        className="form-label fw-bold"
+                        className={`form-label fw-bold ${classes["black-font"]}`}
                       >
                         Confirm Password
                       </label>
@@ -130,7 +130,7 @@ const SignUp = () => {
 
             <div className={`d-flex justify-content-center`}>
               <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
-                <div className="d-flex align-items-center">
+                <div className={`d-flex align-items-center ${classes["black-font"]}`}>
                   Already have an account?
                 </div>
                 <Link to="/login">
