@@ -28,11 +28,12 @@ const Login = () => {
   const handleSubmit = async (values) => {
     const email = values.email;
     const password = values.password;
-
+    
     try {
       const response = await login({email, password});
       localStorage.setItem("token", response.data.token);
       const decoded = jwtDecode(response.data.token);
+      // eslint-disable-next-line no-unused-vars
       const data = jwtDecoder();
       setErrorMessage("");
     } catch (error) {

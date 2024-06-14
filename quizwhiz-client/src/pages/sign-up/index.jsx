@@ -4,13 +4,24 @@ import classes from "./style.module.css";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
+import userNameValidity from "../../services/userNameValidity";
 
 const SignUp = () => {
   const validationSchema = yup.object().shape({
     email: yup
       .string()
       .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter valid email")
-      .required("Email is required"),
+      .required("Email is required")
+      .test("email", "Username already exist", async (email) => {
+        const username = email.split("@")[0];
+        try {
+          const response = await userNameValidity({ username });
+          console.log(response);
+          return response.data; // if response is true, validation passes
+        } catch (error) {
+          return false; // if response is false or error occurs, validation fails
+        }
+      }),
     password: yup
       .string()
       .min(8, "Password must be at least 8 characters")
@@ -32,12 +43,29 @@ const SignUp = () => {
     confirmPassword: "",
   };
 
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     console.log(values.email);
     console.log(values.password);
     console.log(values.confirmPassword);
   };
+  const handleEmailChange = () => {
+    // initialValues.setFieldValue('email', e.target.value);
+    initialValues.validateField("email");
+  };
 
+  // const checkValidUser= (e)=>{
+  //   const email = e.target.value.split('@')[0];
+  //   console.log("Called",email);
+
+  //   try {
+  //     const response = await userNameValidity({email});
+  //     if(!response){
+
+  //     }
+  //   } catch (error) {
+  //     setErrorMessage("Invalid Email or Password");
+  //   }
+  // }
   return (
     <React.Fragment>
       <AuthHeader />
@@ -69,10 +97,13 @@ const SignUp = () => {
                         id="email"
                         placeholder="name@example.com"
                         autoComplete="off"
+                        // onKeyUp={checkValidUser}
+                        //onKeyUp={handleEmailChange}
                       />
                       {touched.email && errors.email ? (
                         <span className="text-danger">{errors.email}</span>
                       ) : null}
+                      {}
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>
@@ -118,8 +149,15 @@ const SignUp = () => {
                   </div>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
-                      <button type="submit" className={`${classes["sign-up-button"]} ${!isValid || isSubmitting? classes["disabled-button"] : ""}`}
-                      disabled={!isValid || isSubmitting}>
+                      <button
+                        type="submit"
+                        className={`${classes["sign-up-button"]} ${
+                          !isValid || isSubmitting
+                            ? classes["disabled-button"]
+                            : ""
+                        }`}
+                        disabled={!isValid || isSubmitting}
+                      >
                         Sign Up
                       </button>
                     </div>
