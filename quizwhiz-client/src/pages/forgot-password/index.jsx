@@ -38,7 +38,7 @@ const ForgotPassword = () => {
                 <Form>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-5 pb-5">
-                      <label htmlFor="email" className="form-label fw-bold">
+                      <label htmlFor="email" className={`form-label fw-bold ${classes["black-font"]}`}>
                         Email
                       </label>
                       <Field

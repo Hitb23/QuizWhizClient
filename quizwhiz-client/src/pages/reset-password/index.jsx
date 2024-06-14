@@ -52,7 +52,7 @@ const ResetPassword = () => {
                 <Form>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                      <label htmlFor="password" className="form-label fw-bold">
+                      <label htmlFor="password" className={`form-label fw-bold ${classes["black-font"]}`}>
                         Password
                       </label>
                       <Field
@@ -72,7 +72,7 @@ const ResetPassword = () => {
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
                       <label
                         htmlFor="confirmpassword"
-                        className="form-label fw-bold"
+                        className={`form-label fw-bold ${classes["black-font"]}`}
                       >
                         Confirm Password
                       </label>
