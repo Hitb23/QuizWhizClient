@@ -31,7 +31,7 @@ export const router = createBrowserRouter(
             AuthorizedRoute({ element : sendElement, roles : sendRoles, userRole : userRole ? userRole : "" }) ? (
               route.element
             ) : (
-              <Navigate to={"/login"} />
+              <Navigate to={"/not-found-page"} />
             )
           }
         />
