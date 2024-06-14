@@ -5,7 +5,7 @@ import {
   createRoutesFromElements,
   Route,
   Routes,
-  Navigate
+  Navigate,
 } from "react-router-dom";
 import AuthorizedRoute from "./AuthorizedRoute";
 import { ROUTES } from "./Routes";
@@ -23,15 +23,28 @@ export const router = createBrowserRouter(
     ROUTES.map((route) => {
       const sendElement = route.element;
       const sendRoles = route.roles;
+      console.log(
+        "routing",
+        route.path,
+        AuthorizedRoute({
+          element: sendElement,
+          roles: sendRoles,
+          userRole: userRole ? userRole : "",
+        })
+      );
       return (
         <Route
           key={route.path}
           path={route.path}
           element={
-            AuthorizedRoute({ element : sendElement, roles : sendRoles, userRole : userRole ? userRole : "" }) ? (
+            AuthorizedRoute({
+              element: sendElement,
+              roles: sendRoles,
+              userRole: userRole ? userRole : "",
+            }) ? (
               route.element
             ) : (
-              <Navigate to={"/not-found-page"} />
+              <Navigate to={"/login"} />
             )
           }
         />

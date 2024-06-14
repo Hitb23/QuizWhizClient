@@ -23,7 +23,8 @@
   padding: 1rem;
 }
 
-.sign-up-button {
+.sign-up-button,
+.log-out-button {
   padding: 0.9rem 1rem 0.9rem 1rem;
   background-color: #ED6744;
   color: #FFFFFF;
@@ -44,10 +45,12 @@
   color: #ffffff;
 }
 
-.sign-up-button:hover {
+.sign-up-button:hover,
+.log-out-button:hover {
   background-color: #ffffff;
   color: #ed6744;
 }
+
 
 
 @media (max-width: 450px) {
