@@ -1,10 +1,12 @@
-import React from "react";
+import React, { Fragment } from "react";
 import classes from "./style.module.css";
 
 const AdminDashboard = () => {
   return (
-    <h1>Admin Dashboard</h1>
+    <Fragment>
+      <h1>Admin Dashboard</h1>
+    </Fragment>
   );
-}
+} 
 
 export default AdminDashboard;

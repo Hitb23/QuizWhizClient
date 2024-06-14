@@ -1,16 +1,20 @@
 import React, { useState, Fragment } from "react";
 import AuthHeader from "../../components/header/auth-header";
 import classes from "./style.module.css";
-import { Link } from "react-router-dom";
+import { Link, Navigate, RouterProvider, useNavigate } from "react-router-dom";
 import axios from "../../services/axios";
-import login from "../../services/login.service";
+import { login } from "../../services/auth.service";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { jwtDecode } from "jwt-decode";
+import jwtDecoder from "../../services/jwtDecoder";
+import { router } from "../../constants/Routing";
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   const validationSchema = yup.object().shape({
     email: yup
@@ -34,9 +38,23 @@ const Login = () => {
     try {
       const response = await login({ email, password });
       localStorage.setItem("token", response.data.token);
-      const decoded = jwtDecode(response.data.token);
-      const data = jwtDecoder();
-      setErrorMessage("");
+      const data = await jwtDecoder();
+
+      const userRole =
+        data["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+      
+      if (userRole === "Admin") {
+        console.log("Admin");
+        navigate("/admin-dashboard", { replace: true });
+      } else if (userRole === "Contestant") {
+        console.log("Contestant");
+        navigate("/user-dashboard", { replace: true });
+      } else {
+        console.log("Login");
+        navigate("/login", { replace: true });
+      }
+
+      //navigate("/");
     } catch (error) {
       toast.error("Invalid email or password", {
         position: "top-right",
@@ -70,7 +88,10 @@ const Login = () => {
                 <Form>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                      <label htmlFor="email" className={`form-label fw-bold ${classes["black-font"]}`}>
+                      <label
+                        htmlFor="email"
+                        className={`form-label fw-bold ${classes["black-font"]}`}
+                      >
                         Email
                       </label>
                       <Field
@@ -92,7 +113,10 @@ const Login = () => {
                   </div>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                      <label htmlFor="password" className={`form-label fw-bold ${classes["black-font"]}`}>
+                      <label
+                        htmlFor="password"
+                        className={`form-label fw-bold ${classes["black-font"]}`}
+                      >
                         Password
                       </label>
                       <Field
@@ -154,7 +178,9 @@ const Login = () => {
 
             <div className={`d-flex justify-content-center`}>
               <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
-                <div className={`d-flex align-items-center ${classes["black-font"]}`}>
+                <div
+                  className={`d-flex align-items-center ${classes["black-font"]}`}
+                >
                   Don't you have an account?
                 </div>
                 <Link to="/sign-up">

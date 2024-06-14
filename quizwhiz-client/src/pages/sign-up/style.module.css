@@ -9,14 +9,14 @@
 }
 
 .form-input {
-  border: 1px solid #ED6744;
+  border: 1px solid #ED6744 !important;
 }
 
 .form-input:focus,
 .form-input:hover {
-    outline: 1px solid #ED6744;
-    border: 1px solid #f33404;
-    box-shadow: 0 0 16px 0 rgba(228, 55, 55, 0.18), 0 2px 4px 0 rgba(228, 55, 55, 0.12);
+    outline: 1px solid #ED6744 !important;
+    border: 1px solid #f33404 !important;
+    box-shadow: 0 0 16px 0 rgba(228, 55, 55, 0.18), 0 2px 4px 0 rgba(228, 55, 55, 0.12) !important;
 }
 
 .forgot-password-label,
