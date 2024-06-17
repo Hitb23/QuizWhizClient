@@ -5,35 +5,31 @@ import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import { signup } from "../../services/auth.service";
 import * as yup from "yup";
-
-import userNameValidity from "../../services/userNameValidity";
-
+import { userNameValidity } from "../../services/auth.service";
 import { ToastContainer, toast } from "react-toastify";
-
+import { RoutePaths } from "../../utils/enum";
 
 const SignUp = () => {
   const navigate = useNavigate();
   const validationSchema = yup.object().shape({
-    username:yup
-    .string()
-    .required("UserName is required")
-    .lowercase("Username should be in lowercase")
-    .test("username", "Username already exist", async (username) => {
-      if(username.trim()==="") return true;
-      username=username.trim().toLowerCase();
-      try {
-        const response = await userNameValidity({ username });
-        return response.data; 
-      } catch (error) {
-        return false; 
-      }
-    
-    }),
+    username: yup
+      .string()
+      .required("UserName is required")
+      .lowercase("Username should be in lowercase")
+      .test("username", "Username already exist", async (username) => {
+        if (username.trim() === "") return true;
+        username = username.trim().toLowerCase();
+        try {
+          const response = await userNameValidity({ username });
+          return response.data;
+        } catch (error) {
+          return false;
+        }
+      }),
     email: yup
       .string()
       .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter valid email")
-      .required("Email is required")
-      ,
+      .required("Email is required"),
     password: yup
       .string()
       .min(8, "Password must be at least 8 characters")
@@ -53,18 +49,17 @@ const SignUp = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    username:""
+    username: "",
   };
 
   const handleSubmit = async (values) => {
-
     const email = values.email;
     const password = values.password;
     const confirmPassword = values.confirmPassword;
-    const username=values.username;
+    const username = values.username;
     try {
-      const response = await signup({username, email, password, confirmPassword });
-      navigate("/login");
+      const response = await signup({ email, password, confirmPassword });
+      navigate(RoutePaths.Login);
     } catch (error) {
       toast.error("Invalid email or password", {
         position: "top-right",
@@ -76,9 +71,8 @@ const SignUp = () => {
         progress: undefined,
       });
     }
-
   };
-  
+
   return (
     <React.Fragment>
       <AuthHeader />
@@ -99,8 +93,11 @@ const SignUp = () => {
                 <Form>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                      <label htmlFor="username" className={`form-label fw-bold ${classes["black-font"]}`}>
-                        UserName
+                      <label
+                        htmlFor="username"
+                        className={`form-label fw-bold ${classes["black-font"]}`}
+                      >
+                        Username
                       </label>
                       <Field
                         as="input"
@@ -110,18 +107,25 @@ const SignUp = () => {
                         id="username"
                         placeholder="abc@123"
                         autoComplete="off"
-                        // onKeyUp={checkValidUser}
-                        //onKeyUp={handleEmailChange}
+                        onKeyUp={() => setFieldTouched("username", true)}
                       />
                       {touched.username && errors.username ? (
                         <span className="text-danger">{errors.username}</span>
-                      ) : touched.username ?  <span className="text-success">UserName available</span> :null}
-                     
+                      ) : (
+                        touched.username && (
+                          <span className="text-success">
+                            Username available
+                          </span>
+                        )
+                      )}
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                      <label htmlFor="email" className={`form-label fw-bold ${classes["black-font"]}`}>
+                      <label
+                        htmlFor="email"
+                        className={`form-label fw-bold ${classes["black-font"]}`}
+                      >
                         Email
                       </label>
                       <Field
@@ -138,12 +142,14 @@ const SignUp = () => {
                       {touched.email && errors.email ? (
                         <span className="text-danger">{errors.email}</span>
                       ) : null}
-                   
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                      <label htmlFor="password" className={`form-label fw-bold ${classes["black-font"]}`}>
+                      <label
+                        htmlFor="password"
+                        className={`form-label fw-bold ${classes["black-font"]}`}
+                      >
                         Password
                       </label>
                       <Field
@@ -203,10 +209,12 @@ const SignUp = () => {
 
             <div className={`d-flex justify-content-center`}>
               <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
-                <div className={`d-flex align-items-center ${classes["black-font"]}`}>
+                <div
+                  className={`d-flex align-items-center ${classes["black-font"]}`}
+                >
                   Already have an account?
                 </div>
-                <Link to="/login">
+                <Link to={RoutePaths.Login}>
                   <label
                     className={`form-label fw-bold text-end text-decoration-none m-0 text-black pe-auto ${classes["sign-up-label"]}`}
                   >

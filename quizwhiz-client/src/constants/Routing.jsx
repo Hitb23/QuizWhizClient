@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter,
   createBrowserRouter,
@@ -13,25 +13,20 @@ import jwtDecoder from "../services/jwtDecoder";
 import Login from "../pages/login";
 import { RoutePaths } from "../utils/enum";
 import Welcome from "../pages/welcome";
+import { useSelector } from "react-redux";
 
 const jwtData = jwtDecoder();
 const userRole =
   jwtData["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
-export const router = createBrowserRouter(
+export const router = () => {
+  const userRole  = useSelector((state) => state.userRole);
+  console.log("Router Call: ", userRole);
+  return createBrowserRouter(
   createRoutesFromElements(
     ROUTES.map((route) => {
       const sendElement = route.element;
       const sendRoles = route.roles;
-      // console.log(
-      //   "routing",
-      //   route.path,
-      //   AuthorizedRoute({
-      //     element: sendElement,
-      //     roles: sendRoles,
-      //     userRole: userRole ? userRole : "",
-      //   })
-      // );
       return (
         <Route
           key={route.path}
@@ -51,7 +46,7 @@ export const router = createBrowserRouter(
       );
     })
   )
-);
+)};
 
 // const Routing = () => {
 //   const roles = ROUTES[1].roles;

@@ -1,40 +1,41 @@
 import React from "react";
 import classes from "./style.module.css";
-import { Link } from "react-router-dom";
+import { Link, Route } from "react-router-dom";
 import { Facebook, LinkedIn, Instagram, Youtube } from "../../../assets";
+import { RoutePaths } from "../../../utils/enum";
 
 const LandingFooter = () => {
   return (
     <React.Fragment>
       <footer className={classes["footer"]}>
         <div className={classes["logo-div"]}>
-          <Link to="/" className={classes["name-link"]}>
+          <Link to={RoutePaths.Welcome} className={classes["name-link"]}>
             <div className={classes["company-name"]}>QuizWhiz</div>
           </Link>
         </div>
         <div className={classes["social-media-icons"]}>
-          <Link to="">
+          <Link to={RoutePaths.Welcome}>
             <img
               className={`img-responsive ${classes["social-media-icon"]}`}
               src={Facebook}
               alt="Facebook"
             />
           </Link>
-          <Link to="">
+          <Link to={RoutePaths.Welcome}>
             <img
               className={`img-responsive ${classes["social-media-icon"]}`}
               src={LinkedIn}
               alt="LinkedIn"
             />
           </Link>
-          <Link to="">
+          <Link to={RoutePaths.Welcome}>
             <img
               className={`img-responsive ${classes["social-media-icon"]}`}
               src={Youtube}
               alt="Youtube"
             />
           </Link>
-          <Link to="">
+          <Link to={RoutePaths.Welcome}>
             <img
               className={`img-responsive ${classes["social-media-icon"]}`}
               src={Instagram}

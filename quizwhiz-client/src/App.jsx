@@ -5,7 +5,7 @@ import Welcome from "./pages/welcome";
 
 const App = () => {
   return (
-     <RouterProvider router={router} />
+     <RouterProvider router={router()} />
   );
 };
 
