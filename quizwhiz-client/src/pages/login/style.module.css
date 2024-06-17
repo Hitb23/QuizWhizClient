@@ -7,20 +7,31 @@
 }
 
 .log-in-title {
-  color: #ED6744;
+  color: #ed6744;
   font-size: 50px;
   padding-top: 1rem;
 }
 
 .form-input {
+<<<<<<< HEAD:quizwhiz-client/src/pages/auth/Login.module.css
+  border: 1px solid #ed6744;
+=======
   border: 1px solid #ED6744 !important;
+>>>>>>> d01bf8bd56be92ba9ac4c22dadbff953607ea518:quizwhiz-client/src/pages/login/style.module.css
 }
 
 .form-input:focus,
 .form-input:hover {
+<<<<<<< HEAD:quizwhiz-client/src/pages/auth/Login.module.css
+  outline: 1px solid #ed6744;
+  border: 1px solid #f33404;
+  box-shadow: 0 0 16px 0 rgba(228, 55, 55, 0.18),
+    0 2px 4px 0 rgba(228, 55, 55, 0.12);
+=======
     outline: 1px solid #ED6744 !important;
     border: 1px solid #f33404 !important;
     box-shadow: 0 0 16px 0 rgba(228, 55, 55, 0.18), 0 2px 4px 0 rgba(228, 55, 55, 0.12) !important;
+>>>>>>> d01bf8bd56be92ba9ac4c22dadbff953607ea518:quizwhiz-client/src/pages/login/style.module.css
 }
 
 .forgot-password-label,
@@ -30,13 +41,18 @@
   color: #000000;
 }
 
+.log-in-label-selected {
+  color: #ed6744;
+  text-decoration: underline;
+}
+
 .log-in-button {
   padding: 0.8rem 2.5rem 0.8rem 2.5rem;
   font-size: 20px;
-  background-color: #ED6744;
-  color: #FFFFFF;
+  background-color: #ed6744;
+  color: #ffffff;
   border-radius: 0.5rem;
-  border: 1px solid #ED6744;
+  border: 1px solid #ed6744;
 }
 
 .log-in-button:hover {

@@ -6,6 +6,7 @@ import classes from "./style.module.css";
 import { WelcomePoster } from "../../assets";
 import { Button } from "bootstrap";
 import { Link } from "react-router-dom";
+import { RoutePaths } from "../../utils/enum";
 
 const Welcome =  () => {
   return (
@@ -24,7 +25,7 @@ const Welcome =  () => {
             src={WelcomePoster}
             alt="logo"
           />
-          <Link to="">
+          <Link to={RoutePaths.Welcome}>
             <button className={classes["get-started-button"]}>Get Started</button>
           </Link>
         </div>

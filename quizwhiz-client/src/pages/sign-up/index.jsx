@@ -5,10 +5,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import { signup } from "../../services/auth.service";
 import * as yup from "yup";
+<<<<<<< HEAD
 
 import { userNameValidity } from "../../services/auth.service";
 
 import { ToastContainer, toast } from "react-toastify";
+=======
+import { userNameValidity } from "../../services/auth.service";
+import { ToastContainer, toast } from "react-toastify";
+import { RoutePaths } from "../../utils/enum";
+>>>>>>> master
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -19,7 +25,10 @@ const SignUp = () => {
       .required("UserName is required")
       .lowercase("Username should be in lowercase")
       .test("username", "Username already exist", async (username) => {
+<<<<<<< HEAD
         console.log("Hello");
+=======
+>>>>>>> master
         if (username.trim() === "") return true;
         username = username.trim().toLowerCase();
         try {
@@ -61,6 +70,7 @@ const SignUp = () => {
     const confirmPassword = values.confirmPassword;
     const username = values.username;
     try {
+<<<<<<< HEAD
       const response = await signup({
         username,
         email,
@@ -68,6 +78,10 @@ const SignUp = () => {
         confirmPassword,
       });
       navigate("/login");
+=======
+      const response = await signup({ email, password, confirmPassword });
+      navigate(RoutePaths.Login);
+>>>>>>> master
     } catch (error) {
       toast.error("Invalid email or password", {
         position: "top-right",
@@ -122,8 +136,11 @@ const SignUp = () => {
                         placeholder="abc@123"
                         autoComplete="off"
                         onKeyUp={() => setFieldTouched("username", true)}
+<<<<<<< HEAD
                         // onKeyUp={checkValidUser}
                         //onKeyUp={handleEmailChange}
+=======
+>>>>>>> master
                       />
                       {touched.username && errors.username ? (
                         <span className="text-danger">{errors.username}</span>
@@ -230,7 +247,7 @@ const SignUp = () => {
                 >
                   Already have an account?
                 </div>
-                <Link to="/login">
+                <Link to={RoutePaths.Login}>
                   <label
                     className={`form-label fw-bold text-end text-decoration-none m-0 text-black pe-auto ${classes["sign-up-label"]}`}
                   >
