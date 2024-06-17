@@ -1,11 +1,12 @@
-import React, {useState ,Fragment } from "react";
+import React, {useState ,Fragment, useEffect } from "react";
 import AuthHeader from "../../components/header/auth-header";
 import classes from "./style.module.css";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 
 const ResetPassword = () => {
+  const params=useParams();
   const validationSchema = yup.object().shape({
     password: yup
       .string()
@@ -26,7 +27,9 @@ const ResetPassword = () => {
     password: "",
     confirmPassword: "",
   };
-
+  useEffect(()=>{
+     const tokenValue=params.token;
+  },[]);
   const handleSubmit = (values) => {
     console.log(values.password);
     console.log(values.confirmPassword);

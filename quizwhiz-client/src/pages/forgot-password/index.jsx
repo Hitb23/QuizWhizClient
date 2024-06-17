@@ -4,6 +4,7 @@ import classes from "./style.module.css";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
+import { SendMail } from "../../services/auth.service";
 
 const ForgotPassword = () => {
   const validationSchema = yup.object().shape({
@@ -16,6 +17,7 @@ const ForgotPassword = () => {
 
   const handleSubmit = (values) => {
     console.log("Email: " + values.email);
+    SendMail(values.email);
   };
 
   return (
