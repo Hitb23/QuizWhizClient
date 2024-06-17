@@ -31,7 +31,7 @@ export const ROUTES = [
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path: '/reset-password',
+    path: '/reset-password/:token',
     element: <ResetPassword />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
