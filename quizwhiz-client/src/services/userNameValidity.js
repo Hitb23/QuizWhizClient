@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "./axios";
 const userNameValidity = async (data) => {
+  //debugger;
   return await axios.get("/User/checkUserName/", {
     params: data,
     headers: {

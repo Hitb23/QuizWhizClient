@@ -14,20 +14,26 @@ import { ToastContainer, toast } from "react-toastify";
 const SignUp = () => {
   const navigate = useNavigate();
   const validationSchema = yup.object().shape({
+    username:yup
+    .string()
+    .required("UserName is required")
+    .lowercase("Username should be in lowercase")
+    .test("username", "Username already exist", async (username) => {
+      if(username.trim()==="") return true;
+      username=username.trim().toLowerCase();
+      try {
+        const response = await userNameValidity({ username });
+        return response.data; 
+      } catch (error) {
+        return false; 
+      }
+    
+    }),
     email: yup
       .string()
       .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter valid email")
       .required("Email is required")
-      .test("email", "Username already exist", async (email) => {
-        const username = email.split("@")[0];
-        try {
-          const response = await userNameValidity({ username });
-          console.log(response);
-          return response.data; // if response is true, validation passes
-        } catch (error) {
-          return false; // if response is false or error occurs, validation fails
-        }
-      }),
+      ,
     password: yup
       .string()
       .min(8, "Password must be at least 8 characters")
@@ -47,6 +53,7 @@ const SignUp = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    username:""
   };
 
   const handleSubmit = async (values) => {
@@ -54,9 +61,9 @@ const SignUp = () => {
     const email = values.email;
     const password = values.password;
     const confirmPassword = values.confirmPassword;
-
+    const username=values.username;
     try {
-      const response = await signup({ email, password, confirmPassword });
+      const response = await signup({username, email, password, confirmPassword });
       navigate("/login");
     } catch (error) {
       toast.error("Invalid email or password", {
@@ -71,24 +78,7 @@ const SignUp = () => {
     }
 
   };
-  const handleEmailChange = () => {
-    // initialValues.setFieldValue('email', e.target.value);
-    initialValues.validateField("email");
-  };
-
-  // const checkValidUser= (e)=>{
-  //   const email = e.target.value.split('@')[0];
-  //   console.log("Called",email);
-
-  //   try {
-  //     const response = await userNameValidity({email});
-  //     if(!response){
-
-  //     }
-  //   } catch (error) {
-  //     setErrorMessage("Invalid Email or Password");
-  //   }
-  // }
+  
   return (
     <React.Fragment>
       <AuthHeader />
@@ -109,6 +99,28 @@ const SignUp = () => {
                 <Form>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                      <label htmlFor="username" className={`form-label fw-bold ${classes["black-font"]}`}>
+                        UserName
+                      </label>
+                      <Field
+                        as="input"
+                        type="text"
+                        name="username"
+                        className={`${classes["form-input"]} form-control form-control-md p-3`}
+                        id="username"
+                        placeholder="abc@123"
+                        autoComplete="off"
+                        // onKeyUp={checkValidUser}
+                        //onKeyUp={handleEmailChange}
+                      />
+                      {touched.username && errors.username ? (
+                        <span className="text-danger">{errors.username}</span>
+                      ) : touched.username ?  <span className="text-success">UserName available</span> :null}
+                     
+                    </div>
+                  </div>
+                  <div className={`d-flex justify-content-center`}>
+                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
                       <label htmlFor="email" className={`form-label fw-bold ${classes["black-font"]}`}>
                         Email
                       </label>
@@ -126,7 +138,7 @@ const SignUp = () => {
                       {touched.email && errors.email ? (
                         <span className="text-danger">{errors.email}</span>
                       ) : null}
-                      {}
+                   
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>

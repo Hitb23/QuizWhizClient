@@ -23,15 +23,15 @@ export const router = createBrowserRouter(
     ROUTES.map((route) => {
       const sendElement = route.element;
       const sendRoles = route.roles;
-      console.log(
-        "routing",
-        route.path,
-        AuthorizedRoute({
-          element: sendElement,
-          roles: sendRoles,
-          userRole: userRole ? userRole : "",
-        })
-      );
+      // console.log(
+      //   "routing",
+      //   route.path,
+      //   AuthorizedRoute({
+      //     element: sendElement,
+      //     roles: sendRoles,
+      //     userRole: userRole ? userRole : "",
+      //   })
+      // );
       return (
         <Route
           key={route.path}

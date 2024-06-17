@@ -11,11 +11,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { jwtDecode } from "jwt-decode";
 import jwtDecoder from "../../services/jwtDecoder";
 import { router } from "../../constants/Routing";
+import { redirect } from "react-router-dom";
 
 const Login = () => {
-  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-
+  const [errorMessage, setErrorMessage] = useState("");
+  
   const validationSchema = yup.object().shape({
     email: yup
       .string()
@@ -49,7 +50,8 @@ const Login = () => {
         navigate("/admin-dashboard", { replace: true });
       } else if (userRole === "Contestant") {
         console.log("Contestant");
-        navigate("/user-dashboard", { replace: true });
+        // navigate("/user-dashboard", { replace: true });
+        history.push('/new-route');
       } else {
         console.log("Login");
         navigate("/login", { replace: true });
