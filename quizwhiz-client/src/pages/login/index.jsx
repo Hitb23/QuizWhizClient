@@ -14,13 +14,15 @@ import jwtDecoder from "../../services/jwtDecoder";
 import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { ActionCreators } from "../../redux/action-creators";
+import { router } from "../../constants/Routing";
+import { redirect } from "react-router-dom";
 
 const Login = () => {
-  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const actions = bindActionCreators(ActionCreators, dispatch);
-
+  const [errorMessage, setErrorMessage] = useState("");
+  
   const validationSchema = yup.object().shape({
     email: yup
       .string()
@@ -39,10 +41,11 @@ const Login = () => {
   const handleSubmit = async (values) => {
     const email = values.email;
     const password = values.password;
-
+    
     try {
       const response = await login({ email, password });
       localStorage.setItem("token", response.data.token);
+
       const data = await jwtDecoder();
 
       const userRole =

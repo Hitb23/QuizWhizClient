@@ -5,12 +5,27 @@ import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import { signup } from "../../services/auth.service";
 import * as yup from "yup";
+import { userNameValidity } from "../../services/auth.service";
 import { ToastContainer, toast } from "react-toastify";
 import { RoutePaths } from "../../utils/enum";
 
 const SignUp = () => {
   const navigate = useNavigate();
   const validationSchema = yup.object().shape({
+    username: yup
+      .string()
+      .required("UserName is required")
+      .lowercase("Username should be in lowercase")
+      .test("username", "Username already exist", async (username) => {
+        if (username.trim() === "") return true;
+        username = username.trim().toLowerCase();
+        try {
+          const response = await userNameValidity({ username });
+          return response.data;
+        } catch (error) {
+          return false;
+        }
+      }),
     email: yup
       .string()
       .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter valid email")
@@ -34,13 +49,14 @@ const SignUp = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    username: "",
   };
 
   const handleSubmit = async (values) => {
     const email = values.email;
     const password = values.password;
     const confirmPassword = values.confirmPassword;
-
+    const username = values.username;
     try {
       const response = await signup({ email, password, confirmPassword });
       navigate(RoutePaths.Login);
@@ -77,7 +93,39 @@ const SignUp = () => {
                 <Form>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                      <label htmlFor="email" className={`form-label fw-bold ${classes["black-font"]}`}>
+                      <label
+                        htmlFor="username"
+                        className={`form-label fw-bold ${classes["black-font"]}`}
+                      >
+                        Username
+                      </label>
+                      <Field
+                        as="input"
+                        type="text"
+                        name="username"
+                        className={`${classes["form-input"]} form-control form-control-md p-3`}
+                        id="username"
+                        placeholder="abc@123"
+                        autoComplete="off"
+                        onKeyUp={() => setFieldTouched("username", true)}
+                      />
+                      {touched.username && errors.username ? (
+                        <span className="text-danger">{errors.username}</span>
+                      ) : (
+                        touched.username && (
+                          <span className="text-success">
+                            Username available
+                          </span>
+                        )
+                      )}
+                    </div>
+                  </div>
+                  <div className={`d-flex justify-content-center`}>
+                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                      <label
+                        htmlFor="email"
+                        className={`form-label fw-bold ${classes["black-font"]}`}
+                      >
                         Email
                       </label>
                       <Field
@@ -88,6 +136,8 @@ const SignUp = () => {
                         id="email"
                         placeholder="name@example.com"
                         autoComplete="off"
+                        // onKeyUp={checkValidUser}
+                        //onKeyUp={handleEmailChange}
                       />
                       {touched.email && errors.email ? (
                         <span className="text-danger">{errors.email}</span>
@@ -96,7 +146,10 @@ const SignUp = () => {
                   </div>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                      <label htmlFor="password" className={`form-label fw-bold ${classes["black-font"]}`}>
+                      <label
+                        htmlFor="password"
+                        className={`form-label fw-bold ${classes["black-font"]}`}
+                      >
                         Password
                       </label>
                       <Field
@@ -137,8 +190,15 @@ const SignUp = () => {
                   </div>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
-                      <button type="submit" className={`${classes["sign-up-button"]} ${!isValid || isSubmitting? classes["disabled-button"] : ""}`}
-                      disabled={!isValid || isSubmitting}>
+                      <button
+                        type="submit"
+                        className={`${classes["sign-up-button"]} ${
+                          !isValid || isSubmitting
+                            ? classes["disabled-button"]
+                            : ""
+                        }`}
+                        disabled={!isValid || isSubmitting}
+                      >
                         Sign Up
                       </button>
                     </div>
@@ -149,7 +209,9 @@ const SignUp = () => {
 
             <div className={`d-flex justify-content-center`}>
               <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
-                <div className={`d-flex align-items-center ${classes["black-font"]}`}>
+                <div
+                  className={`d-flex align-items-center ${classes["black-font"]}`}
+                >
                   Already have an account?
                 </div>
                 <Link to={RoutePaths.Login}>
