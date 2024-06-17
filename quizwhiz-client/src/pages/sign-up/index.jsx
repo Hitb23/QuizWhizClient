@@ -6,6 +6,7 @@ import { Formik, Form, Field } from "formik";
 import { signup } from "../../services/auth.service";
 import * as yup from "yup";
 import { ToastContainer, toast } from "react-toastify";
+import { RoutePaths } from "../../utils/enum";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ const SignUp = () => {
 
     try {
       const response = await signup({ email, password, confirmPassword });
-      navigate("/login");
+      navigate(RoutePaths.Login);
     } catch (error) {
       toast.error("Invalid email or password", {
         position: "top-right",
@@ -151,7 +152,7 @@ const SignUp = () => {
                 <div className={`d-flex align-items-center ${classes["black-font"]}`}>
                   Already have an account?
                 </div>
-                <Link to="/login">
+                <Link to={RoutePaths.Login}>
                   <label
                     className={`form-label fw-bold text-end text-decoration-none m-0 text-black pe-auto ${classes["sign-up-label"]}`}
                   >

@@ -2,6 +2,7 @@ import React, { useState, Fragment } from "react";
 import AuthHeader from "../../components/header/auth-header";
 import classes from "./style.module.css";
 import { Link, Navigate, RouterProvider, useNavigate } from "react-router-dom";
+import { RoutePaths } from "../../utils/enum";
 import axios from "../../services/axios";
 import { login } from "../../services/auth.service";
 import { Formik, Form, Field } from "formik";
@@ -10,11 +11,15 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { jwtDecode } from "jwt-decode";
 import jwtDecoder from "../../services/jwtDecoder";
-import { router } from "../../constants/Routing";
+import { useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import { ActionCreators } from "../../redux/action-creators";
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const actions = bindActionCreators(ActionCreators, dispatch);
 
   const validationSchema = yup.object().shape({
     email: yup
@@ -42,19 +47,18 @@ const Login = () => {
 
       const userRole =
         data["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-      
-      if (userRole === "Admin") {
-        console.log("Admin");
-        navigate("/admin-dashboard", { replace: true });
-      } else if (userRole === "Contestant") {
-        console.log("Contestant");
-        navigate("/user-dashboard", { replace: true });
-      } else {
-        console.log("Login");
-        navigate("/login", { replace: true });
+
+      {
+        actions.changeUserRole(userRole);
       }
 
-      //navigate("/");
+      if (userRole === "Admin") {
+        navigate(RoutePaths.AdminDashboard, { replace: true });
+      } else if (userRole === "Contestant") {
+        navigate(RoutePaths.UserDashboard, { replace: true });
+      } else {
+        navigate(RoutePaths.Login, { replace: true });
+      }
     } catch (error) {
       toast.error("Invalid email or password", {
         position: "top-right",
@@ -148,7 +152,7 @@ const Login = () => {
                   </div>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex flex-row-reverse">
-                      <Link to="/forgot-password">
+                      <Link to={RoutePaths.ForgotPassword}>
                         <label
                           className={`form-label fw-bold text-end text-decoration-none text-black pe-auto ${classes["forgot-password-label"]}`}
                         >
@@ -183,7 +187,7 @@ const Login = () => {
                 >
                   Don't you have an account?
                 </div>
-                <Link to="/sign-up">
+                <Link to={RoutePaths.SignUp}>
                   <label
                     className={`form-label fw-bold text-end text-decoration-none m-0 text-black pe-auto ${classes["log-in-label"]}`}
                   >
@@ -193,6 +197,12 @@ const Login = () => {
               </div>
             </div>
           </div>
+          <Link to={RoutePaths.UserDashboard}>
+            <button className={classes["sign-up-button"]}>Dashboard</button>
+          </Link>
+          <Link to={RoutePaths.AdminDashboard}>
+            <button className={classes["sign-up-button"]}>Admin Dashboard</button>
+          </Link>
         </div>
       </main>
       <ToastContainer />

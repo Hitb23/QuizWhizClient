@@ -4,6 +4,7 @@ import classes from "./style.module.css";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
+import { RoutePaths } from "../../utils/enum";
 
 const ForgotPassword = () => {
   const validationSchema = yup.object().shape({
@@ -71,7 +72,7 @@ const ForgotPassword = () => {
             </Formik>
             <div className={`d-flex justify-content-center`}>
               <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
-                <Link to="/login">
+                <Link to={RoutePaths.Login}>
                   <label
                     className={`form-label fw-bold text-end text-decoration-none m-0 text-black pe-auto ${classes["back-to-login-label"]}`}
                   >
