@@ -4,10 +4,21 @@ import classes from "./style.module.css";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
+import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
 const ResetPassword = () => {
 
-  
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleToggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
 
   const validationSchema = yup.object().shape({
     password: yup
@@ -58,14 +69,31 @@ const ResetPassword = () => {
                       <label htmlFor="password" className={`form-label fw-bold ${classes["black-font"]}`}>
                         Password
                       </label>
-                      <Field
-                        as="input"
-                        type="password"
-                        name="password"
-                        className={`${classes["form-input"]} form-control form-control-md p-3`}
-                        id="password"
-                        placeholder="Password"
-                      />
+                      <Field as="input" name="password">
+                        {({ field, form }) => (
+                          <div className={classes["password-field"]}>
+                            <input
+                              {...field}
+                              type={showPassword ? "text" : "password"}
+                              className={`${classes["form-input"]} form-control form-control-md p-3`}
+                              placeholder="Password"
+                              id="password"
+                              autoComplete="off"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleTogglePasswordVisibility}
+                              className={classes["visibility-toggle"]}
+                            >
+                              {showPassword ? (
+                                <MdVisibilityOff />
+                              ) : (
+                                <MdVisibility />
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </Field>
                       {touched.password && errors.password ? (
                       <span className="text-danger">{errors.password}</span>
                     ) : null}
@@ -79,14 +107,31 @@ const ResetPassword = () => {
                       >
                         Confirm Password
                       </label>
-                      <Field
-                        as="input"
-                        type="password"
-                        name="confirmPassword"
-                        className={`${classes["form-input"]} form-control form-control-md p-3`}
-                        id="confirmPassword"
-                        placeholder="Password"
-                      />
+                      <Field as="input" name="confirmPassword">
+                        {({ field, form }) => (
+                          <div className={classes["password-field"]}>
+                            <input
+                              {...field}
+                              type={showConfirmPassword ? "text" : "password"}
+                              className={`${classes["form-input"]} form-control form-control-md p-3`}
+                              placeholder="Password"
+                              id="confirmPassword"
+                              autoComplete="off"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleToggleConfirmPasswordVisibility}
+                              className={classes["visibility-toggle"]}
+                            >
+                              {showConfirmPassword ? (
+                                <MdVisibilityOff />
+                              ) : (
+                                <MdVisibility />
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </Field>
                       {touched.confirmPassword && errors.confirmPassword ? (
                       <span className="text-danger">{errors.confirmPassword}</span>
                     ) : null}
