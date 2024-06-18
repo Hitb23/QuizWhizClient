@@ -16,13 +16,23 @@ import { bindActionCreators } from "redux";
 import { ActionCreators } from "../../redux/action-creators";
 import { router } from "../../constants/Routing";
 import { redirect } from "react-router-dom";
-
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const actions = bindActionCreators(ActionCreators, dispatch);
   const [errorMessage, setErrorMessage] = useState("");
-  
+  const location = useLocation();
+  useEffect(() => {
+    console.log(location);
+    if (location.state?.fromResetPassword) {
+      toast.success(
+        "Password reset successfully. Please log in with your new password."
+      );
+   }
+  }, []);
+
   const validationSchema = yup.object().shape({
     email: yup
       .string()
@@ -41,7 +51,7 @@ const Login = () => {
   const handleSubmit = async (values) => {
     const email = values.email;
     const password = values.password;
-    
+
     try {
       const response = await login({ email, password });
       localStorage.setItem("token", response.data.token);
@@ -204,7 +214,9 @@ const Login = () => {
             <button className={classes["sign-up-button"]}>Dashboard</button>
           </Link>
           <Link to={RoutePaths.AdminDashboard}>
-            <button className={classes["sign-up-button"]}>Admin Dashboard</button>
+            <button className={classes["sign-up-button"]}>
+              Admin Dashboard
+            </button>
           </Link>
         </div>
       </main>

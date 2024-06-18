@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import AuthHeader from "../../components/header/auth-header";
 import classes from "./style.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
-<<<<<<< HEAD
-import { SendMail } from "../../services/auth.service";
-=======
+import { sendResetPasswordLink } from "../../services/auth.service";
+
 import { RoutePaths } from "../../utils/enum";
->>>>>>> master
+import { toast } from "react-toastify";
 
 const ForgotPassword = () => {
+  var navigate = useNavigate();
   const validationSchema = yup.object().shape({
     email: yup
       .string()
@@ -18,10 +18,18 @@ const ForgotPassword = () => {
       .required("Email is required")
       .email("Please enter a valid email"),
   });
-
-  const handleSubmit = (values) => {
+  useEffect(()=>{
+    toast.success("hello");
+  },[])
+  const handleSubmit = async (values) => {
     console.log("Email: " + values.email);
-    SendMail(values.email);
+    try {
+      var data = await sendResetPasswordLink({ Email: values.email });
+      console.log(data);
+       navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -44,7 +52,10 @@ const ForgotPassword = () => {
                 <Form>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-5 pb-5">
-                      <label htmlFor="email" className={`form-label fw-bold ${classes["black-font"]}`}>
+                      <label
+                        htmlFor="email"
+                        className={`form-label fw-bold ${classes["black-font"]}`}
+                      >
                         Email
                       </label>
                       <Field
@@ -57,15 +68,19 @@ const ForgotPassword = () => {
                         autoComplete="off"
                       />
                       {touched.email && errors.email ? (
-                      <span className="text-danger">{errors.email}</span>
-                    ) : null}
+                        <span className="text-danger">{errors.email}</span>
+                      ) : null}
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
                       <button
                         type="submit"
-                        className={`${classes["forgot-password-button"]} ${!isValid || isSubmitting? classes["disabled-button"] : ""}`}
+                        className={`${classes["forgot-password-button"]} ${
+                          !isValid || isSubmitting
+                            ? classes["disabled-button"]
+                            : ""
+                        }`}
                         disabled={!isValid || isSubmitting}
                       >
                         Send Email Link
