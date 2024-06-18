@@ -13,14 +13,14 @@ import { jwtDecode } from "jwt-decode";
 import jwtDecoder from "../../services/jwtDecoder";
 import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
-import { ActionCreators } from "../../redux/action-creators";
+import { userActions } from "../../redux/action-creators";
 import { router } from "../../constants/Routing";
 import { redirect } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const actions = bindActionCreators(ActionCreators, dispatch);
+  const actions = bindActionCreators(userActions, dispatch);
   const [errorMessage, setErrorMessage] = useState("");
   
   const validationSchema = yup.object().shape({
@@ -47,12 +47,11 @@ const Login = () => {
       localStorage.setItem("token", response.data.token);
 
       const data = await jwtDecoder();
-
-      const userRole =
-        data["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-
+      const userRole = data["Role"];
       {
-        actions.changeUserRole(userRole);
+        actions.changeUserRole(data["Role"]);
+        actions.changeUserName(data["Username"]);
+        actions.changeUserEmail(data["Email"]);
       }
 
       if (userRole === "Admin") {
