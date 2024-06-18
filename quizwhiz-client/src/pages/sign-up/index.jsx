@@ -3,7 +3,7 @@ import AuthHeader from "../../components/header/auth-header";
 import classes from "./style.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
-import { signup } from "../../services/auth.service";
+import { signUp } from "../../services/auth.service";
 import * as yup from "yup";
 import { userNameValidity } from "../../services/auth.service";
 import { ToastContainer, toast } from "react-toastify";
@@ -58,7 +58,7 @@ const SignUp = () => {
     const confirmPassword = values.confirmPassword;
     const username = values.username;
     try {
-      const response = await signup({ email, password, confirmPassword });
+      const response = await signUp({ email, password, confirmPassword });
       navigate(RoutePaths.Login);
     } catch (error) {
       toast.error("Invalid email or password", {
@@ -89,7 +89,7 @@ const SignUp = () => {
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
-              {({ errors, touched, isValid, isSubmitting }) => (
+              {({ errors, touched, isValid, isSubmitting, setFieldTouched }) => (
                 <Form>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
@@ -109,7 +109,7 @@ const SignUp = () => {
                         autoComplete="off"
                         onKeyUp={() => setFieldTouched("username", true)}
                       />
-                      {touched.username && errors.username ? (
+                       {touched.username && errors.username ? (
                         <span className="text-danger">{errors.username}</span>
                       ) : (
                         touched.username && (
