@@ -50,6 +50,20 @@
   color: #000000;
 }
 
+.visibility-toggle {
+  position: absolute;
+  right: 10px;
+  background: #FFFFFF;
+  border: none;
+  cursor: pointer;
+}
+
+.password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 @media (max-height: 750px) {
   .main-component {
     padding: 1rem;

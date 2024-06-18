@@ -16,12 +16,17 @@ import { bindActionCreators } from "redux";
 import { userActions } from "../../redux/action-creators";
 import { router } from "../../constants/Routing";
 import { redirect } from "react-router-dom";
+import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const actions = bindActionCreators(userActions, dispatch);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   
   const validationSchema = yup.object().shape({
     email: yup
@@ -108,9 +113,6 @@ const Login = () => {
                         name="email"
                         placeholder="name@example.com"
                         autoComplete="off"
-                        onKeyUp={() => {
-                          setErrorMessage("");
-                        }}
                       />
                       {touched.email && errors.email ? (
                         <span className="text-danger">{errors.email}</span>
@@ -125,32 +127,35 @@ const Login = () => {
                       >
                         Password
                       </label>
-                      <Field
-                        as="input"
-                        type="password"
-                        className={`${classes["form-input"]} form-control form-control-md p-3`}
-                        id="password"
-                        name="password"
-                        placeholder="Password"
-                        autoComplete="off"
-                        onKeyUp={() => {
-                          setErrorMessage("");
-                        }}
-                      />
+                      <Field as="input" name="password">
+                        {({ field, form }) => (
+                          <div className={classes["password-field"]}>
+                            <input
+                              {...field}
+                              type={showPassword ? "text" : "password"}
+                              className={`${classes["form-input"]} form-control form-control-md p-3`}
+                              placeholder="Password"
+                              id="password"
+                              autoComplete="off"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleTogglePasswordVisibility}
+                              className={classes["visibility-toggle"]}
+                            >
+                              {showPassword ? (
+                                <MdVisibilityOff />
+                              ) : (
+                                <MdVisibility />
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </Field>
                       {touched.password && errors.password ? (
                         <span className="text-danger">{errors.password}</span>
                       ) : null}
                     </div>
-                  </div>
-                  <div className={`d-flex justify-content-center`}>
-                    <span
-                      value={errorMessage}
-                      className={`${
-                        errorMessage ? classes["error-message"] : "offscreen"
-                      }`}
-                    >
-                      {errorMessage}
-                    </span>
                   </div>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex flex-row-reverse">

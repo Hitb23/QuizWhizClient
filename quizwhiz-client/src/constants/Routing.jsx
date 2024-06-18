@@ -17,7 +17,6 @@ import { useSelector } from "react-redux";
 
 export const router = () => {
   const userRole  = useSelector((state) => state.userRole);
-  console.log("Router Call: ", userRole);
   return createBrowserRouter(
   createRoutesFromElements(
     ROUTES.map((route) => {
