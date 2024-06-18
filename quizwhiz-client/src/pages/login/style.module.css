@@ -59,6 +59,20 @@
   opacity: 0.7;
 }
 
+.visibility-toggle {
+  position: absolute;
+  right: 10px;
+  background: #FFFFFF;
+  border: none;
+  cursor: pointer;
+}
+
+.password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .error-message {
   font-size: 20px;
   color: #f33404;

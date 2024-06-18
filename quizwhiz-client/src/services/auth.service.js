@@ -1,7 +1,7 @@
 import axios from "./axios";
-
+import { API_URLS } from "../utils/enum";
 export const login = async (data) => {
-  return await axios.post("/Auth/login/", JSON.stringify(data), {
+  return await axios.post(API_URLS.LOGIN_URL, JSON.stringify(data), {
     headers: {
       "Content-Type": "application/json",
       // token: "Bearer " + localStorage.getItem("token")
@@ -9,14 +9,14 @@ export const login = async (data) => {
   });
 };
 
-export const signup = async (data) => {
-  return await axios.post("/User/register", JSON.stringify(data), {
+export const signUp = async (data) => {
+  return await axios.post(API_URLS.SIGNUP_URL, JSON.stringify(data), {
     headers: { "Content-Type": "application/json" },
   });
 };
 
 export const userNameValidity = async (data) => {
-  return await axios.get("/User/checkUserName/", {
+  return await axios.get(API_URLS.USERNAME_VALIDITY_URL, {
     params: data,
     headers: {
       "Content-Type": "application/json",
@@ -26,9 +26,7 @@ export const userNameValidity = async (data) => {
 };
 export const sendResetPasswordLink = async (data) => {
   //debugger;
-  return await axios.post("/Auth/forgot-password/", 
-  JSON.stringify(data),
-  {
+  return await axios.post(API_URLS.FORGOT_PASSWORD_URL, JSON.stringify(data), {
     headers: {
       "Content-Type": "application/json",
       // token: "Bearer " + localStorage.getItem("token")
@@ -36,8 +34,7 @@ export const sendResetPasswordLink = async (data) => {
   });
 };
 export const checkToken = async (data) => {
-  debugger;
-  return await axios.get(`/Auth/validate-reset-token?token=${data}`, {
+  return await axios.get(API_URLS.VALIDATE_TOKEN_URL+ data, {
     headers: {
       "Content-Type": "application/json",
       // token: "Bearer " + localStorage.getItem("token")
@@ -48,20 +45,16 @@ export const checkToken = async (data) => {
 export const resetPassword = async (data) => {
   try {
     const response = await axios.post(
-      "/Auth/reset-password",
+      API_URLS.REEST_PASSWORD,
       JSON.stringify(data),
       {
         headers: {
           "Content-Type": "application/json",
-          // Uncomment and modify the line below if an authorization token is needed
-          // 'Authorization': 'Bearer ' + localStorage.getItem('token')
         },
       }
     );
-    console.log(response);
-    return response.data;
+    return response;
   } catch (error) {
-    // Handle error as appropriate
     console.error("Error resetting password:", error);
     throw error;
   }

@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import AuthHeader from "../../components/header/auth-header";
 import classes from "./style.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
-import { signup } from "../../services/auth.service";
+import { signUp } from "../../services/auth.service";
 import * as yup from "yup";
 
 import { userNameValidity } from "../../services/auth.service";
@@ -11,18 +11,28 @@ import { userNameValidity } from "../../services/auth.service";
 import { ToastContainer, toast } from "react-toastify";
 
 import { RoutePaths } from "../../utils/enum";
-
+import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
 const SignUp = () => {
   const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleToggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   const validationSchema = yup.object().shape({
     username: yup
       .string()
       .required("UserName is required")
-      .lowercase("Username should be in lowercase")
+      .matches(/^[a-z0-9_]{3,15}$/, "Username must be between 3-15 characters, and can only contain lowercase letters, numbers, and underscores")
       .test("username", "Username already exist", async (username) => {
-
         if (username.trim() === "") return true;
         username = username.trim().toLowerCase();
         try {
@@ -64,13 +74,13 @@ const SignUp = () => {
     const confirmPassword = values.confirmPassword;
     const username = values.username;
     try {
-      const response = await signup({
+      const response = await signUp({
         username,
         email,
         password,
         confirmPassword,
       });
-      navigate(RoutePaths.Login);
+      navigate(RoutePaths.Login,{state: {IsSuccessMessage:true,Message:"Registration Successfull"}});
     } catch (error) {
       toast.error("Invalid email or password", {
         position: "top-right",
@@ -125,7 +135,6 @@ const SignUp = () => {
                         placeholder="abc@123"
                         autoComplete="off"
                         onKeyUp={() => setFieldTouched("username", true)}
-
                       />
                       {touched.username && errors.username ? (
                         <span className="text-danger">{errors.username}</span>
@@ -170,14 +179,31 @@ const SignUp = () => {
                       >
                         Password
                       </label>
-                      <Field
-                        as="input"
-                        type="password"
-                        name="password"
-                        className={`${classes["form-input"]} form-control form-control-md p-3`}
-                        id="password"
-                        placeholder="Password"
-                      />
+                      <Field as="input" name="password">
+                        {({ field, form }) => (
+                          <div className={classes["password-field"]}>
+                            <input
+                              {...field}
+                              type={showPassword ? "text" : "password"}
+                              className={`${classes["form-input"]} form-control form-control-md p-3`}
+                              placeholder="Password"
+                              id="password"
+                              autoComplete="off"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleTogglePasswordVisibility}
+                              className={classes["visibility-toggle"]}
+                            >
+                              {showPassword ? (
+                                <MdVisibilityOff size={20} />
+                              ) : (
+                                <MdVisibility size={20} />
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </Field>
                       {touched.password && errors.password ? (
                         <span className="text-danger">{errors.password}</span>
                       ) : null}
@@ -191,14 +217,31 @@ const SignUp = () => {
                       >
                         Confirm Password
                       </label>
-                      <Field
-                        as="input"
-                        name="confirmPassword"
-                        type="password"
-                        className={`${classes["form-input"]} form-control form-control-md p-3`}
-                        id="confirmPassword"
-                        placeholder="Password"
-                      />
+                      <Field as="input" name="confirmPassword">
+                        {({ field, form }) => (
+                          <div className={classes["password-field"]}>
+                            <input
+                              {...field}
+                              type={showConfirmPassword ? "text" : "password"}
+                              className={`${classes["form-input"]} form-control form-control-md p-3`}
+                              placeholder="Password"
+                              id="confirmPassword"
+                              autoComplete="off"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleToggleConfirmPasswordVisibility}
+                              className={classes["visibility-toggle"]}
+                            >
+                              {showConfirmPassword ? (
+                                <MdVisibilityOff size={20} />
+                              ) : (
+                                <MdVisibility size={20} />
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </Field>
                       {touched.confirmPassword && errors.confirmPassword ? (
                         <span className="text-danger">
                           {errors.confirmPassword}

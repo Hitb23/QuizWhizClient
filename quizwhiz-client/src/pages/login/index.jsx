@@ -9,30 +9,29 @@ import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { jwtDecode } from "jwt-decode";
 import jwtDecoder from "../../services/jwtDecoder";
 import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
-import { ActionCreators } from "../../redux/action-creators";
-import { router } from "../../constants/Routing";
-import { redirect } from "react-router-dom";
+import { userActions } from "../../redux/action-creators";
+import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const actions = bindActionCreators(ActionCreators, dispatch);
-  const [errorMessage, setErrorMessage] = useState("");
+  const actions = bindActionCreators(userActions, dispatch);
+  const [showPassword, setShowPassword] = useState(false);
   const location = useLocation();
   useEffect(() => {
-    console.log(location);
-    if (location.state?.fromResetPassword) {
-      toast.success(
-        "Password reset successfully. Please log in with your new password."
-      );
-   }
-  }, []);
-
+    //console.log(location);
+    if (location.state?.IsSuccessMessage) toast.success(location.state?.Message);
+    else if(location.state?.IsErrorMessage) toast.error(location.state?.Message);
+    
+  },[location] );
+    
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const validationSchema = yup.object().shape({
     email: yup
       .string()
@@ -57,12 +56,11 @@ const Login = () => {
       localStorage.setItem("token", response.data.token);
 
       const data = await jwtDecoder();
-
-      const userRole =
-        data["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-
+      const userRole = data["Role"];
       {
-        actions.changeUserRole(userRole);
+        actions.changeUserRole(data["Role"]);
+        actions.changeUserName(data["Username"]);
+        actions.changeUserEmail(data["Email"]);
       }
 
       if (userRole === "Admin") {
@@ -119,9 +117,6 @@ const Login = () => {
                         name="email"
                         placeholder="name@example.com"
                         autoComplete="off"
-                        onKeyUp={() => {
-                          setErrorMessage("");
-                        }}
                       />
                       {touched.email && errors.email ? (
                         <span className="text-danger">{errors.email}</span>
@@ -136,32 +131,35 @@ const Login = () => {
                       >
                         Password
                       </label>
-                      <Field
-                        as="input"
-                        type="password"
-                        className={`${classes["form-input"]} form-control form-control-md p-3`}
-                        id="password"
-                        name="password"
-                        placeholder="Password"
-                        autoComplete="off"
-                        onKeyUp={() => {
-                          setErrorMessage("");
-                        }}
-                      />
+                      <Field as="input" name="password">
+                        {({ field, form }) => (
+                          <div className={classes["password-field"]}>
+                            <input
+                              {...field}
+                              type={showPassword ? "text" : "password"}
+                              className={`${classes["form-input"]} form-control form-control-md p-3`}
+                              placeholder="Password"
+                              id="password"
+                              autoComplete="off"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleTogglePasswordVisibility}
+                              className={classes["visibility-toggle"]}
+                            >
+                              {showPassword ? (
+                                <MdVisibilityOff size={20} />
+                              ) : (
+                                <MdVisibility size={20} />
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </Field>
                       {touched.password && errors.password ? (
                         <span className="text-danger">{errors.password}</span>
                       ) : null}
                     </div>
-                  </div>
-                  <div className={`d-flex justify-content-center`}>
-                    <span
-                      value={errorMessage}
-                      className={`${
-                        errorMessage ? classes["error-message"] : "offscreen"
-                      }`}
-                    >
-                      {errorMessage}
-                    </span>
                   </div>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex flex-row-reverse">

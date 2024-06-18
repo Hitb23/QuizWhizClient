@@ -1,17 +1,30 @@
 import React, { useState, Fragment, useEffect } from "react";
 import AuthHeader from "../../components/header/auth-header";
 import classes from "./style.module.css";
-import {  useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import { checkToken } from "../../services/auth.service";
 import { RoutePaths } from "../../utils/enum";
 import { resetPassword } from "../../services/auth.service";
 import { toast } from "react-toastify";
+import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
 const ResetPassword = () => {
   const params = useParams();
   const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleToggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   const validationSchema = yup.object().shape({
     password: yup
@@ -36,14 +49,11 @@ const ResetPassword = () => {
   const tokenValidation = async () => {
     try {
       const tokenValue = params.token;
-      
       var result = await checkToken(tokenValue);
-      //console.log(result);
       if (result?.status !== 200) {
         navigate(RoutePaths.Login);
       }
     } catch (error) {
-      //console.log("ERROR404:",error);
       navigate(RoutePaths.Login);
     }
   };
@@ -64,24 +74,14 @@ const ResetPassword = () => {
       });
       console.log(data);
       if (data.status === 200) {
-        toast.success(
-          "Password reset successfully. Please log in with your new password.",
-         
-        );
-        navigate('/login', { state: { fromResetPassword: true } });
-        
+        navigate(RoutePaths.Login,{state: {IsSuccessMessage:true,Message:"Password reset successfully. Please log in with your new password."}})
       } else {
-        navigate("/login");
-        toast.error(
-          "Something Went Wrong",
-         
-        );
+        navigate(RoutePaths.Login,{state: {IsErrorMessage:true,Message:"Something Went Wrong. Please Try Again"}});
       }
-      // if(data)
-      // navigate("/login");
+  
     } catch (error) {
       console.log(error);
-      navigate("/login");
+      navigate(RoutePaths.Login,{state: {IsErrorMessage:true,Message:"Something Went Wrong. Please Try Again"}});
     }
   };
 
@@ -111,14 +111,31 @@ const ResetPassword = () => {
                       >
                         Password
                       </label>
-                      <Field
-                        as="input"
-                        type="password"
-                        name="password"
-                        className={`${classes["form-input"]} form-control form-control-md p-3`}
-                        id="password"
-                        placeholder="Password"
-                      />
+                      <Field as="input" name="password">
+                        {({ field, form }) => (
+                          <div className={classes["password-field"]}>
+                            <input
+                              {...field}
+                              type={showPassword ? "text" : "password"}
+                              className={`${classes["form-input"]} form-control form-control-md p-3`}
+                              placeholder="Password"
+                              id="password"
+                              autoComplete="off"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleTogglePasswordVisibility}
+                              className={classes["visibility-toggle"]}
+                            >
+                              {showPassword ? (
+                                <MdVisibilityOff size={20} />
+                              ) : (
+                                <MdVisibility size={20} />
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </Field>
                       {touched.password && errors.password ? (
                         <span className="text-danger">{errors.password}</span>
                       ) : null}
@@ -132,14 +149,31 @@ const ResetPassword = () => {
                       >
                         Confirm Password
                       </label>
-                      <Field
-                        as="input"
-                        type="password"
-                        name="confirmPassword"
-                        className={`${classes["form-input"]} form-control form-control-md p-3`}
-                        id="confirmPassword"
-                        placeholder="Password"
-                      />
+                      <Field as="input" name="confirmPassword">
+                        {({ field, form }) => (
+                          <div className={classes["password-field"]}>
+                            <input
+                              {...field}
+                              type={showConfirmPassword ? "text" : "password"}
+                              className={`${classes["form-input"]} form-control form-control-md p-3`}
+                              placeholder="Password"
+                              id="confirmPassword"
+                              autoComplete="off"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleToggleConfirmPasswordVisibility}
+                              className={classes["visibility-toggle"]}
+                            >
+                              {showConfirmPassword ? (
+                                <MdVisibilityOff size={20} />
+                              ) : (
+                                <MdVisibility size={20} />
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </Field>
                       {touched.confirmPassword && errors.confirmPassword ? (
                         <span className="text-danger">
                           {errors.confirmPassword}

@@ -15,38 +15,34 @@ import { RoutePaths } from "../utils/enum";
 import Welcome from "../pages/welcome";
 import { useSelector } from "react-redux";
 
-const jwtData = jwtDecoder();
-const userRole =
-  jwtData["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-
 export const router = () => {
-  const userRole  = useSelector((state) => state.userRole);
-  console.log("Router Call: ", userRole);
+  const userRole = useSelector((state) => state.userRole);
   return createBrowserRouter(
-  createRoutesFromElements(
-    ROUTES.map((route) => {
-      const sendElement = route.element;
-      const sendRoles = route.roles;
-      return (
-        <Route
-          key={route.path}
-          path={route.path}
-          element={
-            AuthorizedRoute({
-              element: sendElement,
-              roles: sendRoles,
-              userRole: userRole ? userRole : "",
-            }) ? (
-              route.element
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
-        />
-      );
-    })
-  )
-)};
+    createRoutesFromElements(
+      ROUTES.map((route) => {
+        const sendElement = route.element;
+        const sendRoles = route.roles;
+        return (
+          <Route
+            key={route.path}
+            path={route.path}
+            element={
+              AuthorizedRoute({
+                element: sendElement,
+                roles: sendRoles,
+                userRole: userRole ? userRole : "",
+              }) ? (
+                route.element
+              ) : (
+                <Navigate to={RoutePaths.Login} />
+              )
+            }
+          />
+        );
+      })
+    )
+  );
+};
 
 // const Routing = () => {
 //   const roles = ROUTES[1].roles;

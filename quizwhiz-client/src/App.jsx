@@ -7,9 +7,9 @@ import { ToastContainer } from "react-toastify";
 const App = () => {
   return (
     <>
-     <ToastContainer/>
-     <RouterProvider router={router()} />
-     </>
+      <ToastContainer />
+      <RouterProvider router={router()} />
+    </>
   );
 };
 

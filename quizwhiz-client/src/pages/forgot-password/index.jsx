@@ -18,17 +18,16 @@ const ForgotPassword = () => {
       .required("Email is required")
       .email("Please enter a valid email"),
   });
-  useEffect(()=>{
-    toast.success("hello");
-  },[])
+  
   const handleSubmit = async (values) => {
     console.log("Email: " + values.email);
     try {
       var data = await sendResetPasswordLink({ Email: values.email });
-      console.log(data);
-       navigate("/");
+      console.log(data);Password
+      navigate(RoutePaths.Welcome,{state: {IsSuccessMessage:true,Message:"We have sent reset password link to your email. kindly check your registered email."}});
+      
     } catch (error) {
-      console.log(error);
+      toast.error("Something Went Wrong");
     }
   };
 
