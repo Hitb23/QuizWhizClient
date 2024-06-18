@@ -7,13 +7,15 @@
 }
 
 .log-in-title {
-  color: #ED6744;
+  color: #ed6744;
   font-size: 50px;
   padding-top: 1rem;
 }
 
 .form-input {
+
   border: 1px solid #ED6744 !important;
+
 }
 
 .form-input:focus,
@@ -30,13 +32,18 @@
   color: #000000;
 }
 
+.log-in-label-selected {
+  color: #ed6744;
+  text-decoration: underline;
+}
+
 .log-in-button {
   padding: 0.8rem 2.5rem 0.8rem 2.5rem;
   font-size: 20px;
-  background-color: #ED6744;
-  color: #FFFFFF;
+  background-color: #ed6744;
+  color: #ffffff;
   border-radius: 0.5rem;
-  border: 1px solid #ED6744;
+  border: 1px solid #ed6744;
 }
 
 .log-in-button:hover {

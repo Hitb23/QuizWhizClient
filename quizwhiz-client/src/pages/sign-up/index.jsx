@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AuthHeader from "../../components/header/auth-header";
 import classes from "./style.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import { signUp } from "../../services/auth.service";
 import * as yup from "yup";
+
 import { userNameValidity } from "../../services/auth.service";
+
 import { ToastContainer, toast } from "react-toastify";
+
 import { RoutePaths } from "../../utils/enum";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
@@ -28,7 +31,7 @@ const SignUp = () => {
     username: yup
       .string()
       .required("UserName is required")
-      .lowercase("Username should be in lowercase")
+      .matches(/^[a-z0-9_]{3,15}$/, "Username must be between 3-15 characters, and can only contain lowercase letters, numbers, and underscores")
       .test("username", "Username already exist", async (username) => {
         if (username.trim() === "") return true;
         username = username.trim().toLowerCase();
@@ -71,8 +74,13 @@ const SignUp = () => {
     const confirmPassword = values.confirmPassword;
     const username = values.username;
     try {
-      const response = await signUp({ username, email, password, confirmPassword });
-      navigate(RoutePaths.Login);
+      const response = await signUp({
+        username,
+        email,
+        password,
+        confirmPassword,
+      });
+      navigate(RoutePaths.Login,{state: {IsSuccessMessage:true,Message:"Registration Successfull"}});
     } catch (error) {
       toast.error("Invalid email or password", {
         position: "top-right",
@@ -188,9 +196,9 @@ const SignUp = () => {
                               className={classes["visibility-toggle"]}
                             >
                               {showPassword ? (
-                                <MdVisibilityOff />
+                                <MdVisibilityOff size={20} />
                               ) : (
-                                <MdVisibility />
+                                <MdVisibility size={20} />
                               )}
                             </button>
                           </div>
@@ -226,9 +234,9 @@ const SignUp = () => {
                               className={classes["visibility-toggle"]}
                             >
                               {showConfirmPassword ? (
-                                <MdVisibilityOff />
+                                <MdVisibilityOff size={20} />
                               ) : (
-                                <MdVisibility />
+                                <MdVisibility size={20} />
                               )}
                             </button>
                           </div>

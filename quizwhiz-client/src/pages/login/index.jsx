@@ -9,25 +9,29 @@ import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { jwtDecode } from "jwt-decode";
 import jwtDecoder from "../../services/jwtDecoder";
 import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { userActions } from "../../redux/action-creators";
-import { router } from "../../constants/Routing";
-import { redirect } from "react-router-dom";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
-
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const actions = bindActionCreators(userActions, dispatch);
   const [showPassword, setShowPassword] = useState(false);
-
+  const location = useLocation();
+  useEffect(() => {
+    //console.log(location);
+    if (location.state?.IsSuccessMessage) toast.success(location.state?.Message);
+    else if(location.state?.IsErrorMessage) toast.error(location.state?.Message);
+    
+  },[location] );
+    
   const handleTogglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  
   const validationSchema = yup.object().shape({
     email: yup
       .string()
@@ -46,7 +50,7 @@ const Login = () => {
   const handleSubmit = async (values) => {
     const email = values.email;
     const password = values.password;
-    
+
     try {
       const response = await login({ email, password });
       localStorage.setItem("token", response.data.token);
@@ -144,9 +148,9 @@ const Login = () => {
                               className={classes["visibility-toggle"]}
                             >
                               {showPassword ? (
-                                <MdVisibilityOff />
+                                <MdVisibilityOff size={20} />
                               ) : (
-                                <MdVisibility />
+                                <MdVisibility size={20} />
                               )}
                             </button>
                           </div>
@@ -208,7 +212,9 @@ const Login = () => {
             <button className={classes["sign-up-button"]}>Dashboard</button>
           </Link>
           <Link to={RoutePaths.AdminDashboard}>
-            <button className={classes["sign-up-button"]}>Admin Dashboard</button>
+            <button className={classes["sign-up-button"]}>
+              Admin Dashboard
+            </button>
           </Link>
         </div>
       </main>

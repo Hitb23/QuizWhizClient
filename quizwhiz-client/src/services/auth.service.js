@@ -1,11 +1,7 @@
 import axios from "./axios";
-
-const LOGIN_URL = '/Auth/login/';
-const SIGNUP_URL = '/User/register';
-const USERNAME_VALIDITY_URL = '/User/checkUserName/';
-
+import { API_URLS } from "../utils/enum";
 export const login = async (data) => {
-  return await axios.post(LOGIN_URL, JSON.stringify(data), {
+  return await axios.post(API_URLS.LOGIN_URL, JSON.stringify(data), {
     headers: {
       "Content-Type": "application/json",
       // token: "Bearer " + localStorage.getItem("token")
@@ -14,16 +10,52 @@ export const login = async (data) => {
 };
 
 export const signUp = async (data) => {
-  return await axios.post(SIGNUP_URL, JSON.stringify(data), {
+  return await axios.post(API_URLS.SIGNUP_URL, JSON.stringify(data), {
     headers: { "Content-Type": "application/json" },
   });
 };
 
 export const userNameValidity = async (data) => {
-  return await axios.get(USERNAME_VALIDITY_URL, {
+  return await axios.get(API_URLS.USERNAME_VALIDITY_URL, {
     params: data,
     headers: {
       "Content-Type": "application/json",
+      // token: "Bearer " + localStorage.getItem("token")
     },
   });
+};
+export const sendResetPasswordLink = async (data) => {
+  //debugger;
+  return await axios.post(API_URLS.FORGOT_PASSWORD_URL, JSON.stringify(data), {
+    headers: {
+      "Content-Type": "application/json",
+      // token: "Bearer " + localStorage.getItem("token")
+    },
+  });
+};
+export const checkToken = async (data) => {
+  return await axios.get(API_URLS.VALIDATE_TOKEN_URL+ data, {
+    headers: {
+      "Content-Type": "application/json",
+      // token: "Bearer " + localStorage.getItem("token")
+    },
+  });
+};
+
+export const resetPassword = async (data) => {
+  try {
+    const response = await axios.post(
+      API_URLS.REEST_PASSWORD,
+      JSON.stringify(data),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    throw error;
+  }
 };
