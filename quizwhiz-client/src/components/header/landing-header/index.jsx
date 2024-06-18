@@ -4,17 +4,14 @@ import classes from "./style.module.css";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
-import { ActionCreators } from "../../../redux/action-creators";
+import { userActions } from "../../../redux/action-creators";
 import { RoutePaths } from "../../../utils/enum";
 import jwtDecoder from "../../../services/jwtDecoder";
 
 const LandingHeader = () => {
   const isAuthenticated = localStorage.getItem("token") ? true : false;
   const data = jwtDecoder();
-  console.log(data);
-  const userRole =
-        data["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-  console.log(userRole);
+  const userRole = data["Role"];
   var dashboard = null;
   if (userRole === "Admin") {
     dashboard = RoutePaths.AdminDashboard;
@@ -24,11 +21,14 @@ const LandingHeader = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const actions = bindActionCreators(ActionCreators, dispatch);
+  const actions = bindActionCreators(userActions, dispatch);
   const logoutHandler = () => {
     {
       actions.changeUserRole("");
+      actions.changeUserName("");
+      actions.changeUserEmail("");
     }
+    
     localStorage.removeItem("token");
     navigate(RoutePaths.Login);
   };

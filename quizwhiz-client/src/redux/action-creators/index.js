@@ -1,1 +1,1 @@
-export * as ActionCreators from "./userRole";
+export * as userActions from "./user";

@@ -1,16 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import AuthHeader from "../../components/header/auth-header";
 import classes from "./style.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
-import { signup } from "../../services/auth.service";
+import { signUp } from "../../services/auth.service";
 import * as yup from "yup";
 import { userNameValidity } from "../../services/auth.service";
 import { ToastContainer, toast } from "react-toastify";
 import { RoutePaths } from "../../utils/enum";
+import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
 const SignUp = () => {
   const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleToggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   const validationSchema = yup.object().shape({
     username: yup
       .string()
@@ -58,7 +71,7 @@ const SignUp = () => {
     const confirmPassword = values.confirmPassword;
     const username = values.username;
     try {
-      const response = await signup({ email, password, confirmPassword });
+      const response = await signUp({ username, email, password, confirmPassword });
       navigate(RoutePaths.Login);
     } catch (error) {
       toast.error("Invalid email or password", {
@@ -89,7 +102,13 @@ const SignUp = () => {
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
-              {({ errors, touched, isValid, isSubmitting }) => (
+              {({
+                errors,
+                touched,
+                isValid,
+                isSubmitting,
+                setFieldTouched,
+              }) => (
                 <Form>
                   <div className={`d-flex justify-content-center`}>
                     <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
@@ -152,14 +171,31 @@ const SignUp = () => {
                       >
                         Password
                       </label>
-                      <Field
-                        as="input"
-                        type="password"
-                        name="password"
-                        className={`${classes["form-input"]} form-control form-control-md p-3`}
-                        id="password"
-                        placeholder="Password"
-                      />
+                      <Field as="input" name="password">
+                        {({ field, form }) => (
+                          <div className={classes["password-field"]}>
+                            <input
+                              {...field}
+                              type={showPassword ? "text" : "password"}
+                              className={`${classes["form-input"]} form-control form-control-md p-3`}
+                              placeholder="Password"
+                              id="password"
+                              autoComplete="off"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleTogglePasswordVisibility}
+                              className={classes["visibility-toggle"]}
+                            >
+                              {showPassword ? (
+                                <MdVisibilityOff />
+                              ) : (
+                                <MdVisibility />
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </Field>
                       {touched.password && errors.password ? (
                         <span className="text-danger">{errors.password}</span>
                       ) : null}
@@ -173,14 +209,31 @@ const SignUp = () => {
                       >
                         Confirm Password
                       </label>
-                      <Field
-                        as="input"
-                        name="confirmPassword"
-                        type="password"
-                        className={`${classes["form-input"]} form-control form-control-md p-3`}
-                        id="confirmPassword"
-                        placeholder="Password"
-                      />
+                      <Field as="input" name="confirmPassword">
+                        {({ field, form }) => (
+                          <div className={classes["password-field"]}>
+                            <input
+                              {...field}
+                              type={showConfirmPassword ? "text" : "password"}
+                              className={`${classes["form-input"]} form-control form-control-md p-3`}
+                              placeholder="Password"
+                              id="confirmPassword"
+                              autoComplete="off"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleToggleConfirmPasswordVisibility}
+                              className={classes["visibility-toggle"]}
+                            >
+                              {showConfirmPassword ? (
+                                <MdVisibilityOff />
+                              ) : (
+                                <MdVisibility />
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </Field>
                       {touched.confirmPassword && errors.confirmPassword ? (
                         <span className="text-danger">
                           {errors.confirmPassword}
