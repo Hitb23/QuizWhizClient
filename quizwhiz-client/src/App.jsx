@@ -15,7 +15,6 @@ const App = () => {
   const actions = bindActionCreators(userActions, dispatch);
 
   {
-    console.log(authToken["Role"]);
     actions.changeUserRole(authToken["Role"]);
     actions.changeUserName(authToken["Username"]);
     actions.changeUserEmail(authToken["Email"]);
