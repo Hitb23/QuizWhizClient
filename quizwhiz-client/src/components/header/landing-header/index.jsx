@@ -28,7 +28,7 @@ const LandingHeader = () => {
       actions.changeUserName("");
       actions.changeUserEmail("");
     }
-    
+
     localStorage.removeItem("token");
     navigate(RoutePaths.Login);
   };

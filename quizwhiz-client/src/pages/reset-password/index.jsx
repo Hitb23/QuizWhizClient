@@ -74,7 +74,7 @@ const ResetPassword = () => {
       });
       console.log(data);
       if (data.status === 200) {
-        navigate(RoutePaths.Login,{state: {IsSuccessMessage:true,Message:"Password reset successfully. Please log in with your new password."}})
+        navigate(RoutePaths.Login,{state: {IsSuccessMessage:true,Message:"Password reset successfully."}})
       } else {
         navigate(RoutePaths.Login,{state: {IsErrorMessage:true,Message:"Something Went Wrong. Please Try Again"}});
       }

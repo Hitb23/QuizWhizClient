@@ -31,7 +31,7 @@ const SignUp = () => {
     username: yup
       .string()
       .required("UserName is required")
-      .matches(/^[a-z0-9_]{3,15}$/, "Username must be between 3-15 characters, and can only contain lowercase letters, numbers, and underscores")
+      .matches(/^[a-z][a-z0-9._-]{2,19}$/, "Username must start with a lowercase letter, be 3-20 characters, and contain only lowercase letters, numbers, _, ., or -.")
       .test("username", "Username already exist", async (username) => {
         if (username.trim() === "") return true;
         username = username.trim().toLowerCase();
@@ -80,9 +80,11 @@ const SignUp = () => {
         password,
         confirmPassword,
       });
-      navigate(RoutePaths.Login,{state: {IsSuccessMessage:true,Message:"Registration Successfull"}});
+      navigate(RoutePaths.Login,{state: {IsSuccessMessage:true,Message:"Registration Successful!!"}});
     } catch (error) {
-      toast.error("Invalid email or password", {
+      console.log(error);
+      const message= error?.response?.data?.message ? error.response.data.message : "Something went wrong";
+      toast.error(message, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,

@@ -16,6 +16,7 @@ import { userActions } from "../../redux/action-creators";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -23,12 +24,13 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const location = useLocation();
   useEffect(() => {
-    //console.log(location);
-    if (location.state?.IsSuccessMessage) toast.success(location.state?.Message);
-    else if(location.state?.IsErrorMessage) toast.error(location.state?.Message);
-    
-  },[location] );
-    
+    console.log(location);
+    if (location.state?.IsSuccessMessage)
+      toast.success(location.state?.Message);
+    else if (location.state?.IsErrorMessage)
+      toast.error(location.state?.Message);
+  }, [location]);
+
   const handleTogglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -54,7 +56,7 @@ const Login = () => {
     try {
       const response = await login({ email, password });
       localStorage.setItem("token", response.data.token);
-
+     
       const data = await jwtDecoder();
       const userRole = data["Role"];
       {
@@ -62,9 +64,10 @@ const Login = () => {
         actions.changeUserName(data["Username"]);
         actions.changeUserEmail(data["Email"]);
       }
-
+     
       if (userRole === "Admin") {
         navigate(RoutePaths.AdminDashboard, { replace: true });
+       
       } else if (userRole === "Contestant") {
         navigate(RoutePaths.UserDashboard, { replace: true });
       } else {
@@ -208,14 +211,6 @@ const Login = () => {
               </div>
             </div>
           </div>
-          <Link to={RoutePaths.UserDashboard}>
-            <button className={classes["sign-up-button"]}>Dashboard</button>
-          </Link>
-          <Link to={RoutePaths.AdminDashboard}>
-            <button className={classes["sign-up-button"]}>
-              Admin Dashboard
-            </button>
-          </Link>
         </div>
       </main>
       <ToastContainer />

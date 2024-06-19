@@ -23,14 +23,13 @@ const ForgotPassword = () => {
     console.log("Email: " + values.email);
     try {
       var data = await sendResetPasswordLink({ Email: values.email });
-      console.log(data);Password
-      navigate(RoutePaths.Welcome,{state: {IsSuccessMessage:true,Message:"We have sent reset password link to your email. kindly check your registered email."}});
-      
+      console.log(data);
+      navigate(RoutePaths.Login,{state: {IsSuccessMessage:true,Message:"Reset password link has been sent."}});
+      // navigate(RoutePaths.Login,{state: {IsSuccessMessage:true,Message:"Registration Successful!!"}});
     } catch (error) {
       toast.error("Something Went Wrong");
     }
   };
-
   return (
     <React.Fragment>
       <AuthHeader />
