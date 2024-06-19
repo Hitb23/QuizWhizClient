@@ -24,6 +24,7 @@ export const userNameValidity = async (data) => {
     },
   });
 };
+
 export const sendResetPasswordLink = async (data) => {
   //debugger;
   return await axios.post(API_URLS.FORGOT_PASSWORD_URL, JSON.stringify(data), {
@@ -33,6 +34,7 @@ export const sendResetPasswordLink = async (data) => {
     },
   });
 };
+
 export const checkToken = async (data) => {
   return await axios.get(API_URLS.VALIDATE_TOKEN_URL+ data, {
     headers: {

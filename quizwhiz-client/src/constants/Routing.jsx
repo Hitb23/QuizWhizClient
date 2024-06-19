@@ -16,12 +16,17 @@ import Welcome from "../pages/welcome";
 import { useSelector } from "react-redux";
 
 export const router = () => {
-  const userRole = useSelector((state) => state.userRole);
+  const userRole = useSelector((state) => state.userRole.userRole);
   return createBrowserRouter(
     createRoutesFromElements(
       ROUTES.map((route) => {
         const sendElement = route.element;
         const sendRoles = route.roles;
+        console.log(route.path, ": ", AuthorizedRoute({
+          element: sendElement,
+          roles: sendRoles,
+          userRole: userRole ? userRole : "",
+        }));
         return (
           <Route
             key={route.path}

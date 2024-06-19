@@ -208,14 +208,6 @@ const Login = () => {
               </div>
             </div>
           </div>
-          <Link to={RoutePaths.UserDashboard}>
-            <button className={classes["sign-up-button"]}>Dashboard</button>
-          </Link>
-          <Link to={RoutePaths.AdminDashboard}>
-            <button className={classes["sign-up-button"]}>
-              Admin Dashboard
-            </button>
-          </Link>
         </div>
       </main>
       <ToastContainer />
