@@ -26,39 +26,39 @@
 .sign-up-button,
 .log-out-button {
   padding: 0.9rem 1rem 0.9rem 1rem;
-  background-color: #ed6744;
+  background-color: #F47D0A;
   color: #ffffff;
   border-radius: 0.5rem;
-  border: 1px solid #ed6744;
+  border: 1px solid #F47D0A;
 }
 
 .log-in-button {
   padding: 0.9rem 1.3rem 0.9rem 1.3rem;
   background-color: #ffffff;
-  color: #ed6744;
+  color: #F47D0A;
   border-radius: 0.5rem;
-  border: 1px solid #ed6744;
+  border: 1px solid #F47D0A;
 }
 
 .log-in-button:hover {
-  background-color: #ed6744;
+  background-color: #F47D0A;
   color: #ffffff;
 }
 
 .sign-up-button:hover {
   background-color: #ffffff;
-  color: #ed6744;
+  color: #F47D0A;
 }
 
 .log-in-button:hover {
-  background-color: #ed6744;
+  background-color: #F47D0A;
   color: #ffffff;
 }
 
 .sign-up-button:hover,
 .log-out-button:hover {
   background-color: #ffffff;
-  color: #ed6744;
+  color: #F47D0A;
 }
 
 

@@ -135,7 +135,7 @@ const SignUp = () => {
                         className={`${classes["form-input"]} form-control form-control-md p-3`}
                         id="username"
                         placeholder="abc@123"
-                        autoComplete="off"
+                        autoComplete="on"
                         onKeyUp={() => setFieldTouched("username", true)}
                       />
                       {touched.username && errors.username ? (
@@ -164,7 +164,7 @@ const SignUp = () => {
                         className={`${classes["form-input"]} form-control form-control-md p-3`}
                         id="email"
                         placeholder="name@example.com"
-                        autoComplete="off"
+                        autoComplete="on"
                         // onKeyUp={checkValidUser}
                         //onKeyUp={handleEmailChange}
                       />
