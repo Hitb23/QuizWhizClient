@@ -3,18 +3,18 @@
 }
 
 .forgot-password-title {
-  color: #ED6744;
+  color: #F47D0A;
   font-size: 50px;
   padding-top: 1rem;
 }
 
 .form-input {
-  border: 1px solid #ED6744 !important;
+  border: 1px solid #F47D0A !important;
 }
 
 .form-input:focus,
 .form-input:hover {
-    outline: 1px solid #ED6744 !important;
+    outline: 1px solid #F47D0A !important;
     border: 1px solid #f33404 !important;
     box-shadow: 0 0 16px 0 rgba(228, 55, 55, 0.18), 0 2px 4px 0 rgba(228, 55, 55, 0.12) !important;
 }
@@ -27,25 +27,25 @@
 .forgot-password-button {
   padding: 0.8rem 2.5rem 0.8rem 2.5rem;
   font-size: 20px;
-  background-color: #ED6744;
+  background-color: #F47D0A;
   color: #FFFFFF;
   border-radius: 0.5rem;
-  border: 1px solid #ED6744;
+  border: 1px solid #F47D0A;
 }
 
 .forgot-password-button:hover {
   background-color: #ffffff;
-  color: #ed6744;
+  color: #F47D0A;
 }
 
 .log-in-button:hover {
-  background-color: #ed6744;
+  background-color: #F47D0A;
   color: #ffffff;
 }
 
 .sign-up-button:hover {
   background-color: #ffffff;
-  color: #ed6744;
+  color: #F47D0A;
 }
 
 .black-font{
