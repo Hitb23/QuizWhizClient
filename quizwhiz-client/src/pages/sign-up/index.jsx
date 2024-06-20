@@ -31,7 +31,10 @@ const SignUp = () => {
     username: yup
       .string()
       .required("UserName is required")
-      .matches(/^[a-z][a-z0-9._-]{2,19}$/, "Username must start with a lowercase letter, be 3-20 characters, and contain only lowercase letters, numbers, _, ., or -.")
+      .matches(
+        /^[a-z][a-z0-9._-]{2,19}$/,
+        "Username must start with a lowercase letter, be 3-20 characters, and contain only lowercase letters, numbers, _, ., or -."
+      )
       .test("username", "Username already exist", async (username) => {
         if (username.trim() === "") return true;
         username = username.trim().toLowerCase();
@@ -80,10 +83,14 @@ const SignUp = () => {
         password,
         confirmPassword,
       });
-      navigate(RoutePaths.Login,{state: {IsSuccessMessage:true,Message:"Registration Successful!!"}});
+      navigate(RoutePaths.Login, {
+        state: { IsSuccessMessage: true, Message: "Registration Successful!!" },
+      });
     } catch (error) {
       console.log(error);
-      const message= error?.response?.data?.message ? error.response.data.message : "Something went wrong";
+      const message = error?.response?.data?.message
+        ? error.response.data.message
+        : "Something went wrong";
       toast.error(message, {
         position: "top-right",
         autoClose: 3000,
@@ -143,7 +150,7 @@ const SignUp = () => {
                       ) : (
                         touched.username && (
                           <span className="text-success">
-                            Username available
+                            Username is available
                           </span>
                         )
                       )}
