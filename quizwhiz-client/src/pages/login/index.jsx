@@ -119,7 +119,7 @@ const Login = () => {
                         id="email"
                         name="email"
                         placeholder="name@example.com"
-                        autoComplete="off"
+                        autoComplete="on"
                       />
                       {touched.email && errors.email ? (
                         <span className="text-danger">{errors.email}</span>

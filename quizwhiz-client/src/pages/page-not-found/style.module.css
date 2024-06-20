@@ -2,12 +2,12 @@
 
 /*Variables*/
 :root {
-  --background-color: #ed6744;
+  --background-color: #F47D0A;
   --font: "Fira Sans", sans-serif;
   --white: #ffffff;
   --black: #0c0e10;
   --gray: #202425;
-  --blue: #ed6744;
+  --blue: #F47D0A;
 }
 
 /*Mixins*/
