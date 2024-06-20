@@ -24,7 +24,7 @@ const ForgotPassword = () => {
     try {
       var data = await sendResetPasswordLink({ Email: values.email });
       console.log(data);
-      navigate(RoutePaths.Login,{state: {IsSuccessMessage:true,Message:"Reset password link has been sent."}});
+      navigate(RoutePaths.Login,{state: {IsSuccessMessage:true,Message:"Reset password link has been sent to your registered email."}});
       // navigate(RoutePaths.Login,{state: {IsSuccessMessage:true,Message:"Registration Successful!!"}});
     } catch (error) {
       toast.error("Something Went Wrong");
@@ -63,7 +63,7 @@ const ForgotPassword = () => {
                         id="email"
                         name="email"
                         placeholder="name@example.com"
-                        autoComplete="off"
+                        autoComplete="on"
                       />
                       {touched.email && errors.email ? (
                         <span className="text-danger">{errors.email}</span>
@@ -81,7 +81,7 @@ const ForgotPassword = () => {
                         }`}
                         disabled={!isValid || isSubmitting}
                       >
-                        Send Email Link
+                        Send Link
                       </button>
                     </div>
                   </div>

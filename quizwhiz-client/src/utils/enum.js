@@ -8,6 +8,7 @@ export const RoutePaths = {
   ResetPassword : "/reset-password",
   AdminDashboard : "/admin-dashboard",
   UserDashboard : "/user-dashboard",
+  PageNotFound: "/page-not-found",
 }
 
 export const Role = {

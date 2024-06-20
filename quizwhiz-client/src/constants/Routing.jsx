@@ -43,7 +43,7 @@ export const router = () => {
               }) ? (
                 route.element
               ) : (
-                <Navigate to={RoutePaths.Login} />
+                <Navigate to={RoutePaths.PageNotFound} />
               )
             }
           />
