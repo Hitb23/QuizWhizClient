@@ -7,9 +7,9 @@ import AdminSideBar from "../../components/admin-sidebar";
 const AdminDashboard = () => {
   return (
     <Fragment>
-      <LandingHeader/>
-      <h1>Admin DashBoard</h1>
-     {/* <AdminSideBar/> */}
+      {/* <LandingHeader/>
+      <h1>Admin DashBoard</h1> */}
+    <AdminSideBar/> 
     </Fragment>
   );
 } 
