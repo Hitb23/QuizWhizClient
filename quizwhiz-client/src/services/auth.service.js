@@ -15,15 +15,15 @@ export const signUp = async (data) => {
   });
 };
 
-export const userNameValidity = async (data) => {
-  return await axios.get(API_URLS.USERNAME_VALIDITY_URL, {
-    params: data,
+export const checkUsername = async (data) => {
+  return await axios.post(API_URLS.CHECK_USERNAME_URL, JSON.stringify(data), {
     headers: {
       "Content-Type": "application/json",
-      // token: "Bearer " + localStorage.getItem("token")
+      // token: "Bearer " + localStorage.getItem("token"),
     },
   });
 };
+
 export const sendResetPasswordLink = async (data) => {
   //debugger;
   return await axios.post(API_URLS.FORGOT_PASSWORD_URL, JSON.stringify(data), {
@@ -34,7 +34,7 @@ export const sendResetPasswordLink = async (data) => {
   });
 };
 export const checkToken = async (data) => {
-  return await axios.get(API_URLS.VALIDATE_TOKEN_URL+ data, {
+  return await axios.get(API_URLS.VALIDATE_TOKEN_URL + data, {
     headers: {
       "Content-Type": "application/json",
       // token: "Bearer " + localStorage.getItem("token")
