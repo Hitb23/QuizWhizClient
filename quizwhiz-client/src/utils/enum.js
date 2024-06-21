@@ -9,6 +9,7 @@ export const RoutePaths = {
   AdminDashboard: "/admin-dashboard",
   UserDashboard: "/user-dashboard",
   PageNotFound: "/page-not-found",
+  AdminLogin: "/admin-login",
 };
 
 export const Role = {

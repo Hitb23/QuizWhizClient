@@ -9,6 +9,15 @@ export const login = async (data) => {
   });
 };
 
+export const adminLogin = async (data) =>{
+  return await axios.post(API_URLS.ADMIN_LOGIN,JSON.stringify(data),{
+    headers:{
+      "Content-Type": "application/json",
+    },
+  });
+};
+
+
 export const signUp = async (data) => {
   return await axios.post(API_URLS.SIGNUP_URL, JSON.stringify(data), {
     headers: { "Content-Type": "application/json" },
