@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import React from "react";
 import Shared from "../utils/shared";
 import { RoutePaths } from "../utils/enum";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const initialUserValue = {

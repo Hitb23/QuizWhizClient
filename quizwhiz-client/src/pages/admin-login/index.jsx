@@ -56,7 +56,7 @@ const AdminLogin = () =>{
   
       try {
         const response = await adminLogin({ email, password });
-        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("token", response.data.data);
        
         const data = await jwtDecoder();
         const userRole = data["Role"];
@@ -73,7 +73,7 @@ const AdminLogin = () =>{
           navigate(RoutePaths.Login, { replace: true });
         }
       } catch (error) {
-        toast.error("Invalid email or password", {
+        toast.error(error.response.data.message, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,

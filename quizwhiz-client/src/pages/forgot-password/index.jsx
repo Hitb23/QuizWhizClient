@@ -24,8 +24,7 @@ const ForgotPassword = () => {
     try {
       var data = await sendResetPasswordLink({ Email: values.email });
       console.log(data);
-      navigate(RoutePaths.Login,{state: {IsSuccessMessage:true,Message:"Reset password link has been sent to your registered email."}});
-      // navigate(RoutePaths.Login,{state: {IsSuccessMessage:true,Message:"Registration Successful!!"}});
+      navigate(RoutePaths.Login);
     } catch (error) {
       toast.error("Something Went Wrong");
     }

@@ -6,7 +6,7 @@ import { Formik, Form, Field } from "formik";
 import { signUp } from "../../services/auth.service";
 import * as yup from "yup";
 
-import { userNameValidity } from "../../services/auth.service";
+import { checkUsername } from "../../services/auth.service";
 
 import { ToastContainer, toast } from "react-toastify";
 
@@ -39,7 +39,7 @@ const SignUp = () => {
         if (username.trim() === "") return true;
         username = username.trim().toLowerCase();
         try {
-          const response = await userNameValidity({ username });
+          const response = await checkUsername({ username });
           return response.data;
         } catch (error) {
           return false;
@@ -83,11 +83,8 @@ const SignUp = () => {
         password,
         confirmPassword,
       });
-      navigate(RoutePaths.Login, {
-        state: { IsSuccessMessage: true, Message: "Registration Successful!!" },
-      });
+      navigate(RoutePaths.Login);
     } catch (error) {
-      console.log(error);
       const message = error?.response?.data?.message
         ? error.response.data.message
         : "Something went wrong";

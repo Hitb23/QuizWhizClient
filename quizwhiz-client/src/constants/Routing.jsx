@@ -22,22 +22,12 @@ export const router = () => {
       ROUTES.map((route) => {
         const sendElement = route.element;
         const sendRoles = route.roles;
-        console.log(
-          route.path,
-          ": ",
-          AuthorizedRoute({
-            element: sendElement,
-            roles: sendRoles,
-            userRole: userRole ? userRole : "",
-          })
-        );
         return (
           <Route
             key={route.path}
             path={route.path}
             element={
               AuthorizedRoute({
-                element: sendElement,
                 roles: sendRoles,
                 userRole: userRole ? userRole : "",
               }) ? (
