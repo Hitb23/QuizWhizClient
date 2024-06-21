@@ -131,7 +131,7 @@ const Login = () => {
                     id="email"
                     name="email"
                     placeholder="name@example.com"
-                    autoComplete="off"
+                    autoComplete="on"
                     onChange={handleChange}
                     value={formValues.email.value}
                   />

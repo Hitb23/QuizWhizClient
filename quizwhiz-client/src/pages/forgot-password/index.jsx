@@ -23,14 +23,12 @@ const ForgotPassword = () => {
     console.log("Email: " + values.email);
     try {
       var data = await sendResetPasswordLink({ Email: values.email });
-      console.log(data);Password
-      navigate(RoutePaths.Welcome,{state: {IsSuccessMessage:true,Message:"We have sent reset password link to your email. kindly check your registered email."}});
-      
+      console.log(data);
+      navigate(RoutePaths.Login);
     } catch (error) {
       toast.error("Something Went Wrong");
     }
   };
-
   return (
     <React.Fragment>
       <AuthHeader />
@@ -64,7 +62,7 @@ const ForgotPassword = () => {
                         id="email"
                         name="email"
                         placeholder="name@example.com"
-                        autoComplete="off"
+                        autoComplete="on"
                       />
                       {touched.email && errors.email ? (
                         <span className="text-danger">{errors.email}</span>
@@ -82,7 +80,7 @@ const ForgotPassword = () => {
                         }`}
                         disabled={!isValid || isSubmitting}
                       >
-                        Send Email Link
+                        Send Link
                       </button>
                     </div>
                   </div>

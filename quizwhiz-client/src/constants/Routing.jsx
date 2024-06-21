@@ -22,24 +22,18 @@ export const router = () => {
       ROUTES.map((route) => {
         const sendElement = route.element;
         const sendRoles = route.roles;
-        console.log(route.path, ": ", AuthorizedRoute({
-          element: sendElement,
-          roles: sendRoles,
-          userRole: userRole ? userRole : "",
-        }));
         return (
           <Route
             key={route.path}
             path={route.path}
             element={
               AuthorizedRoute({
-                element: sendElement,
                 roles: sendRoles,
                 userRole: userRole ? userRole : "",
               }) ? (
                 route.element
               ) : (
-                <Navigate to={RoutePaths.Login} />
+                <Navigate to={RoutePaths.PageNotFound} />
               )
             }
           />
@@ -48,14 +42,3 @@ export const router = () => {
     )
   );
 };
-
-// const Routing = () => {
-//   const roles = ROUTES[1].roles;
-//   console.log(AuthorizedRoute({roles, userRole}));
-//   return (<Routes>
-//     <Route exact path="/" element={<Welcome />} />
-//     <Route exact path="/login" element={<AuthorizedRoute() element={ROUTES[1].element} roles={ROUTES[1].roles} userRole = {userRole} /> != null ? ROUTES[1].element : <Login />} />
-//     <Route exact path="/admin-dashboard" element={AuthorizedRoute( element={ROUTES[5].element} roles={ROUTES[5].roles} userRole = {userRole}) != null ? ROUTES[5].element : <Login />} />
-//     <Route exact path="/user-dashboard" element={<AuthorizedRoute element={ROUTES[6].element} roles={ROUTES[6].roles} userRole = {userRole} /> != null ? ROUTES[6].element : <Login />} />
-//   </Routes>);
-// }

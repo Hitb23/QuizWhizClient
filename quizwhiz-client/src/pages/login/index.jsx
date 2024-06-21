@@ -14,21 +14,14 @@ import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { userActions } from "../../redux/action-creators";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
-import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const actions = bindActionCreators(userActions, dispatch);
   const [showPassword, setShowPassword] = useState(false);
-  const location = useLocation();
-  useEffect(() => {
-    //console.log(location);
-    if (location.state?.IsSuccessMessage) toast.success(location.state?.Message);
-    else if(location.state?.IsErrorMessage) toast.error(location.state?.Message);
-    
-  },[location] );
-    
+
   const handleTogglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -53,7 +46,7 @@ const Login = () => {
 
     try {
       const response = await login({ email, password });
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("token", response.data.data);
 
       const data = await jwtDecoder();
       const userRole = data["Role"];
@@ -64,14 +57,20 @@ const Login = () => {
       }
 
       if (userRole === "Admin") {
-        navigate(RoutePaths.AdminDashboard, { replace: true });
+        navigate(RoutePaths.AdminDashboard, {
+          state: { IsSuccessMessage: true, Message: response.data.message },
+        });
       } else if (userRole === "Contestant") {
-        navigate(RoutePaths.UserDashboard, { replace: true });
+        navigate(RoutePaths.UserDashboard, {
+          state: { IsSuccessMessage: true, Message: response.data.message },
+        });
       } else {
-        navigate(RoutePaths.Login, { replace: true });
+        navigate(RoutePaths.Login, {
+          state: { IsSuccessMessage: true, Message: response.data.message },
+        });
       }
     } catch (error) {
-      toast.error("Invalid email or password", {
+      toast.error(error.response.data.message, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -116,7 +115,7 @@ const Login = () => {
                         id="email"
                         name="email"
                         placeholder="name@example.com"
-                        autoComplete="off"
+                        autoComplete="on"
                       />
                       {touched.email && errors.email ? (
                         <span className="text-danger">{errors.email}</span>

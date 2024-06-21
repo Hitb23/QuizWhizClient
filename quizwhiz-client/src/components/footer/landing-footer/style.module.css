@@ -22,7 +22,7 @@
   font-size: 30px;
   padding: 0rem 1rem 0rem 1rem;
   font-weight: bolder;
-  color: #ED6744;
+  color: #F47D0A;
 }
 
 .social-media-icons {
@@ -34,8 +34,9 @@
 }
 
 .social-media-icon {
-  width: 36px;
-  height: 36px;
+  position: relative;
+  width: 32px;
+  height: 32px;
   color: #465054;
   border-radius: 0.5rem;
 }

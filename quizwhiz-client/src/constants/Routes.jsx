@@ -8,6 +8,7 @@ import AdminDashboard from "../pages/admin-dashboard";
 import UserDashboard from "../pages/user-dashboard";
 import { Role } from "../utils/enum";
 import NotFoundPage from "../pages/page-not-found";
+import AdminLogin from "../pages/admin-login";
 
 export const ROUTES = [
   {
@@ -44,6 +45,11 @@ export const ROUTES = [
     path: '/user-dashboard',
     element: <UserDashboard />,
     roles: [Role.Contestant],
+  },
+  {
+    path: '/admin-login',
+    element: <AdminLogin />,
+    roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
     path: '*',
