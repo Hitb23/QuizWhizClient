@@ -25,7 +25,7 @@ const AdminLogin = () =>{
     const [showPassword, setShowPassword] = useState(false);
     const location = useLocation();
     useEffect(() => {
-      console.log(location);
+      // console.log(location);
       if (location.state?.IsSuccessMessage)
         toast.success(location.state?.Message);
       else if (location.state?.IsErrorMessage)
@@ -94,7 +94,7 @@ const AdminLogin = () =>{
         <div
           className={`${classes["log-in-title"]} col-md-6 col-sm-8 col-10 text-center fw-bold`}
         >
-         Admin LogIn
+         Admin Login
         </div>
         <div>
           <Formik
