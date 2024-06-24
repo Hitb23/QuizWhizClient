@@ -9,7 +9,8 @@ export const RoutePaths = {
   AdminDashboard : "/admin-dashboard",
   UserDashboard : "/user-dashboard",
   PageNotFound: "/page-not-found",
-  AdminLogin:"/admin-login"
+  AdminLogin:"/admin-login",
+  MyProfile: "/my-profile",
 }
 
 export const Role = {
@@ -24,5 +25,7 @@ export const API_URLS={
  FORGOT_PASSWORD_URL : "/Auth/forgot-password/",
  VALIDATE_TOKEN_URL: `/Auth/validate-reset-token?token=`,
  REEST_PASSWORD: "/Auth/reset-password",
- ADMIN_LOGIN:"/Auth/admin-login"
+ ADMIN_LOGIN:"/Auth/admin-login",
+ GET_USER_DATA: "/auth/get-profile-details?username=",
+ UPLOAD_PHOTO: "/auth/upload-profile-photo"
 }

@@ -9,6 +9,7 @@ import UserDashboard from "../pages/user-dashboard";
 import { Role } from "../utils/enum";
 import NotFoundPage from "../pages/page-not-found";
 import AdminLogin from "../pages/admin-login";
+import MyProfile from "../pages/my-profile";
 
 export const ROUTES = [
   {
@@ -54,6 +55,11 @@ export const ROUTES = [
   {
     path: '*',
     element: <NotFoundPage />,
+    roles: [Role.Admin, Role.Contestant, Role.Public],
+  },
+  {
+    path: '/my-profile',
+    element: <MyProfile/>,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   }
 ];

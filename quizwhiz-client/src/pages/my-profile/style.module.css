@@ -1,0 +1,54 @@
+.main-box {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-around;
+  min-height: 80vh;
+  margin-top: 9rem;
+  padding: 12rem 12rem;
+}
+
+.profile-photo {
+  background-color: #f47d0a !important;
+  min-height: 12vh;
+  min-width: 12vh;
+}
+
+div.vertical-line-centre {
+  border-left: 3px solid #f47d0a;
+  position: relative;
+  /* left: 50%; */
+}
+
+@media (max-width: 767px) {
+  .main-box{
+    padding: 2rem 8rem;
+  }
+  
+  .edit-button{
+    margin: auto !important;
+  }
+}
+
+@media (max-width: 664px){
+    .main-box{
+        padding: 2rem 6rem;
+    }
+}
+
+@media (max-width: 500px){
+    .main-box{
+        padding: 2rem 4rem;
+    }
+}
+
+@media (max-width: 395px){
+    .main-box{
+        padding: 2rem 3rem;
+    }
+}
+
+@media (max-width: 350px){
+    .main-box{
+        padding: 2rem 2rem;
+    }
+}

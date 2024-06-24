@@ -42,6 +42,7 @@ export const sendResetPasswordLink = async (data) => {
     },
   });
 };
+
 export const checkToken = async (data) => {
   return await axios.get(API_URLS.VALIDATE_TOKEN_URL+ data, {
     headers: {
@@ -67,4 +68,24 @@ export const resetPassword = async (data) => {
     console.error("Error resetting password:", error);
     throw error;
   }
+};
+
+export const getUserData = async (data) => {
+  return await axios.get(API_URLS.GET_USER_DATA + data, {
+    headers: {
+      "Content-Type": "application/json",
+      // token: "Bearer " + localStorage.getItem("token")
+    },
+  });
+};
+
+export const uploadProfilePhoto = async(ProfilePhoto,Username) => {
+  const formData = new FormData();
+      formData.append("ProfilePhoto", ProfilePhoto);
+      formData.append("Username", Username);
+  return await axios.post(API_URLS.UPLOAD_PHOTO, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+  });
 };

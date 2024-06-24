@@ -52,7 +52,7 @@ const Login = () => {
   const handleSubmit = async (values) => {
     const email = values.email;
     const password = values.password;
-
+    debugger;
     try {
       const response = await login({ email, password });
       localStorage.setItem("token", response.data.token);
