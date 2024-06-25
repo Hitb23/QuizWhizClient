@@ -18,7 +18,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import classes from "./style.module.css";
 import Logo from "../../../assets/NewQuizLogo.svg";
-import { Avatar, Badge, Collapse, useTheme } from "@mui/material";
+import { Avatar, Badge, Collapse, useMediaQuery, useTheme } from "@mui/material";
 import {
   ExpandLess,
   ExpandMore,
@@ -49,7 +49,6 @@ const AdminSlider = () => {
   const handleAvatarClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleAvatarClose = () => {
     setAnchorEl(null);
   };
@@ -76,12 +75,13 @@ const AdminSlider = () => {
             sx={{
               marginRight: 3,
               ...(open && { display: "none" }),
+              ...(useMediaQuery('(max-width:450px)') && { display: "none" })
             }}
           >
             <MenuIcon />
           </IconButton>
-          <Link to="/admin-dashboard">
-            <img className={classes["logo-image"]} src={Logo} height={80} />
+          <Link to="/">
+            <img className={classes["logo-image"]} src={Logo} height={70} />
           </Link>
         </Toolbar>
         <Box
@@ -92,17 +92,21 @@ const AdminSlider = () => {
             marginRight: "1rem",
           }}
         >
-          <Badge badgeContent={4} color="primary" sx={{ cursor: "pointer" }}>
+          <Badge badgeContent={4} sx={{ cursor: "pointer",
+          '& .MuiBadge-badge': {
+          backgroundColor: "#F47D0A",
+          color: "white" // This sets the text color of the badge
+        } }}>
             <IoNotificationsOutline color="black" size={30} />
           </Badge>
           <IconButton
-            className="gap-3 rounded d-flex align-items-center"
+            className="gap-2 rounded d-flex align-items-center"
             onClick={handleAvatarClick}
           >
-            <Avatar sx={{ background: "#ED6744", cursor: "pointer" }}>
+            <Avatar sx={{ background: "#F47D0A", cursor: "pointer" }}>
               BR
             </Avatar>
-            <p className="fs-5 mt-3 fw-bold d-sm-inline d-none">Harsh rathod</p>
+            <p className="fs-5 mt-3 fw-semibold d-sm-inline d-none">Harsh rathod</p>
           </IconButton>
 
           <Menu
@@ -178,8 +182,8 @@ const AdminSlider = () => {
           }}
         >
           <Box sx={{ display: "flex", gap: "0.8rem", alignItems: "center" }}>
-            <Avatar sx={{ background: "#ED6744" }}>PR</Avatar>
-            <Typography>Pravin Raina</Typography>
+            <Avatar sx={{ background: "#F47D0A" }}>PR</Avatar>
+            <Typography variant="p">Pravin Raina</Typography>
           </Box>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
@@ -193,11 +197,23 @@ const AdminSlider = () => {
         <List>
           {adminDashboardSections.map((text, index) => (
             <ListItem key={text.title} disablePadding sx={{ display: "block" }}>
-              <ListItemButton onClick={() => handleClick(index)}>
+              <ListItemButton
+                onClick={() => handleClick(index)}
+                sx={{
+                  borderRadius:"10px",
+                  backgroundColor: openIndex === index || text=="Quiz Management" ? "#ffb165" : "inherit",
+                  color: openIndex === index ? "#fffff" : "inherit",
+                  "&:hover": {
+                    backgroundColor:
+                      openIndex === index ? "#ffb165" : "#f5f5f5",
+                    color: openIndex === index ? "#fffff" : "inherit",
+                  },
+                }}
+              >
                 <ListItemIcon sx={{ display: open ? "none" : "block" }}>
                   {text.icon}
                 </ListItemIcon>
-                <ListItemText primary={text.title} />
+                <ListItemText variant="h4" primary={text.title} />
                 {openIndex === index ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
               <Collapse in={openIndex === index} timeout="auto" unmountOnExit>

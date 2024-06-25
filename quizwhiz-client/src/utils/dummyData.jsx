@@ -22,24 +22,28 @@ const adminDashboardSections = [
   ];
   const Category=[
     {
-      title:"Education",
+      title:"Test Your Knowledge",
       description: "Lorem ipsum ue natus  rerum asperiores commodi architecto incidunt, itaque qui, quo eligendi impedit nam alias. Eum, consequuntur consectetur!",
-      date:"12-08-2024 12:00"
+      date:"12-08-2024",
+      time:"01:12:34 AM"
     },
     {
-      title:"Technology",
+      title:"Unlock Your Genius!",
       description: "Lorem ipsum ue natus  rerum asperiores commodi architecto incidunt, itaque qui, quo eligendi impedit nam alias. Eum, consequuntur consectetur!",
-      date:"12-08-2024 12:00"
+      date:"12-08-2024",
+      time:"01:12:34 AM"
     },
     {
-      title:"General Knowledge",
+      title:"Quiz Your Way to the Top!",
       description: "Lorem ipsum ue natus  rerum asperiores commodi architecto incidunt, itaque qui, quo eligendi impedit nam alias. Eum, consequuntur consectetur!",
-      date:"12-08-2024 12:00"
+      date:"12-08-2024",
+      time:"01:12:34 AM"
     },
     {
-      title:"Gaming",
+      title:"Brain Games for Bright Minds!",
       description: "Lorem ipsum ue natus  rerum asperiores commodi architecto incidunt, itaque qui, quo eligendi impedit nam alias. Eum, consequuntur consectetur!",
-      date:"12-08-2024 12:00"
+      date:"12-08-2024",
+      time:"01:12:34 AM"
     },
     // {
     //   title:"Web development",

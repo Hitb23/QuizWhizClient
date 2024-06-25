@@ -61,10 +61,19 @@ export const resetPassword = async (data) => {
           "Content-Type": "application/json",
         },
       }
-    );
-    return response;
-  } catch (error) {
-    console.error("Error resetting password:", error);
-    throw error;
+      );
+      return response;
+    } catch (error) {
+      console.error("Error resetting password:", error);
+      throw error;
+    }
+  };
+  
+  export const getContestRecords=async(data)=>{
+    return await axios.get(API_URLS.VALIDATE_TOKEN_URL ,JSON.stringify(data), {
+      headers: {
+        "Content-Type": "application/json",
+        // token: "Bearer " + localStorage.getItem("token")
+      },
+    });
   }
-};
