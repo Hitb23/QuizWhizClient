@@ -13,14 +13,13 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
-
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
-
     "@mui/icons-material": "^5.15.20",
     "@mui/material": "^5.15.20",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
+    "date-fns": "^3.6.0",
     "formik": "^2.4.6",
     "formik-material-ui": "^4.0.0-alpha.2",
     "jwt-decode": "^4.0.0",

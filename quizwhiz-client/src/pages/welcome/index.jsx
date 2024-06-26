@@ -11,7 +11,7 @@ import { LandingImage } from "../../assets";
 import Typed from 'typed.js';
 const Welcome =  () => {
   const el = React.useRef(null);
-  React.useEffect(() => {
+  React.useEffect(() => { 
     const typed = new Typed(el.current, {
       strings: ['Get Your Brain in Gear','Welcome to QuizWhiz'],
       typeSpeed: 50,
@@ -19,12 +19,12 @@ const Welcome =  () => {
       backDelay: 1000,
       startDelay: 500,
       loop: false, // Set loop to false to stop after typing is complete
-      onComplete: (self) => {
-        if (el.current) {
-          // Remove the cursor class after typing is complete
-          el.current.querySelector('.typed-cursor').style.display = 'none';
-        }
-      },
+      // onComplete: (self) => {
+      //   if (el.current) {
+      //     // Remove the cursor class after typing is complete
+      //     el.current.querySelector('.typed-cursor').style.display = 'none';
+      //   }
+      // },
     });
 
     return () => {

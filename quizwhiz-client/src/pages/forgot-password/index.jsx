@@ -20,10 +20,10 @@ const ForgotPassword = () => {
   });
   
   const handleSubmit = async (values) => {
-    console.log("Email: " + values.email);
+    // console.log("Email: " + values.email);
     try {
       var data = await sendResetPasswordLink({ Email: values.email });
-      console.log(data);
+      // console.log(data);
       navigate(RoutePaths.Login);
     } catch (error) {
       toast.error("Something Went Wrong");

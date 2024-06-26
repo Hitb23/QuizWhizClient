@@ -72,7 +72,7 @@ const ResetPassword = () => {
         NewPassword: newPassword,
         ConfirmNewPassword: confirmNewPassword,
       });
-      console.log(data);
+      // console.log(data);
       if (data.status === 200) {
         navigate(RoutePaths.Login);
       } else {
@@ -80,7 +80,7 @@ const ResetPassword = () => {
       }
   
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       navigate(RoutePaths.Login);
     }
   };
