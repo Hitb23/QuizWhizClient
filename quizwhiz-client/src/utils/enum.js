@@ -1,31 +1,32 @@
-import { Route } from "react-router-dom"
+import { Route } from "react-router-dom";
 
 export const RoutePaths = {
-  Welcome : "/",
-  Login : "/login",
-  SignUp : "/sign-up",
-  ForgotPassword : "/forgot-password",
-  ResetPassword : "/reset-password",
-  AdminDashboard : "/admin-dashboard",
-  UserDashboard : "/user-dashboard",
+  Welcome: "/",
+  Login: "/login",
+  SignUp: "/sign-up",
+  ForgotPassword: "/forgot-password",
+  ResetPassword: "/reset-password",
+  AdminDashboard: "/admin-dashboard",
+  UserDashboard: "/user-dashboard",
   PageNotFound: "/page-not-found",
-  AdminLogin:"/admin-login",
   MyProfile: "/my-profile",
-}
+  AdminLogin: "/admin-login",
+};
 
 export const Role = {
-  Public : "",
-  Admin : "Admin",
-  Contestant : "Contestant",
-}
-export const API_URLS={
-  LOGIN_URL : "/Auth/login/",
- SIGNUP_URL : "/User/register",
- USERNAME_VALIDITY_URL : "/User/checkUserName/",
- FORGOT_PASSWORD_URL : "/Auth/forgot-password/",
- VALIDATE_TOKEN_URL: `/Auth/validate-reset-token?token=`,
- REEST_PASSWORD: "/Auth/reset-password",
- ADMIN_LOGIN:"/Auth/admin-login",
- GET_USER_DATA: "/auth/get-profile-details?username=",
- UPLOAD_PHOTO: "/auth/upload-profile-photo"
-}
+  Public: "",
+  Admin: "Admin",
+  Contestant: "Contestant",
+};
+export const API_URLS = {
+  LOGIN_URL: "/auth/login/",
+  ADMIN_URL: "/auth/admin-login/",
+  SIGNUP_URL: "/auth/sign-up/",
+  CHECK_USERNAME_URL: "/auth/check-username/",
+  FORGOT_PASSWORD_URL: "/auth/forgot-password/",
+  VALIDATE_TOKEN_URL: `/auth/validate-reset-password-token?token=`,
+  REEST_PASSWORD: "/auth/reset-password/",
+  EDIT_PROFILE: "/auth/edit-profile",
+  GET_USER_DATA: "/auth/get-profile-details?username=",
+  UPLOAD_PHOTO: "/auth/upload-profile-photo",
+};

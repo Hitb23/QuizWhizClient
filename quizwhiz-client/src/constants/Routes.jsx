@@ -60,6 +60,6 @@ export const ROUTES = [
   {
     path: '/my-profile',
     element: <MyProfile/>,
-    roles: [Role.Admin, Role.Contestant, Role.Public],
+    roles: [Role.Admin, Role.Contestant],
   }
 ];

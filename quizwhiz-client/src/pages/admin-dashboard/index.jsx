@@ -51,7 +51,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { RoutePaths } from "../../utils/enum";
 import jwtDecoder from "../../services/jwtDecoder";
-import { getUserData } from "../../services/auth.service";
+import { getUserDetails } from "../../services/auth.service";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -148,7 +148,7 @@ const AdminSideBar = () => {
       const data = jwtDecoder();
     const userName = data.Username;
     console.log(data);
-    const response = await getUserData(userName);
+    const response = await getUserDetails(userName);
     console.log(response);
     }
     catch(error){

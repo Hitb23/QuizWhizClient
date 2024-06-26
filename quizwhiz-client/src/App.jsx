@@ -15,7 +15,6 @@ const App = () => {
   const actions = bindActionCreators(userActions, dispatch);
 
   {
-
     actions.changeUserRole(authToken["Role"]);
     actions.changeUserName(authToken["Username"]);
     actions.changeUserEmail(authToken["Email"]);
@@ -23,7 +22,7 @@ const App = () => {
   
   return (
     <>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <RouterProvider router={router()} />
     </>
   );
