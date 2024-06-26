@@ -31,7 +31,7 @@ const AdminCategory = () => {
   const Updatedtext =
     params.id.substring(0, 1).toUpperCase() + params.id.substring(1);
   const navigateToCategory = (id) => {
-    if (id === "total") navigate(`/admin-dashboard`);
+    if (id === "pending") navigate(`/admin-dashboard`);
     else navigate(`/contest/${id}`);
   };
   const [Records, setRecords] = React.useState(4);
@@ -66,13 +66,6 @@ const AdminCategory = () => {
 
         <div className="mt-5 row">
           <CardComponent
-            count={10}
-            text="Total"
-            icon={faQuestionCircle}
-            onClickHandler={navigateToCategory}
-            active={params.id}
-          />
-          <CardComponent
             count={3}
             text="Upcoming"
             icon={faCalendarAlt}
@@ -93,9 +86,16 @@ const AdminCategory = () => {
             onClickHandler={navigateToCategory}
             active={params.id}
           />
+          <CardComponent
+            count={10}
+            text="Pending"
+            icon={faQuestionCircle}
+            onClickHandler={navigateToCategory}
+            active={params.id}
+          />
         </div>
         <h4>{Updatedtext} Contest</h4>
-        <Box className="row g-1">
+        <Box className="row">
           {Category.map((ele) => (
             <QuizCard
               title={ele.title}
@@ -129,23 +129,23 @@ const AdminCategory = () => {
             onChange={handlePageChange}
             sx={{
               "& .MuiPaginationItem-root": {
-                backgroundColor: "white", 
-                color: "black", 
+                backgroundColor: "white",
+                color: "black",
                 "&:hover": {
-                  backgroundColor: "#F47D0A", 
-                  color: "#ffffff", 
+                  backgroundColor: "#F47D0A",
+                  color: "#ffffff",
                 },
               },
               "& .MuiPaginationItem-root.Mui-selected": {
-                backgroundColor: "#F47D0A", 
-                color: "#ffffff", 
+                backgroundColor: "#F47D0A",
+                color: "#ffffff",
               },
               "& .MuiPaginationItem-ellipsis": {
                 backgroundColor: "white",
                 "&:hover": {
-                  backgroundColor: "transparent", 
-                  color: "#ffffff", 
-                }, 
+                  backgroundColor: "transparent",
+                  color: "#ffffff",
+                },
               },
             }}
           />
