@@ -78,10 +78,13 @@ export const openedMixin = (theme) => ({
  export const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
-    border:'1px solid black',
+    border: '1px solid #f33404',
     backgroundColor: alpha(theme.palette.common.white, 0.95),
     '&:hover': {
       backgroundColor: alpha(theme.palette.common.white, 0.99),
+    outline: '1px solid #F47D0A' ,
+    border: '1px solid #f33404' ,
+    boxShadow: '0 0 16px 0 rgba(228, 55, 55, 0.18), 0 2px 4px 0 rgba(228, 55, 55, 0.12)'
     },
     marginLeft: 0,
     width: '100%',

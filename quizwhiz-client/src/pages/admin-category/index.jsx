@@ -21,18 +21,20 @@ import {
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { DrawerHeader } from "../../components/admin-components";
+import { DrawerHeader, Search, SearchIconWrapper, StyledInputBase } from "../../components/admin-components";
 import AdminSlider from "../../components/header/admin-header";
 import QuizCard from "../../components/admin-cards/quiz-card";
 import jwtDecoder from "../../services/jwtDecoder";
+import SearchIcon from "@mui/icons-material/Search";
+
 const AdminCategory = () => {
   const navigate = useNavigate();
   const params = useParams();
   const Updatedtext =
     params.id.substring(0, 1).toUpperCase() + params.id.substring(1);
   const navigateToCategory = (id) => {
-    if (id === "total") navigate(`/admin-dashboard`);
-    else navigate(`/contest/${id}`);
+    if (id === "pending") navigate(`/admin-dashboard`);
+    else navigate(`/admin-dashboard/${id}`);
   };
   const [Records, setRecords] = React.useState(4);
 
@@ -50,7 +52,7 @@ const AdminCategory = () => {
   };
   return (
     <Box
-      sx={{ display: "flex", background: "#f8f8ff" }}
+      sx={{ display: "flex" }}
       className={`${classes["bgimage"]}`}
     >
       <CssBaseline />
@@ -65,13 +67,6 @@ const AdminCategory = () => {
         <DrawerHeader />
 
         <div className="mt-5 row">
-          <CardComponent
-            count={10}
-            text="Total"
-            icon={faQuestionCircle}
-            onClickHandler={navigateToCategory}
-            active={params.id}
-          />
           <CardComponent
             count={3}
             text="Upcoming"
@@ -93,15 +88,35 @@ const AdminCategory = () => {
             onClickHandler={navigateToCategory}
             active={params.id}
           />
+          <CardComponent
+            count={10}
+            text="Pending"
+            icon={faQuestionCircle}
+            onClickHandler={navigateToCategory}
+            active={params.id}
+          />
+        </div>
+        <div className="d-flex  align-items-center flex-wrap column-gap-2 my-2">
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon  sx={{color:'#F47D0A'}}/>
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ "aria-label": "search" }}
+            />
+          </Search>
+          <button className={`${classes["add-quiz-btn"]}`}>Add Quiz</button>
         </div>
         <h4>{Updatedtext} Contest</h4>
-        <Box className="row g-1">
-          {Category.map((ele) => (
+        <Box className="row">
+          {Category.map((ele,idx) => (
             <QuizCard
               title={ele.title}
               description={ele.description}
               date={ele.date}
               time={ele.time}
+              key={idx}
             />
           ))}
         </Box>
@@ -129,23 +144,23 @@ const AdminCategory = () => {
             onChange={handlePageChange}
             sx={{
               "& .MuiPaginationItem-root": {
-                backgroundColor: "white", 
-                color: "black", 
+                backgroundColor: "white",
+                color: "black",
                 "&:hover": {
-                  backgroundColor: "#F47D0A", 
-                  color: "#ffffff", 
+                  backgroundColor: "#F47D0A",
+                  color: "#ffffff",
                 },
               },
               "& .MuiPaginationItem-root.Mui-selected": {
-                backgroundColor: "#F47D0A", 
-                color: "#ffffff", 
+                backgroundColor: "#F47D0A",
+                color: "#ffffff",
               },
               "& .MuiPaginationItem-ellipsis": {
                 backgroundColor: "white",
                 "&:hover": {
-                  backgroundColor: "transparent", 
-                  color: "#ffffff", 
-                }, 
+                  backgroundColor: "transparent",
+                  color: "#ffffff",
+                },
               },
             }}
           />
