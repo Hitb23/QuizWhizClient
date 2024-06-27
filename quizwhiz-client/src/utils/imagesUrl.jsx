@@ -1,0 +1,2 @@
+export { default as girishsuthar}  from "D:/QuizWhizClient/quizwhiz-client/src/ProfilePhoto/girishsuthar/girishsuthar.jpg";
+export { default as ishanbhatt} from "D:/QuizWhizClient/quizwhiz-client/src/ProfilePhoto/ishanbhatt/ishanbhatt.png";
