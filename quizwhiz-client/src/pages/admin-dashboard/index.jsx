@@ -56,16 +56,26 @@ const AdminDashboard = () => {
   const [category, setCategory] = useState('');
   const [difficultyList, setDifficultyList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
+  const [DifficultyId,setDifficultyId]=useState(0);
+  const [CategoryId,SetcategoryId]=useState(0);
   const [Records, setRecords] = useState(4);
+  const [PageSize,SetPageSize]=useState(1);
+  const [currentPage,SetCurrentPage]=useState(1);
+  const [filteredData,SetFilteredData]=useState([]);
   const navigate = useNavigate();
   const params = useParams();
+  // const 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await getDifficulties();
         const result1 = await getCategories();
+        const allData = await filterByCategory({StatusId:1,DifficultyId:0,CategoryId:0,CurrentPage:1});
+        const Data=allData.data.data.GetQuizzes;
         setDifficultyList(result.data.data);
         setCategoryList(result1.data.data);
+        SetFilteredData(Data);
+        // SetPageSize(result?.data?.data?.Pagination.PageSize);
       } catch (error) {
         console.error('Error fetching data', error);
       }
@@ -93,16 +103,22 @@ const AdminDashboard = () => {
     // public required int CategoryId { get; set; }
 
     // public required int CurrentPage { get; set; }
-     const result = await filterByCategory({StatusId:4,DifficultyId:event.target.value,CategoryId:2,CurrentPage:1});
-    // console.log(result)
+     const result = await filterByCategory({StatusId:1,DifficultyId:0,CategoryId:0,CurrentPage:1});
+     const filteredData=result.data.data.GetQuizzes;
+     SetFilteredData(filteredData);
+     console.log(result)
   };
 
   const handlePageChange = async (event, value) => {
     console.log(value)
   };
 
-  const handleCategory = (e) => {
+  const handleCategory = async(e) => {
     setCategory(e.target.value);
+    const result = await filterByCategory({StatusId:1,DifficultyId:0,CategoryId:0,CurrentPage:1});
+    const filteredData=result.data.data.GetQuizzes;
+
+    console.log(result)
   };
   return (
     <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>
@@ -163,6 +179,8 @@ const AdminDashboard = () => {
               label="Difficulty"
               MenuProps={MenuProps}
             >
+              <MenuItem key={0} value={0}> All
+                  </MenuItem>
               {difficultyList &&
                 difficultyList.map((ele) => (
                   <MenuItem key={ele.DifficultyId} value={ele.DifficultyId}>
@@ -181,6 +199,8 @@ const AdminDashboard = () => {
               label="Category"
               MenuProps={MenuProps}
             >
+              <MenuItem key={0} value={0}> All
+                  </MenuItem>
               {categoryList &&
                 categoryList.map((ele) => (
                   <MenuItem key={ele.CategoryId} value={ele.CategoryName}>
@@ -194,12 +214,11 @@ const AdminDashboard = () => {
         </div>
         <h4>Pending Contest</h4>
         <div className="row">
-          {Category.map((ele, idx) => (
+          {filteredData && filteredData.map((ele, idx) => (
             <QuizCard
-              title={ele.title}
-              description={ele.description}
-              date={ele.date}
-              time={ele.time}
+              title={ele.Title}
+              description={ele.Description}
+              date={ele.ScheduledDate}
               key={idx}
             />
           ))}
@@ -223,7 +242,7 @@ const AdminDashboard = () => {
             </Select>
           </FormControl>
           <Pagination
-            count={10}
+            count={PageSize}
             color="primary"
             onChange={handlePageChange}
             sx={{
