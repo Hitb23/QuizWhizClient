@@ -101,7 +101,7 @@ const Login = () => {
         }
       );
 
-      console.log(response.data);
+      // console.log(response.data);
       setErrorMessage("");
     } catch (error) {
       setErrorMessage("Invalid Email or Password");

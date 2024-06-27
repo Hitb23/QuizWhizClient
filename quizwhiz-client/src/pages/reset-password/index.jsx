@@ -72,16 +72,16 @@ const ResetPassword = () => {
         NewPassword: newPassword,
         ConfirmNewPassword: confirmNewPassword,
       });
-      console.log(data);
+      // console.log(data);
       if (data.status === 200) {
-        navigate(RoutePaths.Login,{state: {IsSuccessMessage:true,Message:"Password reset successfully."}})
+        navigate(RoutePaths.Login);
       } else {
-        navigate(RoutePaths.Login,{state: {IsErrorMessage:true,Message:"Something Went Wrong. Please Try Again"}});
+        navigate(RoutePaths.Login);
       }
   
     } catch (error) {
-      console.log(error);
-      navigate(RoutePaths.Login,{state: {IsErrorMessage:true,Message:"Something Went Wrong. Please Try Again"}});
+      // console.log(error);
+      navigate(RoutePaths.Login);
     }
   };
 

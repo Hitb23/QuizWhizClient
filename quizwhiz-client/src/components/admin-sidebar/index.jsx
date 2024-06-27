@@ -42,7 +42,7 @@ import {
 } from "@mui/material";
 import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
 import { IoNotifications, IoNotificationsOutline } from "react-icons/io5";
-import CardComponent from "../card";
+import CardComponent from "../admin-cards/quiz-category";
 import {
   faQuestionCircle,
   faCalendarAlt,

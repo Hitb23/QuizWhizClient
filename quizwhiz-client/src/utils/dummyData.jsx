@@ -20,5 +20,41 @@ const adminDashboardSections = [
       icon: <SettingsIcon /> // Icon for settings
     }
   ];
-  
-export { adminDashboardSections}
+  const Category=[
+    {
+      title:"Test Your Knowledge",
+      description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptate, tempora',
+      date:"12-08-2024",
+      time: "12:00 PM"
+    },
+    {
+      title:"Unlock Your Genius!",
+      description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptate, tempora',
+      date:"12-08-2024",
+      time: "12:00 PM"
+    },
+    {
+      title:"Quiz Your Way to the Top!",
+      description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptate, tempora',
+      date:"12-08-2024",
+      time: "12:00 PM"
+    },
+    {
+      title:"Brain Games for Bright Minds!",
+      description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptate, tempora',
+      date:"12-08-2024",
+      time: "12:00 PM"
+    },
+    // {
+    //   title:"Web development",
+    //   description: "Lorem ipsum ue natus  rerum asperiores commodi architecto incidunt, itaque qui, quo eligendi impedit nam alias. Eum, consequuntur consectetur!",
+    //   date:"12-08-2024 12:00"
+    // },
+    // {
+    //   title:"Android Development",
+    //   description: "Lorem ipsum ue natus  rerum asperiores commodi architecto incidunt, itaque qui, quo eligendi impedit nam alias. Eum, consequuntur consectetur!",
+    //   date:"12-08-2024 12:00"
+    // }
+
+  ]
+export { adminDashboardSections,Category}

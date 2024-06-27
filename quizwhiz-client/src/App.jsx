@@ -15,15 +15,33 @@ const App = () => {
   const actions = bindActionCreators(userActions, dispatch);
 
   {
-
     actions.changeUserRole(authToken["Role"]);
     actions.changeUserName(authToken["Username"]);
     actions.changeUserEmail(authToken["Email"]);
   }
-  
+
+  useEffect(() => {
+    const tokenExpiry = localStorage.getItem("token-expiry");
+
+    if (tokenExpiry) {
+      const currentTime = new Date().getTime();
+      const delay = tokenExpiry - currentTime;
+
+      if (delay > 0) {
+        setTimeout(() => {
+          localStorage.removeItem("token");
+          localStorage.removeItem("token-expiry");
+        }, delay);
+      } else {
+        localStorage.removeItem("token");
+        localStorage.removeItem("token-expiry");
+      }
+    }
+  }, []);
+
   return (
     <>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <RouterProvider router={router()} />
     </>
   );
