@@ -164,6 +164,7 @@ const AdminSlider = ({firstName, lastName, uploadCount}) => {
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
             <MenuItem onClick={clickOnProfile}>
+
               <Avatar /> Profile
             </MenuItem>
             <MenuItem onClick={handleAvatarClose}>

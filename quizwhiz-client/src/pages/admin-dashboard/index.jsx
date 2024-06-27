@@ -1,11 +1,11 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
-import CardComponent from "../../components/admin-cards/quiz-category";
+import classes from "./style.module.css";
 import { MdArrowForward } from "react-icons/md";
 import { Category } from "../../utils/dummyData";
-import classes from "./style.module.css";
+import CardComponent from "../../components/admin-cards/quiz-category";
+
 import {
   faQuestionCircle,
   faCalendarAlt,
@@ -27,6 +27,7 @@ import { getUserDetails } from "../../services/auth.service";
 const AdminDashboard = () => {
   const [firstName, setFirstName] = useState('');  
   const [lastName, setLastName] = useState('');
+
   const navigate = useNavigate();
   const navigateToCategory = (id) => {
     if (id === "total") navigate(`/admin-dashboard`);
@@ -107,6 +108,7 @@ const AdminDashboard = () => {
         <div className="d-flex justify-content-between align-items-center mt-3">
           <h4>Active Contest</h4>
           <Link className={`${classes["link-style"]}`} to={"/contest/active"}>
+
             View All <MdArrowForward />
           </Link>
         </div>
