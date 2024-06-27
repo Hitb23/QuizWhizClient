@@ -32,18 +32,30 @@ import {
   StyledInputBase,
 } from "../../components/admin-components";
 import SearchIcon from "@mui/icons-material/Search";
-import jwtDecoder from "../../services/jwtDecoder";
 import { getUserDetails } from "../../services/auth.service";
-const AdminDashboard = () => {
-  const [firstName, setFirstName] = useState('');  
-  const [lastName, setLastName] = useState('');
 import {
   filterByCategory,
   getCategories,
   getDifficulties,
 } from "../../services/admindashboard.service";
 import jwtDecoder from "../../services/jwtDecoder";
-const ITEM_HEIGHT = 48;
+
+
+
+const AdminDashboard = () => {
+  const [difficulty, setDifficulty] = useState('');
+  const [category, setCategory] = useState('');
+  const [difficultyList, setDifficultyList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
+  const [Records, setRecords] = useState(4);
+  const [firstName, setFirstName] = useState('');  
+  const [lastName, setLastName] = useState('');
+  const navigate = useNavigate();
+  const params = useParams();
+  
+const names = ["Easy", "Medium", "Hard"];
+const QuizCategory = ["Science", "General Knowledge", "Sports"];
+  const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
   PaperProps: {
@@ -53,18 +65,6 @@ const MenuProps = {
     },
   },
 };
-
-const names = ["Easy", "Medium", "Hard"];
-const QuizCategory = ["Science", "General Knowledge", "Sports"];
-
-const AdminDashboard = () => {
-  const [difficulty, setDifficulty] = useState('');
-  const [category, setCategory] = useState('');
-  const [difficultyList, setDifficultyList] = useState([]);
-  const [categoryList, setCategoryList] = useState([]);
-  const [Records, setRecords] = useState(4);
-  const navigate = useNavigate();
-  const params = useParams();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -225,12 +225,11 @@ const AdminDashboard = () => {
           {Category.map((ele, idx) => (
 
             <QuizCard
-              key={index}
+              key={idx}
               title={ele.title}
               description={ele.description}
               date={ele.date}
               time={ele.time}
-              key={idx}
             />
           ))}
         </div>
@@ -282,6 +281,5 @@ const AdminDashboard = () => {
       </Box>
     </Box>
   );
-};
-
-export default AdminDashboard;
+}
+export default AdminDashboard
