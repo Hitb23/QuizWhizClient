@@ -1,5 +1,6 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
@@ -31,10 +32,25 @@ import { IoNotificationsOutline } from "react-icons/io5";
 
 import { Link } from "react-router-dom";
 import { DrawerHeader, AppBar, Drawer } from "../../admin-components/index";
-const AdminSlider = () => {
+import { RoutePaths } from "../../../utils/enum";
+import jwtDecoder from "../../../services/jwtDecoder";
+
+const AdminSlider = ({firstName, lastName, uploadCount}) => {
+  console.log(firstName);
+  console.log(lastName);
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [fullImagePath, setFullImagePath] = useState("");
   const theme = useTheme();
+  const navigate = useNavigate();
+  var username = "";
+  const data = jwtDecoder();
+  username = data["Username"];
+
+  useEffect(() => {
+    setFullImagePath(`${import.meta.env.VITE_PUBLIC_URL}ProfilePhoto/${username}/${username}.jpg?${uploadCount}`);
+  }, [uploadCount]);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -52,6 +68,10 @@ const AdminSlider = () => {
   const handleAvatarClose = () => {
     setAnchorEl(null);
   };
+  const clickOnProfile = () => {
+    navigate(RoutePaths.MyProfile);
+    setAnchorEl(null);
+  }
   return (
     <>
       <AppBar
@@ -103,10 +123,9 @@ const AdminSlider = () => {
             className="gap-2 rounded d-flex align-items-center"
             onClick={handleAvatarClick}
           >
-            <Avatar sx={{ background: "#F47D0A", cursor: "pointer" }}>
-              BR
+            <Avatar sx={{ background: "#F47D0A", cursor: "pointer" }} src={fullImagePath}>
             </Avatar>
-            <p className="fs-5 mt-3 fw-semibold d-sm-inline d-none">Harsh rathod</p>
+            <p className="fs-5 mt-3 fw-semibold d-sm-inline d-none">{firstName} {lastName}</p>
           </IconButton>
 
           <Menu
@@ -144,7 +163,8 @@ const AdminSlider = () => {
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <MenuItem onClick={handleAvatarClose}>
+            <MenuItem onClick={clickOnProfile}>
+
               <Avatar /> Profile
             </MenuItem>
             <MenuItem onClick={handleAvatarClose}>

@@ -9,6 +9,7 @@ export const RoutePaths = {
   AdminDashboard: "/admin-dashboard",
   UserDashboard: "/user-dashboard",
   PageNotFound: "/page-not-found",
+  MyProfile: "/my-profile",
   AdminLogin: "/admin-login",
 };
 
@@ -25,6 +26,9 @@ export const API_URLS = {
   FORGOT_PASSWORD_URL: "/auth/forgot-password/",
   VALIDATE_TOKEN_URL: `/auth/validate-reset-password-token?token=`,
   REEST_PASSWORD: "/auth/reset-password/",
+  EDIT_PROFILE: "/auth/edit-profile",
+  GET_USER_DATA: "/auth/get-profile-details?username=",
+  UPLOAD_PHOTO: "/auth/upload-profile-photo",
   QUIZ_DIFFICULTIES:"/quiz/get-quiz-difficulties",
   QUIZ_CATEGORIES:"/quiz/get-quiz-categories",
   QUIZ_FILTER:'/quiz/get-quizzes-filter'
