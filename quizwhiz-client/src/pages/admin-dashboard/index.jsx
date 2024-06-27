@@ -1,8 +1,17 @@
-import * as React from "react";
-import { Box, Button } from "@mui/material";
+import { React, useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  useTheme,
+} from "@mui/material";
+
 import CssBaseline from "@mui/material/CssBaseline";
 import classes from "./style.module.css";
-import { MdArrowForward } from "react-icons/md";
 import { Category } from "../../utils/dummyData";
 import CardComponent from "../../components/admin-cards/quiz-category";
 
@@ -12,10 +21,11 @@ import {
   faPlay,
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { DrawerHeader } from "../../components/admin-components";
 import AdminSlider from "../../components/header/admin-header";
 import QuizCard from "../../components/admin-cards/quiz-card";
+import Pagination from "@mui/material/Pagination";
 import {
   Search,
   SearchIconWrapper,
@@ -27,11 +37,78 @@ import { getUserDetails } from "../../services/auth.service";
 const AdminDashboard = () => {
   const [firstName, setFirstName] = useState('');  
   const [lastName, setLastName] = useState('');
+import {
+  filterByCategory,
+  getCategories,
+  getDifficulties,
+} from "../../services/admindashboard.service";
+import jwtDecoder from "../../services/jwtDecoder";
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 99,
+    },
+  },
+};
 
+const names = ["Easy", "Medium", "Hard"];
+const QuizCategory = ["Science", "General Knowledge", "Sports"];
+
+const AdminDashboard = () => {
+  const [difficulty, setDifficulty] = useState('');
+  const [category, setCategory] = useState('');
+  const [difficultyList, setDifficultyList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
+  const [Records, setRecords] = useState(4);
   const navigate = useNavigate();
+  const params = useParams();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await getDifficulties();
+        const result1 = await getCategories();
+        setDifficultyList(result.data.data);
+        setCategoryList(result1.data.data);
+      } catch (error) {
+        console.error('Error fetching data', error);
+      }
+    };
+
+    fetchData();
+  },[]);
+
   const navigateToCategory = (id) => {
-    if (id === "total") navigate(`/admin-dashboard`);
-    else navigate(`/contest/${id}`);
+    if (id === "pending") navigate(`/admin-dashboard`);
+    else navigate(`/admin-dashboard/${id}`);
+  };
+
+  const handlePageSize = (event) => {
+    setRecords(event.target.value);
+  };
+  
+  const handleDifficulty = async (event) => {
+    console.log("hello")
+     setDifficulty(event.target.value);
+    // public required int StatusId { get; set; }
+
+    // public required int DifficultyId { get; set; }
+
+    // public required int CategoryId { get; set; }
+
+    // public required int CurrentPage { get; set; }
+     const result = await filterByCategory({StatusId:4,DifficultyId:event.target.value,CategoryId:2,CurrentPage:1});
+    // console.log(result)
+  };
+
+  const handlePageChange = async (event, value) => {
+    console.log(value)
+  };
+
+  const handleCategory = (e) => {
+    setCategory(e.target.value);
   };
   var username = "";
 
@@ -61,16 +138,9 @@ const AdminDashboard = () => {
       {/* Admin offcanvas with navbar */}
       <AdminSlider firstName={firstName.toString()} lastName={lastName.toString()} />
       {/* Main Content */}
-      <Box className={` container`} component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box className={`container`} component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         <div className="mt-5 row">
-          <CardComponent
-            count={10}
-            text="Total"
-            icon={faQuestionCircle}
-            onClickHandler={navigateToCategory}
-            active={"total"}
-          />
           <CardComponent
             count={3}
             text="Upcoming"
@@ -92,75 +162,123 @@ const AdminDashboard = () => {
             onClickHandler={navigateToCategory}
             active={"total"}
           />
+          <CardComponent
+            count={10}
+            text="Pending"
+            icon={faQuestionCircle}
+            onClickHandler={navigateToCategory}
+            active={"pending"}
+          />
         </div>
-        <div className="d-flex justify-content-between align-items-center flex-wrap">
-          <Search>
+        <div className="d-flex  align-items-center flex-wrap column-gap-2 my-2">
+          <Search sx={{ height: 55, width: 40 }}>
             <SearchIconWrapper>
-              <SearchIcon />
+              <SearchIcon sx={{ color: "#F47D0A" }} />
             </SearchIconWrapper>
             <StyledInputBase
+              sx={{ height: 55 }}
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
+          <FormControl sx={{ m: 1, width: 200 }}>
+            <InputLabel id="demo-multiple-name-label">Difficulty</InputLabel>
+            <Select
+              labelId="demo-multiple-name-label"
+              id="demo-multiple-name"
+              value={difficulty}
+              onChange={handleDifficulty}
+              label="Difficulty"
+              MenuProps={MenuProps}
+            >
+              {difficultyList &&
+                difficultyList.map((ele) => (
+                  <MenuItem key={ele.DifficultyId} value={ele.DifficultyId}>
+                    {ele.DifficultyName}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ m: 1, width: 200 }}>
+            <InputLabel id="demo-multiple-name-label">Category</InputLabel>
+            <Select
+              labelId="demo-multiple-name-label"
+              id="demo-multiple-name"
+              value={category}
+              onChange={handleCategory}
+              label="Category"
+              MenuProps={MenuProps}
+            >
+              {categoryList &&
+                categoryList.map((ele) => (
+                  <MenuItem key={ele.CategoryId} value={ele.CategoryName}>
+                    {ele.CategoryName}
+                  </MenuItem>
+                ))
+              }
+            </Select>
+          </FormControl>
           <button className={`${classes["add-quiz-btn"]}`}>Add Quiz</button>
         </div>
-        <div className="d-flex justify-content-between align-items-center mt-3">
-          <h4>Active Contest</h4>
-          <Link className={`${classes["link-style"]}`} to={"/contest/active"}>
+        <h4>Pending Contest</h4>
+        <div className="row">
+          {Category.map((ele, idx) => (
 
-            View All <MdArrowForward />
-          </Link>
-        </div>
-        <Box className="row">
-          {Category.map((ele, index) => (
             <QuizCard
               key={index}
               title={ele.title}
               description={ele.description}
               date={ele.date}
               time={ele.time}
+              key={idx}
             />
           ))}
-        </Box>
-
-        <div className="d-flex justify-content-between align-items-center mt-3">
-          <h4>Ongoing Contest</h4>
-          <Link className={` ${classes["link-style"]}`} to={"/contest/ongoing"}>
-            View All <MdArrowForward />
-          </Link>
         </div>
-        <Box className="row">
-          {Category.map((ele, index) => (
-            <QuizCard
-              key={index}
-              title={ele.title}
-              description={ele.description}
-              date={ele.date}
-              time={ele.time}
-            />
-          ))}
-        </Box>
-
-        <div className="d-flex justify-content-between align-items-center mt-3">
-          <h4>Completed Contest</h4>
-          <Link
-            className={` ${classes["link-style"]}`}
-            to={"/contest/completed"}
-          >
-            View All <MdArrowForward />
-          </Link>
+        <div className="d-flex justify-content-between mt-3 align-items-center">
+          <FormControl sx={{ m: 1, minWidth: 80 }} size="small">
+            <InputLabel id="demo-simple-select-autowidth-label">
+              Page
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-autowidth-label"
+              id="demo-simple-select-autowidth"
+              value={Records}
+              onChange={handlePageSize}
+              autoWidth
+              label="Page"
+            >
+              <MenuItem value={4}>4</MenuItem>
+              <MenuItem value={8}>8</MenuItem>
+              <MenuItem value={12}>12</MenuItem>
+            </Select>
+          </FormControl>
+          <Pagination
+            count={10}
+            color="primary"
+            onChange={handlePageChange}
+            sx={{
+              "& .MuiPaginationItem-root": {
+                backgroundColor: "white",
+                color: "black",
+                "&:hover": {
+                  backgroundColor: "#F47D0A",
+                  color: "#ffffff",
+                },
+              },
+              "& .MuiPaginationItem-root.Mui-selected": {
+                backgroundColor: "#F47D0A",
+                color: "#ffffff",
+              },
+              "& .MuiPaginationItem-ellipsis": {
+                backgroundColor: "white",
+                "&:hover": {
+                  backgroundColor: "transparent",
+                  color: "#ffffff",
+                },
+              },
+            }}
+          />
         </div>
-        <Box className="row">
-          {Category.map((ele, index) => (
-            <QuizCard
-              key={index}
-              title={ele.title}
-              description={ele.description}
-              date={ele.date}
-            />
-          ))}
-        </Box>
       </Box>
     </Box>
   );

@@ -29,4 +29,7 @@ export const API_URLS = {
   EDIT_PROFILE: "/auth/edit-profile",
   GET_USER_DATA: "/auth/get-profile-details?username=",
   UPLOAD_PHOTO: "/auth/upload-profile-photo",
+  QUIZ_DIFFICULTIES:"/quiz/get-quiz-difficulties",
+  QUIZ_CATEGORIES:"/quiz/get-quiz-categories",
+  QUIZ_FILTER:'/quiz/get-quizzes-filter'
 };
