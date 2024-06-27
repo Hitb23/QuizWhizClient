@@ -58,7 +58,7 @@ export const ROUTES = [
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path: '/contest/:id',
+    path: '/admin-dashboard/:id',
     element: <AdminCategory />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },

@@ -10,7 +10,7 @@ background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/s
     box-shadow: 4px 3px 6px 0px black;
 }
 .add-quiz-btn{
-    padding: 0.5rem 2.1rem;
+    padding: 0.9rem 2.1rem;
     font-size: 20px;
     background-color: #F47D0A;
     color: #ffffff;
@@ -20,7 +20,9 @@ background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/s
 .add-quiz-btn:hover{
     background-color: #F47D0A;
     color: #ffffff;
-    box-shadow:2px 2px 3px black;
+    box-shadow:1px 1px 3px black;
+    transform: scale(1.07);
+    transition: all 0.2s;
 }
 .link-style{
     color: #F47D0A !important;

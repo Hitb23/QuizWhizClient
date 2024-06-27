@@ -25,4 +25,7 @@ export const API_URLS = {
   FORGOT_PASSWORD_URL: "/auth/forgot-password/",
   VALIDATE_TOKEN_URL: `/auth/validate-reset-password-token?token=`,
   REEST_PASSWORD: "/auth/reset-password/",
+  QUIZ_DIFFICULTIES:"/quiz/get-quiz-difficulties",
+  QUIZ_CATEGORIES:"/quiz/get-quiz-categories",
+  QUIZ_FILTER:'/quiz/get-quizzes-filter'
 };

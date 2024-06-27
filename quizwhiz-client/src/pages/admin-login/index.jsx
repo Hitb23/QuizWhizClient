@@ -56,7 +56,7 @@ const AdminLogin = () => {
     try {
       const response = await adminLogin({ email, password });
       localStorage.setItem("token", response.data.data);
-      localStorage.setItem("token-expiry", new Date().getTime() + 3600 * 60);
+      localStorage.setItem("token-expiry", new Date().getTime() + 3600 * 1000);
 
       const data = await jwtDecoder();
       const userRole = data["Role"];
