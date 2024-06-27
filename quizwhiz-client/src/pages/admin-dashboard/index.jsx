@@ -14,6 +14,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import classes from "./style.module.css";
 import { Category } from "../../utils/dummyData";
 import CardComponent from "../../components/admin-cards/quiz-category";
+
 import {
   faQuestionCircle,
   faCalendarAlt,
@@ -31,6 +32,11 @@ import {
   StyledInputBase,
 } from "../../components/admin-components";
 import SearchIcon from "@mui/icons-material/Search";
+import jwtDecoder from "../../services/jwtDecoder";
+import { getUserDetails } from "../../services/auth.service";
+const AdminDashboard = () => {
+  const [firstName, setFirstName] = useState('');  
+  const [lastName, setLastName] = useState('');
 import {
   filterByCategory,
   getCategories,
@@ -104,11 +110,33 @@ const AdminDashboard = () => {
   const handleCategory = (e) => {
     setCategory(e.target.value);
   };
+  var username = "";
+
+  useEffect(() => {
+    const data = jwtDecoder();
+    username = data["Username"];
+    console.log("Username in dahsboard: " + username);
+    const fetchUserDetails = async () => {
+      try {
+        const response = await getUserDetails(data["Username"]);
+        setFirstName(response.data.data.FirstName);
+        setLastName(response.data.data.LastName);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
   return (
-    <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>
+    <Box
+      sx={{ display: "flex", background: "#f8f8ff" }}
+      className={`${classes["bgimage"]}`}
+    >
       <CssBaseline />
       {/* Admin offcanvas with navbar */}
-      <AdminSlider />
+      <AdminSlider firstName={firstName.toString()} lastName={lastName.toString()} />
       {/* Main Content */}
       <Box className={`container`} component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
@@ -195,7 +223,9 @@ const AdminDashboard = () => {
         <h4>Pending Contest</h4>
         <div className="row">
           {Category.map((ele, idx) => (
+
             <QuizCard
+              key={index}
               title={ele.title}
               description={ele.description}
               date={ele.date}
@@ -253,4 +283,5 @@ const AdminDashboard = () => {
     </Box>
   );
 };
+
 export default AdminDashboard;
