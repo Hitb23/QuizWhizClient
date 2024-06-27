@@ -20,6 +20,7 @@
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
     "dotenv": "^16.4.5",
+    "date-fns": "^3.6.0",
     "formik": "^2.4.6",
     "formik-material-ui": "^4.0.0-alpha.2",
     "jwt-decode": "^4.0.0",

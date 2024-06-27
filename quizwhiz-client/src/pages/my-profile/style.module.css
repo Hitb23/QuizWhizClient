@@ -36,11 +36,30 @@ div.vertical-line-centre {
   text-align: center;
 }
 
+.upload-btn {
+  padding: 0.5rem 2.1rem;
+  background-color: #f47d0a;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  border: none;
+}
+
+.edit-button {
+  background-color: #f47d0a !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.edit-button:hover {
+  background-color: #485256 !important;
+}
+
+
 @media (max-width: 1199px) {
   .edit-button {
     margin: 0.7rem auto !important;
   }
-  .profile-photo{
+  .profile-photo {
     width: 170px !important;
     height: 170px !important;
     margin-top: 9rem;
@@ -51,7 +70,7 @@ div.vertical-line-centre {
   .main-box {
     padding: 2rem 6rem;
   }
-  .profile-photo{
+  .profile-photo {
     width: 140px !important;
     height: 140px !important;
   }
@@ -74,7 +93,7 @@ div.vertical-line-centre {
     padding: 2rem 4.5rem;
   }
 
-  .profile-photo{
+  .profile-photo {
     width: 110px !important;
     height: 110px !important;
   }

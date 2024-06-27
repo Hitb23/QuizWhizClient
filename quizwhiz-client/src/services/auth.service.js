@@ -98,3 +98,12 @@ export const editProfile = async (data) => {
     },
   });
 };
+
+export const getContestRecords = async (data) => {
+  return await axios.get(API_URLS.VALIDATE_TOKEN_URL, JSON.stringify(data), {
+    headers: {
+      "Content-Type": "application/json",
+      // token: "Bearer " + localStorage.getItem("token")
+    },
+  });
+};

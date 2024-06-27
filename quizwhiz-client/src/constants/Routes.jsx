@@ -10,56 +10,62 @@ import { Role } from "../utils/enum";
 import NotFoundPage from "../pages/page-not-found";
 import AdminLogin from "../pages/admin-login";
 import MyProfile from "../pages/my-profile";
+import AdminCategory from "../pages/admin-category";
 
 export const ROUTES = [
   {
-    path: '/',
+    path: "/",
     element: <Welcome />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path: '/login',
+    path: "/login",
     element: <Login />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path: '/sign-up',
+    path: "/sign-up",
     element: <SignUp />,
     roles: [Role.Public],
   },
   {
-    path: '/forgot-password',
+    path: "/forgot-password",
     element: <ForgotPassword />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path: '/reset-password/:token',
+    path: "/reset-password/:token",
     element: <ResetPassword />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path: '/admin-dashboard',
+    path: "/admin-dashboard",
     element: <AdminDashboard />,
     roles: [Role.Admin],
   },
   {
-    path: '/user-dashboard',
+    path: "/user-dashboard",
     element: <UserDashboard />,
     roles: [Role.Contestant],
   },
   {
-    path: '/admin-login',
+    path: "/admin-login",
     element: <AdminLogin />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path: '*',
+    path: "*",
     element: <NotFoundPage />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path: '/my-profile',
-    element: <MyProfile/>,
+    path: "/my-profile",
+    element: <MyProfile />,
     roles: [Role.Admin, Role.Contestant],
-  }
+  },
+  {
+    path: "/contest/:id",
+    element: <AdminCategory />,
+    roles: [Role.Admin, Role.Contestant, Role.Public],
+  },
 ];
