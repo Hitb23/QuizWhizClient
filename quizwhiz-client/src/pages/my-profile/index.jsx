@@ -43,8 +43,6 @@ import {
 } from "../../services/auth.service";
 import Logo from "../../assets/NewQuizLogo.svg";
 import classes from "./style.module.css";
-import ReactCountryFlag from "react-country-flag";
-import Select from "react-select";
 import { Autocomplete } from "formik-material-ui";
 import { RoutePaths } from "../../utils/enum";
 import { bindActionCreators } from "redux";

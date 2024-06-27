@@ -1,18 +1,8 @@
 import { React, useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  useTheme,
-} from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import classes from "./style.module.css";
-import { Category } from "../../utils/dummyData";
 import CardComponent from "../../components/admin-cards/quiz-category";
 
 import {
@@ -32,11 +22,7 @@ import {
   StyledInputBase,
 } from "../../components/admin-components";
 import SearchIcon from "@mui/icons-material/Search";
-import jwtDecoder from "../../services/jwtDecoder";
 import { getUserDetails } from "../../services/auth.service";
-const AdminDashboard = () => {
-  const [firstName, setFirstName] = useState('');  
-  const [lastName, setLastName] = useState('');
 import {
   filterByCategory,
   getCategories,
@@ -53,32 +39,46 @@ const MenuProps = {
     },
   },
 };
-
-const names = ["Easy", "Medium", "Hard"];
-const QuizCategory = ["Science", "General Knowledge", "Sports"];
-
 const AdminDashboard = () => {
-  const [difficulty, setDifficulty] = useState('');
-  const [category, setCategory] = useState('');
+  const [firstName,setFirstName]=useState('');
+  const [lastName,setLastName]=useState('');
+  const [difficulty, setDifficulty] = useState("");
+  const [category, setCategory] = useState("");
   const [difficultyList, setDifficultyList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
+  const [DifficultyId, setDifficultyId] = useState(0);
+  const [CategoryId, SetcategoryId] = useState(0);
   const [Records, setRecords] = useState(4);
+  const [PageSize, SetPageSize] = useState(1);
+  const [currentPage, SetCurrentPage] = useState(1);
+  const [filteredData, SetFilteredData] = useState([]);
   const navigate = useNavigate();
   const params = useParams();
+  // const
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await getDifficulties();
         const result1 = await getCategories();
+        const allData = await filterByCategory({
+          StatusId: 1,
+          DifficultyId: 0,
+          CategoryId: 0,
+          CurrentPage: 1,
+        });
+        const Data = allData.data.data.GetQuizzes;
         setDifficultyList(result.data.data);
         setCategoryList(result1.data.data);
+        SetFilteredData(Data);
+        // SetPageSize(result?.data?.data?.Pagination.PageSize);
       } catch (error) {
-        console.error('Error fetching data', error);
+        console.error("Error fetching data", error);
       }
     };
 
     fetchData();
-  },[]);
+  }, []);
 
   const navigateToCategory = (id) => {
     if (id === "pending") navigate(`/admin-dashboard`);
@@ -88,10 +88,10 @@ const AdminDashboard = () => {
   const handlePageSize = (event) => {
     setRecords(event.target.value);
   };
-  
+
   const handleDifficulty = async (event) => {
-    console.log("hello")
-     setDifficulty(event.target.value);
+    console.log("hello");
+    setDifficulty(event.target.value);
     // public required int StatusId { get; set; }
 
     // public required int DifficultyId { get; set; }
@@ -99,15 +99,22 @@ const AdminDashboard = () => {
     // public required int CategoryId { get; set; }
 
     // public required int CurrentPage { get; set; }
-     const result = await filterByCategory({StatusId:4,DifficultyId:event.target.value,CategoryId:2,CurrentPage:1});
-    // console.log(result)
+    const result = await filterByCategory({
+      StatusId: 1,
+      DifficultyId: 0,
+      CategoryId: 0,
+      CurrentPage: 1,
+    });
+    const filteredData = result.data.data.GetQuizzes;
+    SetFilteredData(filteredData);
+    console.log(result);
   };
 
   const handlePageChange = async (event, value) => {
-    console.log(value)
+    console.log(value);
   };
 
-  const handleCategory = (e) => {
+  const handleCategory = async (e) => {
     setCategory(e.target.value);
   };
   var username = "";
@@ -131,12 +138,15 @@ const AdminDashboard = () => {
 
   return (
     <Box
-      sx={{ display: "flex", background: "#f8f8ff" }}
+      sx={{ display: "flex" }}
       className={`${classes["bgimage"]}`}
     >
       <CssBaseline />
       {/* Admin offcanvas with navbar */}
-      <AdminSlider firstName={firstName.toString()} lastName={lastName.toString()} />
+      <AdminSlider
+        firstName={firstName.toString()}
+        lastName={lastName.toString()}
+      />
       {/* Main Content */}
       <Box className={`container`} component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
@@ -191,6 +201,9 @@ const AdminDashboard = () => {
               label="Difficulty"
               MenuProps={MenuProps}
             >
+              <MenuItem key={0} value={0}>
+                All
+              </MenuItem>
               {difficultyList &&
                 difficultyList.map((ele) => (
                   <MenuItem key={ele.DifficultyId} value={ele.DifficultyId}>
@@ -209,30 +222,30 @@ const AdminDashboard = () => {
               label="Category"
               MenuProps={MenuProps}
             >
+              <MenuItem key={0} value={0}>
+                All
+              </MenuItem>
               {categoryList &&
                 categoryList.map((ele) => (
                   <MenuItem key={ele.CategoryId} value={ele.CategoryName}>
                     {ele.CategoryName}
                   </MenuItem>
-                ))
-              }
+                ))}
             </Select>
           </FormControl>
           <button className={`${classes["add-quiz-btn"]}`}>Add Quiz</button>
         </div>
         <h4>Pending Contest</h4>
         <div className="row">
-          {Category.map((ele, idx) => (
-
-            <QuizCard
-              key={index}
-              title={ele.title}
-              description={ele.description}
-              date={ele.date}
-              time={ele.time}
-              key={idx}
-            />
-          ))}
+          {filteredData &&
+            filteredData.map((ele, idx) => (
+              <QuizCard
+                title={ele.Title}
+                description={ele.Description}
+                date={ele.ScheduledDate}
+                key={idx}
+              />
+            ))}
         </div>
         <div className="d-flex justify-content-between mt-3 align-items-center">
           <FormControl sx={{ m: 1, minWidth: 80 }} size="small">
@@ -253,7 +266,7 @@ const AdminDashboard = () => {
             </Select>
           </FormControl>
           <Pagination
-            count={10}
+            count={PageSize}
             color="primary"
             onChange={handlePageChange}
             sx={{
@@ -283,5 +296,4 @@ const AdminDashboard = () => {
     </Box>
   );
 };
-
 export default AdminDashboard;

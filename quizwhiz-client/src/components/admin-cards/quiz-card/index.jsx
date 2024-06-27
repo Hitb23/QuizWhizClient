@@ -45,7 +45,7 @@ const QuizCard = ({ title, description, date, time }) => {
           }}
         />
         <CardContent
-          className="d-flex align-items-center flex-column"
+          className="d-flex  flex-column"
           sx={{
             paddingTop: "16px",
             paddingBottom: "16px",
@@ -57,7 +57,7 @@ const QuizCard = ({ title, description, date, time }) => {
             className="fw-semibold"
             sx={{ marginBottom: "8px" }}
           >
-            {title.substring(0, 15)}
+            {title}
           </Typography>
           <Typography
             variant="body2"
