@@ -91,7 +91,7 @@ const NotFoundPage = () => {
                 >
                   <stop
                     offset="0%"
-                    style={{ stopColor: "#FFFFFF", stopOpacity: 1 }}
+                    style={{ stopColor: "#fbd0da", stopOpacity: 1 }}
                   />
                   <stop
                     offset="50%"

@@ -50,7 +50,7 @@ export const ROUTES = [
     roles: [Role.Contestant],
   },
   {
-    path: "/admin-login",
+    path: "/admin/login",
     element: <AdminLogin />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },

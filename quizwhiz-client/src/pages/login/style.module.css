@@ -3,25 +3,24 @@
 }
 
 .black-font{
-  color: #000000;
+  color: #fada65;
 }
 
 .log-in-title {
-  color: #F47D0A;
+  color: #fada65;
   font-size: 50px;
   padding-top: 1rem;
 }
 
 .form-input {
-
-  border: 1px solid #F47D0A !important;
-
+  background-color: #fbf5dd !important;
+  border: 1px solid #fada65 !important;
 }
 
 .form-input:focus,
 .form-input:hover {
-    outline: 1px solid #F47D0A !important;
-    border: 1px solid #f33404 !important;
+    outline: 1px solid #f0c20c !important;
+    border: 1px solid #f0c20c !important;
     box-shadow: 0 0 16px 0 rgba(228, 55, 55, 0.18), 0 2px 4px 0 rgba(228, 55, 55, 0.12) !important;
 }
 
@@ -29,30 +28,31 @@
 .log-in-label {
   font-size: 18px;
   cursor: pointer;
-  color: #000000;
+  color: #fada65;
 }
 
 .log-in-label-selected {
-  color: #F47D0A;
+  color: #fada65;
   text-decoration: underline;
 }
 
 .log-in-button {
   padding: 0.8rem 2.5rem 0.8rem 2.5rem;
   font-size: 20px;
-  background-color: #F47D0A;
-  color: #ffffff;
+  background-color: #fada65;
+  color: #000000;
   border-radius: 0.5rem;
-  border: 1px solid #F47D0A;
+  border: 1px solid #fada65;
 }
 
 .log-in-button:hover {
-  background-color: #ffffff;
-  color: #F47D0A;
+  background-color: #6F41DB;
+  color: #fada65;
+  border: 1px solid #fada65;
 }
 
 .disabled-button{
-  background-color: #e0e0e0;
+  background-color: #fbf5dd;
   color: black;
   border: 1px solid #ccc;
   cursor: not-allowed;
@@ -62,7 +62,7 @@
 .visibility-toggle {
   position: absolute;
   right: 10px;
-  background: #FFFFFF;
+  background: #fbf5dd;
   border: none;
   cursor: pointer;
 }
@@ -74,9 +74,13 @@
 }
 
 .error-message {
-  font-size: 20px;
-  color: #f33404;
-  font-weight: bolder;
+  font-size: 17px;
+  color: #fada65 !important;
+}
+
+.link-message {
+  color: #fada65;
+  padding-top: 0.15rem;
 }
 
 @media (max-height: 750px) {

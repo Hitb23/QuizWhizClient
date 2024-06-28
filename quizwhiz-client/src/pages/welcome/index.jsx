@@ -39,7 +39,7 @@ const Welcome =  () => {
         <div className={`text-center`}>
           <div className={classes["welcome-title"]}> <span ref={el} /></div>
           <div className={classes["welcome-slogan"]}>
-            Where Every Game is a Brain Boost!
+            where every game is a Brain Boost!
           </div>
         </div>
         <div className={classes["poster"]}>

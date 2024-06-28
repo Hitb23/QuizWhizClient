@@ -43,7 +43,6 @@ import {
 } from "../../services/auth.service";
 import Logo from "../../assets/NewQuizLogo.svg";
 import classes from "./style.module.css";
-import { Autocomplete } from "formik-material-ui";
 import { RoutePaths } from "../../utils/enum";
 import { bindActionCreators } from "redux";
 import { userActions } from "../../redux/action-creators";
@@ -158,7 +157,6 @@ const AdminSideBar = () => {
       firstName: "",
       lastName: "",
       phoneNumber: "",
-      country: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -305,8 +303,8 @@ const AdminSideBar = () => {
   }, [image]);
 
   const FileUploadButton = styled(Button)(({ theme }) => ({
-    color: "#FFFFFF",
-    backgroundColor: "#F47D0A",
+    color: "#fbd0da",
+    backgroundColor: "#5f071c",
     "&:hover": {
       backgroundColor: "#485256",
     },
@@ -441,27 +439,7 @@ const AdminSideBar = () => {
               </span>
             ) : null}
 
-            <Autocomplete
-              id="country"
-              options={countries}
-              getOptionLabel={(option) => `${option.label} (${option.code})`}
-              value={formik.values.country}
-              onChange={(event, value) =>
-                formik.setFieldValue("country", value)
-              }
-              onBlur={formik.handleBlur}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Choose a country"
-                  error={
-                    formik.touched.country && Boolean(formik.errors.country)
-                  }
-                  helperText={formik.touched.country && formik.errors.country}
-                />
-              )}
-            />
-
+            
             <div className="d-flex flex-row">
               {isEditable ? (
                 <>
@@ -473,7 +451,7 @@ const AdminSideBar = () => {
                     sx={{
                       minWidth: 10,
                       maxWidth: 50,
-                      backgroundColor: "#F47D0A",
+                      backgroundColor: "#5f071c",
                     }}
                   >
                     Save
@@ -485,7 +463,7 @@ const AdminSideBar = () => {
                     sx={{
                       minWidth: 75,
                       maxWidth: 50,
-                      backgroundColor: "#F47D0A",
+                      backgroundColor: "#5f071c",
                     }}
                     onClick={handleCancelClick}
                   >
