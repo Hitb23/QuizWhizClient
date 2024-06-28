@@ -48,7 +48,7 @@ const ForgotPassword = () => {
               {({ errors, touched, isValid, isSubmitting }) => (
                 <Form>
                   <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-5 pb-5">
+                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-5 pb-5">
                       <label
                         htmlFor="email"
                         className={`form-label fw-bold ${classes["black-font"]}`}
@@ -65,12 +65,12 @@ const ForgotPassword = () => {
                         autoComplete="on"
                       />
                       {touched.email && errors.email ? (
-                        <span className="text-danger">{errors.email}</span>
+                        <span className={classes["error-message"]}>{errors.email}</span>
                       ) : null}
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
+                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
                       <button
                         type="submit"
                         className={`${classes["forgot-password-button"]} ${
@@ -88,7 +88,7 @@ const ForgotPassword = () => {
               )}
             </Formik>
             <div className={`d-flex justify-content-center`}>
-              <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
+              <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
                 <Link to={RoutePaths.Login}>
                   <label
                     className={`form-label fw-bold text-end text-decoration-none m-0 text-black pe-auto ${classes["back-to-login-label"]}`}

@@ -173,7 +173,6 @@ const AdminSideBar = () => {
       firstName: "",
       lastName: "",
       phoneNumber: "",
-      country: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -320,8 +319,8 @@ const AdminSideBar = () => {
   }, [image]);
 
   const FileUploadButton = styled(Button)(({ theme }) => ({
-    color: "#FFFFFF",
-    backgroundColor: "#F47D0A",
+    color: "#fbd0da",
+    backgroundColor: "#5f071c",
     "&:hover": {
       backgroundColor: "#485256",
     },
@@ -467,6 +466,7 @@ const AdminSideBar = () => {
                 {formik.errors.phoneNumber}
               </span>
             ) : null}
+            
             <Select
               className={`mt-4 ${classes["input-field"]}`}
               displayEmpty
@@ -500,7 +500,7 @@ const AdminSideBar = () => {
                     sx={{
                       minWidth: 10,
                       maxWidth: 50,
-                      backgroundColor: "#F47D0A",
+                      backgroundColor: "#5f071c",
                     }}
                   >
                     Save
@@ -512,7 +512,7 @@ const AdminSideBar = () => {
                     sx={{
                       minWidth: 75,
                       maxWidth: 50,
-                      backgroundColor: "#F47D0A",
+                      backgroundColor: "#5f071c",
                     }}
                     onClick={handleCancelClick}
                   >

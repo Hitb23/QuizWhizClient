@@ -102,7 +102,7 @@ const Login = () => {
               {({ values, errors, touched, isValid, isSubmitting }) => (
                 <Form>
                   <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
                       <label
                         htmlFor="email"
                         className={`form-label fw-bold ${classes["black-font"]}`}
@@ -119,12 +119,12 @@ const Login = () => {
                         autoComplete="on"
                       />
                       {touched.email && errors.email ? (
-                        <span className="text-danger">{errors.email}</span>
+                        <span className={classes["error-message"]}>{errors.email}</span>
                       ) : null}
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
                       <label
                         htmlFor="password"
                         className={`form-label fw-bold ${classes["black-font"]}`}
@@ -157,15 +157,15 @@ const Login = () => {
                         )}
                       </Field>
                       {touched.password && errors.password ? (
-                        <span className="text-danger">{errors.password}</span>
+                        <span className={classes["error-message"]}>{errors.password}</span>
                       ) : null}
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex flex-row-reverse">
+                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex flex-row-reverse">
                       <Link to={RoutePaths.ForgotPassword}>
                         <label
-                          className={`form-label fw-bold text-end text-decoration-none text-black pe-auto ${classes["forgot-password-label"]}`}
+                          className={`form-label fw-bold text-end text-decoration-none pe-auto ${classes["forgot-password-label"]}`}
                         >
                           Forgot Password?
                         </label>
@@ -194,13 +194,13 @@ const Login = () => {
             <div className={`d-flex justify-content-center`}>
               <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
                 <div
-                  className={`d-flex align-items-center ${classes["black-font"]}`}
+                  className={`d-flex align-items-center ${classes["link-message"]}`}
                 >
                   Don't you have an account?
                 </div>
                 <Link to={RoutePaths.SignUp}>
                   <label
-                    className={`form-label fw-bold text-end text-decoration-none m-0 text-black pe-auto ${classes["log-in-label"]}`}
+                    className={`form-label fw-bold text-end text-decoration-none m-0 pe-auto ${classes["log-in-label"]}`}
                   >
                     Sign Up
                   </label>
