@@ -214,7 +214,6 @@ const AdminSideBar = () => {
         console.log(error);
       }
     };
-
     fetchUserDetails();
   }, []);
 
@@ -265,10 +264,10 @@ const AdminSideBar = () => {
   };
 
   const submitUserDetails = async () => {
-    console.log(firstName);
-    console.log(lastName);
-    console.log(phoneNumber);
-    console.log(country);
+    // console.log(firstName);
+    // console.log(lastName);
+    // console.log(phoneNumber);
+    // console.log(country);
   };
 
   const handleImageUpload = async (event) => {

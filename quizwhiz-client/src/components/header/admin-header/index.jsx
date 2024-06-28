@@ -36,8 +36,7 @@ import { RoutePaths } from "../../../utils/enum";
 import jwtDecoder from "../../../services/jwtDecoder";
 
 const AdminSlider = ({firstName, lastName, uploadCount}) => {
-  console.log(firstName);
-  console.log(lastName);
+
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [fullImagePath, setFullImagePath] = useState("");

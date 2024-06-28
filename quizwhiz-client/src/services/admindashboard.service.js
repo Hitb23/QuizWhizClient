@@ -24,3 +24,13 @@ export const getCategories = async () => {
     },
   });
 };
+export const changeRecordsSize = async (data) => {
+    debugger
+    return await axios.get(API_URLS.QUIZ_RECORDS,{
+      headers: {
+        "Content-Type": "application/json",
+        // token: "Bearer " + localStorage.getItem("token")
+      },
+      params: data
+    });
+  };
