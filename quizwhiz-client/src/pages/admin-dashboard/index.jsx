@@ -90,15 +90,7 @@ const AdminDashboard = () => {
   };
 
   const handleDifficulty = async (event) => {
-    console.log("hello");
     setDifficulty(event.target.value);
-    // public required int StatusId { get; set; }
-
-    // public required int DifficultyId { get; set; }
-
-    // public required int CategoryId { get; set; }
-
-    // public required int CurrentPage { get; set; }
     const result = await filterByCategory({
       StatusId: 1,
       DifficultyId: 0,
@@ -107,11 +99,9 @@ const AdminDashboard = () => {
     });
     const filteredData = result.data.data.GetQuizzes;
     SetFilteredData(filteredData);
-    console.log(result);
   };
 
   const handlePageChange = async (event, value) => {
-    console.log(value);
   };
 
   const handleCategory = async (e) => {
@@ -122,14 +112,12 @@ const AdminDashboard = () => {
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
-    console.log("Username in dahsboard: " + username);
     const fetchUserDetails = async () => {
       try {
         const response = await getUserDetails(data["Username"]);
         setFirstName(response.data.data.FirstName);
         setLastName(response.data.data.LastName);
       } catch (error) {
-        console.log(error);
       }
     };
 
@@ -144,8 +132,9 @@ const AdminDashboard = () => {
       <CssBaseline />
       {/* Admin offcanvas with navbar */}
       <AdminSlider
-        firstName={firstName.toString()}
-        lastName={lastName.toString()}
+        firstname={firstName.toString()}
+        lastname={lastName.toString()}
+        username={username}
       />
       {/* Main Content */}
       <Box className={`container`} component="main" sx={{ flexGrow: 1, p: 3 }}>
@@ -188,7 +177,6 @@ const AdminDashboard = () => {
             <StyledInputBase
               sx={{ height: 55 }}
               placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
             />
           </Search>
           <FormControl sx={{ m: 1, width: 200 }}>

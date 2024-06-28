@@ -23,7 +23,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { PhotoCamera } from "@mui/icons-material";
+import { ArrowDropDown, PhotoCamera } from "@mui/icons-material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -43,14 +43,27 @@ import {
 } from "../../services/auth.service";
 import Logo from "../../assets/NewQuizLogo.svg";
 import classes from "./style.module.css";
-import { Autocomplete } from "formik-material-ui";
 import { RoutePaths } from "../../utils/enum";
 import { bindActionCreators } from "redux";
 import { userActions } from "../../redux/action-creators";
 import AdminSlider from "../../components/header/admin-header";
 import countries from "../../components/list-of-countries/listOfCountries";
+import Select from "@mui/material/Select";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Flag from "react-world-flags";
 
 const drawerWidth = 240;
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 200,
+      marginTop: ITEM_PADDING_TOP - 2,
+    },
+  },
+};
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -134,6 +147,7 @@ const validationSchema = yup.object().shape({
       "Phone number is invalid"
     )
     .required("Phone number is required"),
+  country: yup.string().required("Select a country"),
 });
 
 const AdminSideBar = () => {
@@ -151,7 +165,8 @@ const AdminSideBar = () => {
   const [image, setImage] = useState(null);
   const [fullImagePath, setFullImagePath] = useState(null);
   const [uploadCount, setUploadCount] = useState(0);
-  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [countryName, setCountryName] = useState([]);
+  const [selected, setSelected] = useState(null);
 
   const formik = useFormik({
     initialValues: {
@@ -168,7 +183,7 @@ const AdminSideBar = () => {
       const FirstName = formik.values.firstName;
       const LastName = formik.values.lastName;
       const PhoneNumber = formik.values.phoneNumber;
-      const Country = country;
+      const Country = formik.values.country;
       debugger;
       if (isEditable) {
         try {
@@ -192,11 +207,13 @@ const AdminSideBar = () => {
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
+    console.log("Username in dashboard" + username);
     setUserName(data["Username"]);
     setEmail(data["Email"]);
     const imagePath = `${
       import.meta.env.VITE_PUBLIC_URL
     }ProfilePhoto/${username}/${username}.jpg`;
+    console.log("Profile: " + imagePath);
     setFullImagePath(imagePath);
     const fetchUserDetails = async () => {
       try {
@@ -208,6 +225,7 @@ const AdminSideBar = () => {
         formik.values.firstName = response.data.data.FirstName;
         formik.values.lastName = response.data.data.LastName;
         formik.values.phoneNumber = response.data.data.PhoneNumber;
+        formik.values.country = response.data.data.Country;
         const photoUrl = response.data.data.ProfilePhotoUrl;
         setProfilePhotoUrl(photoUrl);
       } catch (error) {
@@ -240,10 +258,6 @@ const AdminSideBar = () => {
     setAnchorEl(null);
   };
 
-  const handleCountryChange = (event, value) => {
-    setSelectedCountry(value);
-  };
-
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -261,6 +275,7 @@ const AdminSideBar = () => {
   };
 
   const handleCancelClick = () => {
+    formik.setTouched([]);
     setIsEditable(false);
   };
 
@@ -312,6 +327,27 @@ const AdminSideBar = () => {
     },
   }));
 
+  const handleCountryChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setCountryName(value);
+    formik.setFieldValue("country", value);
+  };
+
+  function getStyles(name, personName, theme) {
+    return {
+      fontWeight:
+        personName.indexOf(name) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
+
+  const getCountryFlagUrl = (countryName) => {
+    return `https://flagpedia.net/data/flags-mini/${countryName.toLowerCase()}.png`;
+  };
+
   // const fullImagePath = `${
   //   import.meta.env.VITE_PUBLIC_URL
   // }ProfilePhoto/${userName}/${userName}.jpg`;
@@ -324,6 +360,7 @@ const AdminSideBar = () => {
         firstName={firstName}
         lastName={lastName}
         uploadCount={uploadCount}
+        userName={userName}
       />
       <Box
         className={`container-fluid flex-column flex-xl-row ${classes["main-box"]}`}
@@ -380,9 +417,7 @@ const AdminSideBar = () => {
               label="Username"
               value={userName}
               variant="outlined"
-              InputProps={{
-                readOnly: true,
-              }}
+              inputProps={{readOnly: !isEditable}}
             />
             <TextField
               className={`mt-4 ${classes["input-field"]}`}
@@ -390,9 +425,7 @@ const AdminSideBar = () => {
               label="Email"
               value={email}
               variant="outlined"
-              InputProps={{
-                readOnly: true,
-              }}
+              inputProps={{readOnly: !isEditable}}
             />
             <TextField
               className={`mt-4 ${classes["input-field"]}`}
@@ -401,9 +434,7 @@ const AdminSideBar = () => {
               variant="outlined"
               value={formik.values.firstName}
               onChange={formik.handleChange}
-              InputProps={{
-                readOnly: !isEditable,
-              }}
+              inputProps={{readOnly: !isEditable}}
             />
             {formik.touched.firstName && formik.errors.firstName ? (
               <span className="text-danger mt-2">
@@ -417,9 +448,7 @@ const AdminSideBar = () => {
               variant="outlined"
               value={formik.values.lastName}
               onChange={formik.handleChange}
-              InputProps={{
-                readOnly: !isEditable,
-              }}
+              inputProps={{readOnly: !isEditable}}
             />
             {formik.touched.lastName && formik.errors.lastName ? (
               <span className="text-danger mt-2">{formik.errors.lastName}</span>
@@ -431,36 +460,34 @@ const AdminSideBar = () => {
               variant="outlined"
               value={formik.values.phoneNumber}
               onChange={formik.handleChange}
-              InputProps={{
-                readOnly: !isEditable,
-              }}
+              inputProps={{readOnly: !isEditable}}
             />
             {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
               <span className="text-danger mt-2">
                 {formik.errors.phoneNumber}
               </span>
             ) : null}
-
-            <Autocomplete
-              id="country"
-              options={countries}
-              getOptionLabel={(option) => `${option.label} (${option.code})`}
+            <Select
+              className={`mt-4 ${classes["input-field"]}`}
+              displayEmpty
+              onChange={handleCountryChange}
               value={formik.values.country}
-              onChange={(event, value) =>
-                formik.setFieldValue("country", value)
-              }
-              onBlur={formik.handleBlur}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Choose a country"
-                  error={
-                    formik.touched.country && Boolean(formik.errors.country)
-                  }
-                  helperText={formik.touched.country && formik.errors.country}
-                />
-              )}
-            />
+              input={<OutlinedInput />}
+              readOnly={!isEditable}
+              placeholder="Select a country"
+              MenuProps={MenuProps}
+              
+            >
+              {countries.map((country) => (
+                <MenuItem key={country.code} value={country.name}>
+                  <Flag code={country.code} style={{ width: '1.5em', marginRight: '8px' }}/>
+                  {country.name}
+                </MenuItem>
+              ))}
+            </Select>
+            {formik.touched.country && formik.errors.country ? (
+              <span className="text-danger mt-2">{formik.errors.country}</span>
+            ) : null}
 
             <div className="d-flex flex-row">
               {isEditable ? (

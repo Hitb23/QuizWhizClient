@@ -35,9 +35,8 @@ import { DrawerHeader, AppBar, Drawer } from "../../admin-components/index";
 import { RoutePaths } from "../../../utils/enum";
 import jwtDecoder from "../../../services/jwtDecoder";
 
-const AdminSlider = ({firstName, lastName, uploadCount}) => {
-  console.log(firstName);
-  console.log(lastName);
+const AdminSlider = ({firstName, lastName, uploadCount, userName}) => {
+  console.log("Username:" + userName);
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [fullImagePath, setFullImagePath] = useState("");
@@ -48,7 +47,8 @@ const AdminSlider = ({firstName, lastName, uploadCount}) => {
   username = data["Username"];
 
   useEffect(() => {
-    setFullImagePath(`${import.meta.env.VITE_PUBLIC_URL}ProfilePhoto/${username}/${username}.jpg?${uploadCount}`);
+    setFullImagePath(`${import.meta.env.VITE_PUBLIC_URL}ProfilePhoto/${userName}/${userName}.jpg`);
+    console.log("Sidebar : " + fullImagePath);
   }, [uploadCount]);
 
   const handleDrawerOpen = () => {
@@ -202,8 +202,8 @@ const AdminSlider = ({firstName, lastName, uploadCount}) => {
           }}
         >
           <Box sx={{ display: "flex", gap: "0.8rem", alignItems: "center" }}>
-            <Avatar sx={{ background: "#F47D0A" }}>PR</Avatar>
-            <Typography variant="p">Pravin Raina</Typography>
+            <Avatar sx={{ background: "#F47D0A" }} src={fullImagePath}></Avatar>
+            <Typography variant="p">Hey, {firstName} {lastName}</Typography>
           </Box>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
