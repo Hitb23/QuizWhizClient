@@ -183,7 +183,7 @@ const AdminDashboard = () => {
         <div className="d-flex  align-items-center flex-wrap column-gap-2 my-2">
           <Search sx={{ height: 55, width: 40 }}>
             <SearchIconWrapper>
-              <SearchIcon sx={{ color: "#F47D0A" }} />
+              <SearchIcon sx={{ color: "#5f071c" }} />
             </SearchIconWrapper>
             <StyledInputBase
               sx={{ height: 55 }}
@@ -274,19 +274,19 @@ const AdminDashboard = () => {
                 backgroundColor: "white",
                 color: "black",
                 "&:hover": {
-                  backgroundColor: "#F47D0A",
-                  color: "#ffffff",
+                  backgroundColor: "#5f071c",
+                  color: "#fbd0da",
                 },
               },
               "& .MuiPaginationItem-root.Mui-selected": {
-                backgroundColor: "#F47D0A",
-                color: "#ffffff",
+                backgroundColor: "#5f071c",
+                color: "#fbd0da",
               },
               "& .MuiPaginationItem-ellipsis": {
                 backgroundColor: "white",
                 "&:hover": {
                   backgroundColor: "transparent",
-                  color: "#ffffff",
+                  color: "#fbd0da",
                 },
               },
             }}

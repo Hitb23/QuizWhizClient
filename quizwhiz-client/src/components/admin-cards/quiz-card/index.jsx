@@ -57,7 +57,7 @@ const QuizCard = ({ title, description, date, time }) => {
             className="fw-semibold"
             sx={{ marginBottom: "8px" }}
           >
-            {title}
+            {title.substring(0,14)}
           </Typography>
           <Typography
             variant="body2"
@@ -65,7 +65,7 @@ const QuizCard = ({ title, description, date, time }) => {
             className="fw-semibold text-center"
             sx={{ marginBottom: "16px" }}
           >
-            {description}
+            {description.substring(0,14)}
           </Typography>
           <Typography
             variant="body1"
@@ -80,11 +80,11 @@ const QuizCard = ({ title, description, date, time }) => {
           <Button
             className="mt-2"
             sx={{
-              outline: "1px solid #F47D0A",
+              outline: "1px solid #5f071c",
               fontWeight: "bold",
-              color: "#F47D0A",
+              color: "#5f071c",
               "&:hover": {
-                backgroundColor: "#F47D0A",
+                backgroundColor: "#5f071c",
                 color: "white",
                 borderColor: "primary.main",
                 fontWeight: "bold",

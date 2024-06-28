@@ -55,6 +55,7 @@ const AdminLogin = () => {
 
     try {
       const response = await adminLogin({ email, password });
+      console.log(response);
       localStorage.setItem("token", response.data.data);
       localStorage.setItem("token-expiry", new Date().getTime() + 3600 * 1000);
 
@@ -92,7 +93,7 @@ const AdminLogin = () => {
           <div
             className={`${classes["log-in-title"]} col-md-6 col-sm-8 col-10 text-center fw-bold`}
           >
-            Admin Login
+            Admin Log In
           </div>
           <div>
             <Formik
@@ -103,7 +104,7 @@ const AdminLogin = () => {
               {({ values, errors, touched, isValid, isSubmitting }) => (
                 <Form>
                   <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
                       <label
                         htmlFor="email"
                         className={`form-label fw-bold ${classes["black-font"]}`}
@@ -125,7 +126,7 @@ const AdminLogin = () => {
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
                       <label
                         htmlFor="password"
                         className={`form-label fw-bold ${classes["black-font"]}`}
@@ -163,10 +164,10 @@ const AdminLogin = () => {
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex flex-row-reverse">
+                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex flex-row-reverse">
                       <Link to={RoutePaths.ForgotPassword}>
                         <label
-                          className={`form-label fw-bold text-end text-decoration-none text-black pe-auto ${classes["forgot-password-label"]}`}
+                          className={`form-label fw-bold text-end text-decoration-none pe-auto ${classes["forgot-password-label"]}`}
                         >
                           Forgot Password?
                         </label>
@@ -195,13 +196,13 @@ const AdminLogin = () => {
             <div className={`d-flex justify-content-center`}>
               <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
                 <div
-                  className={`d-flex align-items-center ${classes["black-font"]}`}
+                  className={`d-flex align-items-center ${classes["link-message"]}`}
                 >
                   Don't you have an account?
                 </div>
                 <Link to={RoutePaths.SignUp}>
                   <label
-                    className={`form-label fw-bold text-end text-decoration-none m-0 text-black pe-auto ${classes["log-in-label"]}`}
+                    className={`form-label fw-bold text-end text-decoration-none m-0 pe-auto ${classes["log-in-label"]}`}
                   >
                     Sign Up
                   </label>
