@@ -1,6 +1,15 @@
-import { React, useEffect, useState } from "react";
-import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 
+import * as React from "react";
+import { useState, useEffect } from "react";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  // makeStyles,
+} from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import classes from "./style.module.css";
 import CardComponent from "../../components/admin-cards/quiz-category";
@@ -11,8 +20,13 @@ import {
   faPlay,
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
-import { DrawerHeader } from "../../components/admin-components";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  DrawerHeader,
+  Search,
+  SearchIconWrapper,
+  StyledInputBase,
+} from "../../components/admin-components";
 import AdminSlider from "../../components/header/admin-header";
 import QuizCard from "../../components/admin-cards/quiz-card";
 import Pagination from "@mui/material/Pagination";
@@ -193,14 +207,39 @@ const AdminDashboard = () => {
       SetFilteredData([]);
     }
   };
+  var fname = "";
+  var lname = "";
+  var username = "";
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const data = jwtDecoder();
+        const response = await getUserDetails(data["Username"]);
+        setFirstName(response.data.data.FirstName);
+        setLastName(response.data.data.LastName);
+        setIsDataFetched(true);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
+  useEffect(() => {
+    setUploadCount(uploadCount + 1);
+  }, [updatedText, stateVal, isDataFetched]);
 
   return (
-    <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>
+    <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>  
       <CssBaseline />
       {/* Admin offcanvas with navbar */}
       <AdminSlider
-        firstName={firstName.toString()}
-        lastName={lastName.toString()}
+        firstName={firstName}
+        lastName={lastName}
+        uploadCount={uploadCount}
+        userName={jwtDecoder().Username}
       />
       {/* Main Content */}
       <Box className={`container`} component="main" sx={{ flexGrow: 1, p: 3 }}>
