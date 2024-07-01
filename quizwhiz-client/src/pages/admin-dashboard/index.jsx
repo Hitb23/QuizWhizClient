@@ -52,6 +52,7 @@ const AdminDashboard = () => {
   const [PageSize, SetPageSize] = useState(1);
   const [currentPage, SetCurrentPage] = useState(1);
   const [filteredData, SetFilteredData] = useState([]);
+  const [uploadCount, setUploadCount] = useState(0);
   const navigate = useNavigate();
   const params = useParams();
   // const
@@ -59,6 +60,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setUploadCount(uploadCount + 1);
         const result = await getDifficulties();
         const result1 = await getCategories();
         const allData = await filterByCategory({
@@ -118,6 +120,7 @@ const AdminDashboard = () => {
         setFirstName(response.data.data.FirstName);
         setLastName(response.data.data.LastName);
       } catch (error) {
+        console.log(error);
       }
     };
 
@@ -132,9 +135,10 @@ const AdminDashboard = () => {
       <CssBaseline />
       {/* Admin offcanvas with navbar */}
       <AdminSlider
-        firstname={firstName.toString()}
-        lastname={lastName.toString()}
-        username={username}
+        firstName={firstName}
+        lastName={lastName}
+        uploadCount={uploadCount}
+        userName={jwtDecoder().userName}
       />
       {/* Main Content */}
       <Box className={`container`} component="main" sx={{ flexGrow: 1, p: 3 }}>

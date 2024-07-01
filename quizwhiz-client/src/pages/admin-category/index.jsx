@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   FormControl,
@@ -21,20 +22,40 @@ import {
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { DrawerHeader, Search, SearchIconWrapper, StyledInputBase } from "../../components/admin-components";
+import {
+  DrawerHeader,
+  Search,
+  SearchIconWrapper,
+  StyledInputBase,
+} from "../../components/admin-components";
 import AdminSlider from "../../components/header/admin-header";
 import QuizCard from "../../components/admin-cards/quiz-card";
 import jwtDecoder from "../../services/jwtDecoder";
 import SearchIcon from "@mui/icons-material/Search";
+import { getUserDetails } from "../../services/auth.service";
 
 const AdminCategory = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [uploadCount, setUploadCount] = useState(0);
   const navigate = useNavigate();
   const params = useParams();
-  const Updatedtext =
-    params.id.substring(0, 1).toUpperCase() + params.id.substring(1);
+  const [stateVal, setStateVal] = useState(params.id);
+  const [updatedText, setUpdatedText] = useState("");
+  const [isDataFetched, setIsDataFetched] = useState(false);
+
+  // setParamsId(params.id);
   const navigateToCategory = (id) => {
-    if (id === "pending") navigate(`/admin-dashboard`);
-    else navigate(`/admin-dashboard/${id}`);
+    // setParamsId(paramsId + 1);
+    if (id === "pending") {
+      navigate(`/admin-dashboard`);
+    } else {
+      navigate(`/admin-dashboard/${id}`);
+    }
+    setUpdatedText(
+      params.id.substring(0, 1).toUpperCase() + params.id.substring(1)
+    );
+    setStateVal(id);
   };
   const [Records, setRecords] = React.useState(4);
 
@@ -50,14 +71,40 @@ const AdminCategory = () => {
     };
     const result = await getContestRecords();
   };
+  var fname = "";
+  var lname = "";
+  var username = "";
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const data = jwtDecoder();
+        const response = await getUserDetails(data["Username"]);
+        setFirstName(response.data.data.FirstName);
+        setLastName(response.data.data.LastName);
+        setIsDataFetched(true);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
+  useEffect(() => {
+    setUploadCount(uploadCount + 1);
+  }, [updatedText, stateVal, isDataFetched]);
+
   return (
-    <Box
-      sx={{ display: "flex" }}
-      className={`${classes["bgimage"]}`}
-    >
+    <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>  
       <CssBaseline />
       {/* Admin offcanvas with navbar */}
-      <AdminSlider />
+      <AdminSlider
+        firstName={firstName}
+        lastName={lastName}
+        uploadCount={uploadCount}
+        userName={jwtDecoder().Username}
+      />
       {/* Main Content */}
       <Box
         className={`${classes["bgimage"]} container`}
@@ -99,7 +146,7 @@ const AdminCategory = () => {
         <div className="d-flex  align-items-center flex-wrap column-gap-2 my-2">
           <Search>
             <SearchIconWrapper>
-              <SearchIcon  sx={{color:'#5f071c'}}/>
+              <SearchIcon sx={{ color: "#5f071c" }} />
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
@@ -108,9 +155,9 @@ const AdminCategory = () => {
           </Search>
           <button className={`${classes["add-quiz-btn"]}`}>Add Quiz</button>
         </div>
-        <h4>{Updatedtext} Contest</h4>
+        <h4>{updatedText} Contest</h4>
         <Box className="row">
-          {Category.map((ele,idx) => (
+          {Category.map((ele, idx) => (
             <QuizCard
               title={ele.title}
               description={ele.description}

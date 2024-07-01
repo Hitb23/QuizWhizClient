@@ -155,6 +155,7 @@ const AdminSideBar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [openIndex, setOpenIndex] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
+  const [clickOnSave, setClickOnSave] = useState(false);
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -166,25 +167,24 @@ const AdminSideBar = () => {
   const [fullImagePath, setFullImagePath] = useState(null);
   const [uploadCount, setUploadCount] = useState(0);
   const [countryName, setCountryName] = useState([]);
-  const [selected, setSelected] = useState(null);
+  const [uploadKey, setUploadKey] = useState(Date.now());
 
   const formik = useFormik({
     initialValues: {
       firstName: "",
       lastName: "",
       phoneNumber: "",
+      country: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      debugger;
       const data = jwtDecoder();
       const Username = data["Username"];
       const FirstName = formik.values.firstName;
       const LastName = formik.values.lastName;
       const PhoneNumber = formik.values.phoneNumber;
       const Country = formik.values.country;
-      debugger;
-      if (isEditable) {
+      if (!isEditable || clickOnSave) {
         try {
           const response = await editProfile({
             Username,
@@ -271,6 +271,11 @@ const AdminSideBar = () => {
 
   const handleEditClick = () => {
     setIsEditable(true);
+    setClickOnSave(false);
+  };
+
+  const handleSaveClick = () => {
+    setClickOnSave(true);
   };
 
   const handleCancelClick = () => {
@@ -293,6 +298,7 @@ const AdminSideBar = () => {
         console.log("FileReader onload called");
         setImage(e.target.result); // Update state
         setUploadCount(uploadCount + 1);
+        setUploadKey(Date.now());
       };
       reader.readAsDataURL(ProfilePhoto);
       const data = jwtDecoder();
@@ -301,13 +307,11 @@ const AdminSideBar = () => {
         import.meta.env.VITE_PUBLIC_URL
       }ProfilePhoto/${Username}/${Username}.jpg`;
       setFullImagePath(imagePath);
-      // const fullImagePath = `${ import.meta.env.VITE_PUBLIC_URL }ProfilePhoto/${userName}/${userName}.jpg`;
     }
 
     try {
       const data = jwtDecoder();
       const Username = data.Username;
-
       const response = await uploadProfilePhoto(ProfilePhoto, Username);
     } catch (error) {
       console.log(error);
@@ -315,7 +319,14 @@ const AdminSideBar = () => {
   };
 
   useEffect(() => {
+    debugger;
     console.log("Image state updated: ", image);
+    const data = jwtDecoder();
+    const Username = data.Username;
+    const imagePath = `${
+      import.meta.env.VITE_PUBLIC_URL
+    }ProfilePhoto/${Username}/${Username}.jpg`;
+    setFullImagePath(imagePath);
   }, [image]);
 
   const FileUploadButton = styled(Button)(({ theme }) => ({
@@ -334,18 +345,18 @@ const AdminSideBar = () => {
     formik.setFieldValue("country", value);
   };
 
-  function getStyles(name, personName, theme) {
-    return {
-      fontWeight:
-        personName.indexOf(name) === -1
-          ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium,
-    };
-  }
+  // function getStyles(name, personName, theme) {
+  //   return {
+  //     fontWeight:
+  //       personName.indexOf(name) === -1
+  //         ? theme.typography.fontWeightRegular
+  //         : theme.typography.fontWeightMedium,
+  //   };
+  // }
 
-  const getCountryFlagUrl = (countryName) => {
-    return `https://flagpedia.net/data/flags-mini/${countryName.toLowerCase()}.png`;
-  };
+  // const getCountryFlagUrl = (countryName) => {
+  //   return `https://flagpedia.net/data/flags-mini/${countryName.toLowerCase()}.png`;
+  // };
 
   // const fullImagePath = `${
   //   import.meta.env.VITE_PUBLIC_URL
@@ -356,10 +367,11 @@ const AdminSideBar = () => {
     <Box sx={{ display: "flex", height: "100vh" }}>
       <CssBaseline />
       <AdminSlider
+        key={uploadKey}
         firstName={firstName}
         lastName={lastName}
         uploadCount={uploadCount}
-        userName={userName}
+        userName={jwtDecoder().Username}
       />
       <Box
         className={`container-fluid flex-column flex-xl-row ${classes["main-box"]}`}
@@ -372,6 +384,7 @@ const AdminSideBar = () => {
             justifyContent: "center",
             marginTop: "0px",
             marginRight: "3rem",
+            marginLeft: "1rem",
           }}
         >
           {/* <Avatar src={profilePhotoUrl} className={`${classes["profile-photo"]}`}>
@@ -392,7 +405,7 @@ const AdminSideBar = () => {
           ></Avatar>
 
           <FileUploadButton
-            className={`mt-4 mb-4`}
+            className={`mt-4 mb-4 ${classes["upload-btn"]}`}
             component="label"
             role={undefined}
             variant="contained"
@@ -409,84 +422,138 @@ const AdminSideBar = () => {
         </div>
         <div className={classes["vertical-line-centre"]}></div>
         <form onSubmit={formik.handleSubmit}>
-          <div className="d-flex flex-column me-5">
-            <TextField
-              className={`${classes["input-field"]}`}
+          <div className={`d-flex flex-column me-5 ${classes["form-group"]}`}>
+            {/* <Field
+              as="input"
+              type="text"
               name="userName"
-              label="Username"
+              className={`${classes["input-field"]}`}
+              id="username"
+              inputProps={{readOnly: !isEditable}}
+            /> */}
+            <label
+              htmlFor="userName"
+              className={`form-label fw-bold ${classes["black-font"]}`}
+            >
+              Username
+            </label>
+            <TextField
+              className={`${classes["input-field"]} form-control`}
+              name="userName"
               value={userName}
               variant="outlined"
-              inputProps={{readOnly: !isEditable}}
+              inputProps={{ readOnly: !isEditable }}
+              sx={{ "& fieldset": { border: "none" } }}
             />
+
+            <label
+              htmlFor="email"
+              className={`mt-3 form-label fw-bold ${classes["black-font"]}`}
+            >
+              Email
+            </label>
             <TextField
-              className={`mt-4 ${classes["input-field"]}`}
+              className={`${classes["input-field"]} form-control`}
               name="email"
-              label="Email"
               value={email}
               variant="outlined"
-              inputProps={{readOnly: !isEditable}}
+              inputProps={{ readOnly: !isEditable }}
+              sx={{ "& fieldset": { border: "none" } }}
             />
+
+            <label
+              htmlFor="firstName"
+              className={`mt-3 form-label fw-bold ${classes["black-font"]}`}
+            >
+              First Name
+            </label>
             <TextField
-              className={`mt-4 ${classes["input-field"]}`}
+              className={`${classes["input-field"]} form-control`}
               name="firstName"
-              label="First Name"
               variant="outlined"
               value={formik.values.firstName}
               onChange={formik.handleChange}
-              inputProps={{readOnly: !isEditable}}
+              inputProps={{ readOnly: !isEditable }}
+              sx={{ "& fieldset": { border: "none" } }}
             />
             {formik.touched.firstName && formik.errors.firstName ? (
-              <span className="text-danger mt-2">
+              <span className={`mt-2 ${classes["error-message"]}`}>
                 {formik.errors.firstName}
               </span>
             ) : null}
+
+            <label
+              htmlFor="lastName"
+              className={`mt-3 form-label fw-bold ${classes["black-font"]}`}
+            >
+              Last Name
+            </label>
             <TextField
-              className={`mt-4 ${classes["input-field"]}`}
+              className={`${classes["input-field"]} form-control`}
               name="lastName"
-              label="Last Name"
               variant="outlined"
               value={formik.values.lastName}
               onChange={formik.handleChange}
-              inputProps={{readOnly: !isEditable}}
+              inputProps={{ readOnly: !isEditable }}
+              sx={{ "& fieldset": { border: "none" } }}
             />
             {formik.touched.lastName && formik.errors.lastName ? (
-              <span className="text-danger mt-2">{formik.errors.lastName}</span>
+              <span className={`mt-2 ${classes["error-message"]}`}>
+                {formik.errors.lastName}
+              </span>
             ) : null}
+
+            <label
+              htmlFor="phoneNumber"
+              className={`mt-3 form-label fw-bold ${classes["black-font"]}`}
+            >
+              Phone Number
+            </label>
             <TextField
-              className={`mt-4 ${classes["input-field"]}`}
+              className={`${classes["input-field"]} form-control`}
               name="phoneNumber"
-              label="Phone Number"
               variant="outlined"
               value={formik.values.phoneNumber}
               onChange={formik.handleChange}
-              inputProps={{readOnly: !isEditable}}
+              inputProps={{ readOnly: !isEditable }}
+              sx={{ "& fieldset": { border: "none" } }}
             />
             {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
-              <span className="text-danger mt-2">
+              <span className={`mt-2 ${classes["error-message"]}`}>
                 {formik.errors.phoneNumber}
               </span>
             ) : null}
-            
+
+            <label
+              htmlFor="country"
+              className={`mt-3 form-label fw-bold ${classes["black-font"]}`}
+            >
+              Choose Country
+            </label>
             <Select
-              className={`mt-4 ${classes["input-field"]}`}
-              displayEmpty
+              className={`${classes["input-field"]}`}
+              name="country"
               onChange={handleCountryChange}
               value={formik.values.country}
               input={<OutlinedInput />}
               readOnly={!isEditable}
-              placeholder="Select a country"
               MenuProps={MenuProps}
-              
+              sx={{ "& fieldset": { border: "none" }, borderRadius: "0.4rem" }}
             >
               {countries.map((country) => (
                 <MenuItem key={country.code} value={country.name}>
-                  <Flag code={country.code} style={{ width: '1.5em', marginRight: '8px' }}/>
+                  <Flag
+                    code={country.code}
+                    style={{ width: "1.5em", marginRight: "8px" }}
+                  />
                   {country.name}
                 </MenuItem>
               ))}
             </Select>
             {formik.touched.country && formik.errors.country ? (
-              <span className="text-danger mt-2">{formik.errors.country}</span>
+              <span className={`mt-2 ${classes["error-message"]}`}>
+                {formik.errors.country}
+              </span>
             ) : null}
 
             <div className="d-flex flex-row">
@@ -497,6 +564,7 @@ const AdminSideBar = () => {
                     variant="contained"
                     className={`mt-4 me-2 ${classes["edit-button"]}`}
                     id="save-button"
+                    onClick={handleSaveClick}
                     sx={{
                       minWidth: 10,
                       maxWidth: 50,
@@ -521,7 +589,6 @@ const AdminSideBar = () => {
                 </>
               ) : (
                 <Button
-                  type="button"
                   variant="contained"
                   className={`mt-4 ${classes["edit-button"]}`}
                   sx={{ minWidth: 10, maxWidth: 50 }}
