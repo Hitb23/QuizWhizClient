@@ -24,6 +24,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import { getUserDetails } from "../../services/auth.service";
 import {
+  changeRecordsSize,
   filterByCategory,
   getCategories,
   getDifficulties,
@@ -40,27 +41,26 @@ const MenuProps = {
   },
 };
 const AdminDashboard = () => {
-  const [firstName,setFirstName]=useState('');
-  const [lastName,setLastName]=useState('');
-  const [difficulty, setDifficulty] = useState("");
-  const [category, setCategory] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [difficulty, setDifficulty] = useState(0);
+  const [category, setCategory] = useState(0);
   const [difficultyList, setDifficultyList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
-  const [DifficultyId, setDifficultyId] = useState(0);
-  const [CategoryId, SetcategoryId] = useState(0);
-  const [Records, setRecords] = useState(4);
+  const [Records, setRecords] = useState(3);
   const [PageSize, SetPageSize] = useState(1);
   const [currentPage, SetCurrentPage] = useState(1);
   const [filteredData, SetFilteredData] = useState([]);
+  const [searchedWord,SetSearchedWord]=useState('');
   const navigate = useNavigate();
   const params = useParams();
-  // const
+  var username = "";
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getDifficulties();
-        const result1 = await getCategories();
+        const difficulties = await getDifficulties();
+        const categories = await getCategories();
         const allData = await filterByCategory({
           StatusId: 1,
           DifficultyId: 0,
@@ -68,61 +68,24 @@ const AdminDashboard = () => {
           CurrentPage: 1,
         });
         const Data = allData.data.data.GetQuizzes;
-        setDifficultyList(result.data.data);
-        setCategoryList(result1.data.data);
+        setDifficultyList(difficulties.data.data);
+        setCategoryList(categories.data.data);
         SetFilteredData(Data);
-        // SetPageSize(result?.data?.data?.Pagination.PageSize);
+        console.log(allData);
+        SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
+        console.log(allData?.data?.data?.Pagination?.TotalPages)
       } catch (error) {
         console.error("Error fetching data", error);
       }
     };
 
     fetchData();
-  }, []);
-
-  const navigateToCategory = (id) => {
-    if (id === "pending") navigate(`/admin-dashboard`);
-    else navigate(`/admin-dashboard/${id}`);
-  };
-
-  const handlePageSize = (event) => {
-    setRecords(event.target.value);
-  };
-
-  const handleDifficulty = async (event) => {
-    console.log("hello");
-    setDifficulty(event.target.value);
-    // public required int StatusId { get; set; }
-
-    // public required int DifficultyId { get; set; }
-
-    // public required int CategoryId { get; set; }
-
-    // public required int CurrentPage { get; set; }
-    const result = await filterByCategory({
-      StatusId: 1,
-      DifficultyId: 0,
-      CategoryId: 0,
-      CurrentPage: 1,
-    });
-    const filteredData = result.data.data.GetQuizzes;
-    SetFilteredData(filteredData);
-    console.log(result);
-  };
-
-  const handlePageChange = async (event, value) => {
-    console.log(value);
-  };
-
-  const handleCategory = async (e) => {
-    setCategory(e.target.value);
-  };
-  var username = "";
+  }, [Records]);
 
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
-    console.log("Username in dahsboard: " + username);
+    // console.log("Username in dahsboard: " + username);
     const fetchUserDetails = async () => {
       try {
         const response = await getUserDetails(data["Username"]);
@@ -132,15 +95,91 @@ const AdminDashboard = () => {
         console.log(error);
       }
     };
-
     fetchUserDetails();
   }, []);
+  const navigateToCategory = (id) => {
+    if (id === "pending") navigate(`/admin-dashboard`);
+    else navigate(`/admin-dashboard/${id}`);
+  };
+
+  const handlePageSize = async(event) => {
+    setRecords(event.target.value);
+    console.log(event.target.value)
+    const result = await changeRecordsSize({
+      recordSize:event.target.value
+    }
+    );
+  };
+
+  const handleDifficulty = async (event) => {
+    console.log("hello");
+    setDifficulty(event.target.value);
+    try {
+      const result = await filterByCategory({
+        StatusId: 1,
+        DifficultyId: event.target.value,
+        CategoryId: category,
+        CurrentPage: currentPage,
+      });
+      const filteredData = result.data.data.GetQuizzes;
+      SetFilteredData(filteredData);
+      console.log(result);
+    } catch (error) {
+      SetFilteredData([]);
+    }
+  };
+
+  const handlePageChange = async (event, value) => {
+    SetCurrentPage(currentPage);
+    const result = await filterByCategory({
+      StatusId: 1,
+      DifficultyId: difficulty,
+      CategoryId: category,
+      CurrentPage: value,
+      SearchValue: searchedWord
+    });
+    SetFilteredData(result.data.data.GetQuizzes)
+    console.log(value);
+  };
+  const searchHandler=async(e)=>{
+      const SearchedWord=e.target.value;
+      SetSearchedWord(searchedWord);
+      try{
+      const result=await filterByCategory({
+        StatusId: 1,
+        DifficultyId: difficulty,
+        CategoryId: category,
+        CurrentPage: currentPage,
+        SearchValue: SearchedWord
+      });
+      SetFilteredData(result.data.data.GetQuizzes)
+      console.log("Result is : ", result);
+    }
+    catch(error){
+      console.log("error:",error);
+      SetFilteredData([]);
+    }
+  }
+  const handleCategory = async (e) => {
+    setCategory(e.target.value);
+    try {
+      const result = await filterByCategory({
+        StatusId: 1,
+        DifficultyId: difficulty,
+        CategoryId: e.target.value,
+        CurrentPage: currentPage,
+      });
+      const filteredData = result.data.data.GetQuizzes;
+      console.log("In Main Method", filteredData);
+      SetFilteredData(filteredData);
+    } catch (error) {
+      SetFilteredData([]);
+    }
+  };
+ 
 
   return (
-    <Box
-      sx={{ display: "flex" }}
-      className={`${classes["bgimage"]}`}
-    >
+    <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>
       <CssBaseline />
       {/* Admin offcanvas with navbar */}
       <AdminSlider
@@ -149,7 +188,7 @@ const AdminDashboard = () => {
       />
       {/* Main Content */}
       <Box className={`container`} component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
+        <DrawerHeader/>
         <div className="mt-5 row">
           <CardComponent
             count={3}
@@ -181,7 +220,7 @@ const AdminDashboard = () => {
           />
         </div>
         <div className="d-flex  align-items-center flex-wrap column-gap-2 my-2">
-          <Search sx={{ height: 55, width: 40 }}>
+          <Search sx={{ height: 55, width: 40 }} onChange={searchHandler} value={searchedWord}>
             <SearchIconWrapper>
               <SearchIcon sx={{ color: "#5f071c" }} />
             </SearchIconWrapper>
@@ -227,7 +266,7 @@ const AdminDashboard = () => {
               </MenuItem>
               {categoryList &&
                 categoryList.map((ele) => (
-                  <MenuItem key={ele.CategoryId} value={ele.CategoryName}>
+                  <MenuItem key={ele.CategoryId} value={ele.CategoryId}>
                     {ele.CategoryName}
                   </MenuItem>
                 ))}
@@ -247,51 +286,53 @@ const AdminDashboard = () => {
               />
             ))}
         </div>
-        <div className="d-flex justify-content-between mt-3 align-items-center">
-          <FormControl sx={{ m: 1, minWidth: 80 }} size="small">
-            <InputLabel id="demo-simple-select-autowidth-label">
-              Page
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-autowidth-label"
-              id="demo-simple-select-autowidth"
-              value={Records}
-              onChange={handlePageSize}
-              autoWidth
-              label="Page"
-            >
-              <MenuItem value={4}>4</MenuItem>
-              <MenuItem value={8}>8</MenuItem>
-              <MenuItem value={12}>12</MenuItem>
-            </Select>
-          </FormControl>
-          <Pagination
-            count={PageSize}
-            color="primary"
-            onChange={handlePageChange}
-            sx={{
-              "& .MuiPaginationItem-root": {
-                backgroundColor: "white",
-                color: "black",
-                "&:hover": {
+        {filteredData.length>0 && (
+          <div className="d-flex justify-content-between mt-3 align-items-center">
+            <FormControl sx={{ m: 1, minWidth: 80 }} size="small">
+              <InputLabel id="demo-simple-select-autowidth-label">
+                Page
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-autowidth-label"
+                id="demo-simple-select-autowidth"
+                value={Records}
+                onChange={handlePageSize}
+                autoWidth
+                label="Page"
+              >
+                <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={6}>6</MenuItem>
+                <MenuItem value={9}>9</MenuItem>
+              </Select>
+            </FormControl>
+            <Pagination
+              count={PageSize}
+              color="primary"
+              onChange={handlePageChange}
+              sx={{
+                "& .MuiPaginationItem-root": {
+                  backgroundColor: "white",
+                  color: "black",
+                  "&:hover": {
+                    backgroundColor: "#5f071c",
+                    color: "#fbd0da",
+                  },
+                },
+                "& .MuiPaginationItem-root.Mui-selected": {
                   backgroundColor: "#5f071c",
                   color: "#fbd0da",
                 },
-              },
-              "& .MuiPaginationItem-root.Mui-selected": {
-                backgroundColor: "#5f071c",
-                color: "#fbd0da",
-              },
-              "& .MuiPaginationItem-ellipsis": {
-                backgroundColor: "white",
-                "&:hover": {
-                  backgroundColor: "transparent",
-                  color: "#fbd0da",
+                "& .MuiPaginationItem-ellipsis": {
+                  backgroundColor: "white",
+                  "&:hover": {
+                    backgroundColor: "transparent",
+                    color: "#fbd0da",
+                  },
                 },
-              },
-            }}
-          />
-        </div>
+              }}
+            />
+          </div>
+        )}
       </Box>
     </Box>
   );

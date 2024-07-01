@@ -36,8 +36,7 @@ import { RoutePaths } from "../../../utils/enum";
 import jwtDecoder from "../../../services/jwtDecoder";
 
 const AdminSlider = ({firstName, lastName, uploadCount}) => {
-  console.log(firstName);
-  console.log(lastName);
+
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [fullImagePath, setFullImagePath] = useState("");
@@ -93,7 +92,8 @@ const AdminSlider = ({firstName, lastName, uploadCount}) => {
             onClick={handleDrawerOpen}
             edge="start"
             sx={{
-              marginRight: 3,
+              marginLeft:-3.1,
+              marginRight: 4,
               ...(open && { display: "none" }),
               ...(useMediaQuery('(max-width:450px)') && { display: "none" })
             }}
