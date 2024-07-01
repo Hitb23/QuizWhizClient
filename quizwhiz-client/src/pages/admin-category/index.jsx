@@ -96,10 +96,10 @@ const AdminDashboard = () => {
 
       fetchData();
     },
-    [Records, statusEnum[params.id]],
+    [Records, statusEnum[params.id],
     difficulty,
     category,
-    searchedWord
+    searchedWord]
   );
 
   useEffect(() => {

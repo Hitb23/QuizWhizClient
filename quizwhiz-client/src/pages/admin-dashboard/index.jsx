@@ -32,6 +32,7 @@ import {
 } from "../../services/admindashboard.service";
 import jwtDecoder from "../../services/jwtDecoder";
 import NO_DATA_FOUND from "../../assets/Server.gif";
+import { statusEnum } from "../../utils/enum";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -68,7 +69,7 @@ const AdminDashboard = () => {
         const difficulties = await getDifficulties();
         const categories = await getCategories();
         const allData = await filterByCategory({
-          StatusId: 2,
+          StatusId: statusEnum[params.id],
           DifficultyId: 0,
           CategoryId: 0,
           CurrentPage: 1,
@@ -92,7 +93,10 @@ const AdminDashboard = () => {
     };
 
     fetchData();
-  }, [Records]);
+  }, [Records, statusEnum[params.id],
+  difficulty,
+  category,
+  searchedWord]);
 
   useEffect(() => {
     const data = jwtDecoder();
@@ -110,8 +114,7 @@ const AdminDashboard = () => {
     fetchUserDetails();
   }, []);
   const navigateToCategory = (id) => {
-    if (id === "upcoming") navigate(`/admin-dashboard`);
-    else navigate(`/admin-dashboard/${id}`);
+     navigate(`/admin-dashboard/${id}`);
   };
 
   const handlePageSize = async (event) => {
@@ -127,13 +130,14 @@ const AdminDashboard = () => {
     setDifficulty(event.target.value);
     try {
       const result = await filterByCategory({
-        StatusId: 2,
+        StatusId: statusEnum[params.id],
         DifficultyId: event.target.value,
         CategoryId: category,
         CurrentPage: currentPage,
         SearchValue: searchedWord,
       });
       const filteredData = result.data.data.GetQuizzes;
+      SetPageSize(result?.data?.data?.Pagination?.TotalPages);
       SetFilteredData(filteredData);
       console.log(result);
     } catch (error) {
@@ -144,7 +148,7 @@ const AdminDashboard = () => {
   const handlePageChange = async (event, value) => {
     SetCurrentPage(currentPage);
     const result = await filterByCategory({
-      StatusId: 2,
+      StatusId: statusEnum[params.id],
       DifficultyId: difficulty,
       CategoryId: category,
       CurrentPage: value,
@@ -158,13 +162,14 @@ const AdminDashboard = () => {
     SetSearchedWord(searchedWord);
     try {
       const result = await filterByCategory({
-        StatusId: 2,
+        StatusId: statusEnum[params.id],
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: currentPage,
         SearchValue: SearchedWord,
       });
       SetFilteredData(result.data.data.GetQuizzes);
+      SetPageSize(result?.data?.data?.Pagination?.TotalPages);
       console.log("Result is : ", result);
     } catch (error) {
       console.log("error:", error);
@@ -175,13 +180,14 @@ const AdminDashboard = () => {
     setCategory(e.target.value);
     try {
       const result = await filterByCategory({
-        StatusId: 2,
+        StatusId: statusEnum[params.id],
         DifficultyId: difficulty,
         CategoryId: e.target.value,
         CurrentPage: currentPage,
         SearchValue: searchedWord,
       });
       const filteredData = result.data.data.GetQuizzes;
+      SetPageSize(result?.data?.data?.Pagination?.TotalPages);
       console.log("In Main Method", filteredData);
       SetFilteredData(filteredData);
     } catch (error) {
@@ -206,28 +212,28 @@ const AdminDashboard = () => {
             text="Upcoming"
             icon={faCalendarAlt}
             onClickHandler={navigateToCategory}
-            active={"upcoming"}
+            active={params.id}
           />
           <CardComponent
             count={countOfActive}
             text="Active"
             icon={faPlay}
             onClickHandler={navigateToCategory}
-            active={"upcoming"}
+            active={params.id}
           />
           <CardComponent
             count={countOfCompleted}
             text="Completed"
             icon={faCheckCircle}
             onClickHandler={navigateToCategory}
-            active={"upcoming"}
+            active={params.id}
           />
           <CardComponent
             count={countOfPending}
             text="Pending"
             icon={faQuestionCircle}
             onClickHandler={navigateToCategory}
-            active={"upcoming"}
+            active={params.id}
           />
         </div>
         <div className="d-flex  align-items-center flex-wrap column-gap-2 my-2">
@@ -328,7 +334,7 @@ const AdminDashboard = () => {
           <button className={`${classes["add-quiz-btn"]}`}>Add Quiz</button>
         </div>
 
-        <h4>Pending Contest</h4>
+        <h4 className="text-white ms-2">{params.id.substring(0,1).toUpperCase()+ params.id.substring(1)} Contest</h4>
         <div className="row">
           {filteredData.length > 0 ? (
             filteredData.map((ele, idx) => (
@@ -404,7 +410,7 @@ const AdminDashboard = () => {
                   },
                 },
                 "& .MuiPaginationItem-root.Mui-selected": {
-                  backgroundColor: "#5f071c",
+                  // backgroundColor: "#5f071c",
                   color: "#fbd0da",
                   "&:hover": {
                     backgroundColor: "#fbd0da",
@@ -412,7 +418,7 @@ const AdminDashboard = () => {
                   },
                 },
                 "& .MuiPaginationItem-ellipsis": {
-                  backgroundColor: "white",
+                  backgroundColor: "transparent",
                   "&:hover": {
                     backgroundColor: "transparent",
                     color: "#fbd0da",
