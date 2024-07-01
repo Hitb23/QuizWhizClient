@@ -77,7 +77,6 @@ const AdminSlider = ({firstName, lastName, uploadCount}) => {
         position="fixed"
         open={open}
         sx={{
-          backgroundColor: "#fbd0da",
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",

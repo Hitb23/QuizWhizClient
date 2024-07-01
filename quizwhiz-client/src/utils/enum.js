@@ -32,5 +32,12 @@ export const API_URLS = {
   QUIZ_DIFFICULTIES:"/quiz/get-quiz-difficulties",
   QUIZ_CATEGORIES:"/quiz/get-quiz-categories",
   QUIZ_FILTER:'/quiz/get-quizzes-filter',
-  QUIZ_RECORDS:'/auth/change-record-size'
+  QUIZ_RECORDS:'/auth/change-record-size',
+  QUIZ_STATUS:'/quiz/get-quiz-status-count'
 };
+export const statusEnum={
+  "pending": 1,
+  "upcoming": 2,
+  "active": 3,
+  "completed": 4
+}
