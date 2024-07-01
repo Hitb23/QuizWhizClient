@@ -77,7 +77,7 @@ const AdminSlider = ({firstName, lastName, uploadCount}) => {
         position="fixed"
         open={open}
         sx={{
-          backgroundColor: "#fbd0da",
+          backgroundColor: "#6F41DB",
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
@@ -114,16 +114,16 @@ const AdminSlider = ({firstName, lastName, uploadCount}) => {
         >
           <Badge badgeContent={4} sx={{ cursor: "pointer",
           '& .MuiBadge-badge': {
-          backgroundColor: "#5f071c",
-          color: "white" // This sets the text color of the badge
+          backgroundColor: "#3D3189",
+          color: "#fada65" // This sets the text color of the badge
         } }}>
-            <IoNotificationsOutline color="black" size={30} />
+            <IoNotificationsOutline color="#fada65" backgroundColor= "#3D3189" border= "2px solid #3D3189" size={30} />
           </Badge>
           <IconButton
             className="gap-2 rounded d-flex align-items-center"
             onClick={handleAvatarClick}
           >
-            <Avatar sx={{ background: "#5f071c", cursor: "pointer" }} src={fullImagePath}>
+            <Avatar sx={{ background: "#3D3189", color: "#fada65", cursor: "pointer" }} src={fullImagePath}>
             </Avatar>
             <p className="fs-5 mt-3 fw-semibold d-sm-inline d-none">{firstName} {lastName}</p>
           </IconButton>
