@@ -118,7 +118,7 @@ const AdminDashboard = () => {
     fetchUserDetails();
   }, []);
   const navigateToCategory = (id) => {
-    if (id === "pending") navigate(`/admin-dashboard`);
+    if (id === "upcoming") navigate(`/admin-dashboard`);
     else navigate(`/admin-dashboard/${id}`);
   };
 
@@ -137,6 +137,7 @@ const AdminDashboard = () => {
         DifficultyId: event.target.value,
         CategoryId: category,
         CurrentPage: currentPage,
+        SearchValue: searchedWord,
       });
       const filteredData = result.data.data.GetQuizzes;
       SetFilteredData(filteredData);
@@ -158,7 +159,7 @@ const AdminDashboard = () => {
     SetFilteredData(result.data.data.GetQuizzes);
   };
   const searchHandler = async (e) => {
-    const SearchedWord = e.target.value;
+    const searchedWord = e.target.value;
     SetSearchedWord(searchedWord);
     try {
       const result = await filterByCategory({
@@ -166,7 +167,7 @@ const AdminDashboard = () => {
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: currentPage,
-        SearchValue: SearchedWord,
+        SearchValue: searchedWord,
       });
       SetFilteredData(result.data.data.GetQuizzes);
       console.log("Result is : ", result);
@@ -183,6 +184,7 @@ const AdminDashboard = () => {
         DifficultyId: difficulty,
         CategoryId: e.target.value,
         CurrentPage: currentPage,
+        SearchValue: searchedWord,
       });
       const filteredData = result.data.data.GetQuizzes;
       console.log("In Main Method", filteredData);
@@ -234,13 +236,9 @@ const AdminDashboard = () => {
           />
         </div>
         <div className="d-flex  align-items-center flex-wrap column-gap-2 my-2">
-          <Search
-            sx={{ height: 55, width: 40 }}
-            onChange={searchHandler}
-            value={searchedWord}
-          >
+          <Search sx={{ height: 55, width: 40 }} onChange={searchHandler} value={searchedWord}>
             <SearchIconWrapper>
-              <SearchIcon sx={{ color: "#5f071c" }} />
+              <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
               sx={{ height: 55 }}
@@ -259,6 +257,7 @@ const AdminDashboard = () => {
                 "&.Mui-focused fieldset": { borderColor: "white" },
               },
               "& .MuiOutlinedInput-root": {
+                background:'#3d3189',
                 "& fieldset": { borderColor: "white" },
                 "&:hover fieldset": { borderColor: "white" },
                 "&.Mui-focused fieldset": { borderColor: "white" },
@@ -298,6 +297,7 @@ const AdminDashboard = () => {
                 "&.Mui-focused fieldset": { borderColor: "white" },
               },
               "& .MuiOutlinedInput-root": {
+                background:'#3d3189',
                 "& fieldset": { borderColor: "white" },
                 "&:hover fieldset": { borderColor: "white" },
                 "&.Mui-focused fieldset": { borderColor: "white" },

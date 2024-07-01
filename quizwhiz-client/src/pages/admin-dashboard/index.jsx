@@ -31,6 +31,7 @@ import {
   getDifficulties,
 } from "../../services/admindashboard.service";
 import jwtDecoder from "../../services/jwtDecoder";
+import NO_DATA_FOUND from "../../assets/Server.gif";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -52,11 +53,11 @@ const AdminDashboard = () => {
   const [PageSize, SetPageSize] = useState(1);
   const [currentPage, SetCurrentPage] = useState(1);
   const [filteredData, SetFilteredData] = useState([]);
-  const [searchedWord,SetSearchedWord]=useState('');
-  const [countOfPending,SetCountOfPending]=useState(null);
-  const [countOfUpcoming,SetCountOfUpcoming]=useState(null);
-  const [countOfActive,SetCountOfActive]=useState(null);
-  const [countOfCompleted,SetCountOfCompleted]=useState(null);
+  const [searchedWord, SetSearchedWord] = useState("");
+  const [countOfPending, SetCountOfPending] = useState(null);
+  const [countOfUpcoming, SetCountOfUpcoming] = useState(null);
+  const [countOfActive, SetCountOfActive] = useState(null);
+  const [countOfCompleted, SetCountOfCompleted] = useState(null);
   const navigate = useNavigate();
   const params = useParams();
   var username = "";
@@ -67,7 +68,7 @@ const AdminDashboard = () => {
         const difficulties = await getDifficulties();
         const categories = await getCategories();
         const allData = await filterByCategory({
-          StatusId: 1,
+          StatusId: 2,
           DifficultyId: 0,
           CategoryId: 0,
           CurrentPage: 1,
@@ -76,7 +77,7 @@ const AdminDashboard = () => {
         setDifficultyList(difficulties.data.data);
         setCategoryList(categories.data.data);
         SetFilteredData(data);
-        const status=await getAllStatusCount();
+        const status = await getAllStatusCount();
         SetCountOfPending(status?.data?.data?.PendingCount);
         SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
         SetCountOfActive(status?.data?.data?.ActiveCount);
@@ -84,7 +85,7 @@ const AdminDashboard = () => {
         console.log(allData);
         SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
         setRecords(allData?.data?.data?.Pagination?.RecordSize);
-        console.log(allData?.data?.data?.Pagination?.TotalPages)
+        console.log(allData?.data?.data?.Pagination?.TotalPages);
       } catch (error) {
         console.error("Error fetching data", error);
       }
@@ -109,17 +110,16 @@ const AdminDashboard = () => {
     fetchUserDetails();
   }, []);
   const navigateToCategory = (id) => {
-     if (id === "pending") navigate(`/admin-dashboard`);
-     else navigate(`/admin-dashboard/${id}`);
+    if (id === "upcoming") navigate(`/admin-dashboard`);
+    else navigate(`/admin-dashboard/${id}`);
   };
 
-  const handlePageSize = async(event) => {
+  const handlePageSize = async (event) => {
     setRecords(event.target.value);
-    console.log(event.target.value)
+    console.log(event.target.value);
     const result = await changeRecordsSize({
-      recordSize:event.target.value
-    }
-    );
+      recordSize: event.target.value,
+    });
   };
 
   const handleDifficulty = async (event) => {
@@ -127,10 +127,11 @@ const AdminDashboard = () => {
     setDifficulty(event.target.value);
     try {
       const result = await filterByCategory({
-        StatusId: 1,
+        StatusId: 2,
         DifficultyId: event.target.value,
         CategoryId: category,
         CurrentPage: currentPage,
+        SearchValue: searchedWord,
       });
       const filteredData = result.data.data.GetQuizzes;
       SetFilteredData(filteredData);
@@ -143,42 +144,42 @@ const AdminDashboard = () => {
   const handlePageChange = async (event, value) => {
     SetCurrentPage(currentPage);
     const result = await filterByCategory({
-      StatusId: 1,
+      StatusId: 2,
       DifficultyId: difficulty,
       CategoryId: category,
       CurrentPage: value,
-      SearchValue: searchedWord
+      SearchValue: searchedWord,
     });
-    SetFilteredData(result.data.data.GetQuizzes)
+    SetFilteredData(result.data.data.GetQuizzes);
     console.log(value);
   };
-  const searchHandler=async(e)=>{
-      const SearchedWord=e.target.value;
-      SetSearchedWord(searchedWord);
-      try{
-      const result=await filterByCategory({
-        StatusId: 1,
+  const searchHandler = async (e) => {
+    const SearchedWord = e.target.value;
+    SetSearchedWord(searchedWord);
+    try {
+      const result = await filterByCategory({
+        StatusId: 2,
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: currentPage,
-        SearchValue: SearchedWord
+        SearchValue: SearchedWord,
       });
-      SetFilteredData(result.data.data.GetQuizzes)
+      SetFilteredData(result.data.data.GetQuizzes);
       console.log("Result is : ", result);
-    }
-    catch(error){
-      console.log("error:",error);
+    } catch (error) {
+      console.log("error:", error);
       SetFilteredData([]);
     }
-  }
+  };
   const handleCategory = async (e) => {
     setCategory(e.target.value);
     try {
       const result = await filterByCategory({
-        StatusId: 1,
+        StatusId: 2,
         DifficultyId: difficulty,
         CategoryId: e.target.value,
         CurrentPage: currentPage,
+        SearchValue: searchedWord,
       });
       const filteredData = result.data.data.GetQuizzes;
       console.log("In Main Method", filteredData);
@@ -187,7 +188,6 @@ const AdminDashboard = () => {
       SetFilteredData([]);
     }
   };
- 
 
   return (
     <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>
@@ -199,41 +199,45 @@ const AdminDashboard = () => {
       />
       {/* Main Content */}
       <Box className={`container`} component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader/>
+        <DrawerHeader />
         <div className="mt-5 row">
           <CardComponent
             count={countOfUpcoming}
             text="Upcoming"
             icon={faCalendarAlt}
             onClickHandler={navigateToCategory}
-            active={"total"}
+            active={"upcoming"}
           />
           <CardComponent
             count={countOfActive}
             text="Active"
             icon={faPlay}
             onClickHandler={navigateToCategory}
-            active={"total"}
+            active={"upcoming"}
           />
           <CardComponent
             count={countOfCompleted}
             text="Completed"
             icon={faCheckCircle}
             onClickHandler={navigateToCategory}
-            active={"total"}
+            active={"upcoming"}
           />
           <CardComponent
             count={countOfPending}
             text="Pending"
             icon={faQuestionCircle}
             onClickHandler={navigateToCategory}
-            active={"pending"}
+            active={"upcoming"}
           />
         </div>
         <div className="d-flex  align-items-center flex-wrap column-gap-2 my-2">
-          <Search sx={{ height: 55, width: 40 }} onChange={searchHandler} value={searchedWord}>
+          <Search
+            sx={{ height: 55, width: 40 }}
+            onChange={searchHandler}
+            value={searchedWord}
+          >
             <SearchIconWrapper>
-              <SearchIcon sx={{ color: "#5f071c" }} />
+              <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
               sx={{ height: 55 }}
@@ -252,7 +256,7 @@ const AdminDashboard = () => {
                 "&.Mui-focused fieldset": { borderColor: "white" },
               },
               "& .MuiOutlinedInput-root": {
-                background:'#3d3189',
+                background: "#3d3189",
                 "& fieldset": { borderColor: "white" },
                 "&:hover fieldset": { borderColor: "white" },
                 "&.Mui-focused fieldset": { borderColor: "white" },
@@ -292,7 +296,7 @@ const AdminDashboard = () => {
                 "&.Mui-focused fieldset": { borderColor: "white" },
               },
               "& .MuiOutlinedInput-root": {
-                background:'#3d3189',
+                background: "#3d3189",
                 "& fieldset": { borderColor: "white" },
                 "&:hover fieldset": { borderColor: "white" },
                 "&.Mui-focused fieldset": { borderColor: "white" },
@@ -323,10 +327,10 @@ const AdminDashboard = () => {
           </FormControl>
           <button className={`${classes["add-quiz-btn"]}`}>Add Quiz</button>
         </div>
-       
+
         <h4>Pending Contest</h4>
         <div className="row">
-          {filteredData &&
+          {filteredData.length > 0 ? (
             filteredData.map((ele, idx) => (
               <QuizCard
                 title={ele.Title}
@@ -334,25 +338,38 @@ const AdminDashboard = () => {
                 date={ele.ScheduledDate}
                 key={idx}
               />
-            ))}
+            ))
+          ) : (
+            // <img
+            //   src={NO_DATA_FOUND}
+            //   alt="No Data Available"
+            //   style={{height:'500px',width:'500px'}}
+            // />
+            <h2 className="text-center bg-white">No Data Available</h2>
+          )}
         </div>
-        {filteredData.length>0 && (
+        {filteredData.length > 0 && (
           <div className="d-flex justify-content-between mt-3 align-items-center">
-            <FormControl sx={{ m: 1, minWidth: 80,
-              "& .MuiInputLabel-root": {
-                color: "white",
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
-                "&.Mui-focused fieldset": { borderColor: "white" },
-              },
-              "& .MuiOutlinedInput-root": {
-                background:'#3d3189',
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
-                "&.Mui-focused fieldset": { borderColor: "white" },
-              },
-              "& .MuiSelect-icon": { color: "white" },
-            }} size="small">
+            <FormControl
+              sx={{
+                m: 1,
+                minWidth: 80,
+                "& .MuiInputLabel-root": {
+                  color: "white",
+                  "& fieldset": { borderColor: "white" },
+                  "&:hover fieldset": { borderColor: "white" },
+                  "&.Mui-focused fieldset": { borderColor: "white" },
+                },
+                "& .MuiOutlinedInput-root": {
+                  background: "#3d3189",
+                  "& fieldset": { borderColor: "white" },
+                  "&:hover fieldset": { borderColor: "white" },
+                  "&.Mui-focused fieldset": { borderColor: "white" },
+                },
+                "& .MuiSelect-icon": { color: "white" },
+              }}
+              size="small"
+            >
               <InputLabel id="demo-simple-select-autowidth-label">
                 Records
               </InputLabel>
@@ -363,7 +380,10 @@ const AdminDashboard = () => {
                 onChange={handlePageSize}
                 autoWidth
                 label="Records"
-                sx={{ color: "white", "& .MuiSvgIcon-root": { color: "white" } }}
+                sx={{
+                  color: "white",
+                  "& .MuiSvgIcon-root": { color: "white" },
+                }}
               >
                 <MenuItem value={4}>4</MenuItem>
                 <MenuItem value={8}>8</MenuItem>

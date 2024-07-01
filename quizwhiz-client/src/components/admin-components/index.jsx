@@ -75,17 +75,17 @@ export const openedMixin = (theme) => ({
     }),
   }));
 
- export const Search = styled('div')(({ theme }) => ({
+ export  const Search = styled('div')(({ theme }) => ({
     position: 'relative',
+    border:'1px solid white',
+    background:'#3d3189 !important',
+    color:'white',
     borderRadius: theme.shape.borderRadius,
-    border: '1px solid #f33404',
-    backgroundColor: alpha(theme.palette.common.white, 0.95),
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
     '&:hover': {
-      backgroundColor: alpha(theme.palette.common.white, 0.99),
-    outline: '1px solid #5f071c' ,
-    border: '1px solid #f33404' ,
-    boxShadow: '0 0 16px 0 rgba(228, 55, 55, 0.18), 0 2px 4px 0 rgba(228, 55, 55, 0.12)'
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
+    marginRight: theme.spacing(2),
     marginLeft: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
@@ -94,7 +94,7 @@ export const openedMixin = (theme) => ({
     },
   }));
   
- export const SearchIconWrapper = styled('div')(({ theme }) => ({
+  export const SearchIconWrapper = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 2),
     height: '100%',
     position: 'absolute',
@@ -104,19 +104,17 @@ export const openedMixin = (theme) => ({
     justifyContent: 'center',
   }));
   
- export const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  export const StyledInputBase = styled(InputBase)(({ theme }) => ({
     color: 'inherit',
-    width: '100%',
     '& .MuiInputBase-input': {
       padding: theme.spacing(1, 1, 1, 0),
       // vertical padding + font size from searchIcon
       paddingLeft: `calc(1em + ${theme.spacing(4)})`,
       transition: theme.transitions.create('width'),
-      [theme.breakpoints.up('sm')]: {
-        width: '12ch',
-        '&:focus': {
-          width: '20ch',
-        },
+      width: '100%',
+      [theme.breakpoints.up('md')]: {
+        width: '20ch',
       },
     },
   }));
+  
