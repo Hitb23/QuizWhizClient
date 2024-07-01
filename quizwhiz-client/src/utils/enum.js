@@ -31,5 +31,13 @@ export const API_URLS = {
   UPLOAD_PHOTO: "/auth/upload-profile-photo",
   QUIZ_DIFFICULTIES:"/quiz/get-quiz-difficulties",
   QUIZ_CATEGORIES:"/quiz/get-quiz-categories",
-  QUIZ_FILTER:'/quiz/get-quizzes-filter'
+  QUIZ_FILTER:'/quiz/get-quizzes-filter',
+  QUIZ_RECORDS:'/auth/change-record-size',
+  QUIZ_STATUS:'/quiz/get-quiz-status-count'
 };
+export const statusEnum={
+  "pending": 1,
+  "upcoming": 2,
+  "active": 3,
+  "completed": 4
+}

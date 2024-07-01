@@ -24,8 +24,7 @@ const QuizCard = ({ title, description, date, time }) => {
         className="rounded-3 custom-card"
         sx={{
           cursor: "pointer",
-          margin: "3px",
-
+          margin: "9px",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           transition: "transform 0.3s, box-shadow 0.3s",
           "&:hover": {
@@ -45,11 +44,11 @@ const QuizCard = ({ title, description, date, time }) => {
           }}
         />
         <CardContent
-          className="d-flex  flex-column"
+          className="d-flex flex-column"
           sx={{
             paddingTop: "16px",
             paddingBottom: "16px",
-            textAlign: "center",
+            textAlign:'center'
           }}
         >
           <Typography

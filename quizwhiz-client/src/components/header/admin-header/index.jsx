@@ -41,6 +41,7 @@ import { DrawerHeader, AppBar, Drawer } from "../../admin-components/index";
 import { RoutePaths } from "../../../utils/enum";
 import jwtDecoder from "../../../services/jwtDecoder";
 
+
 const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -101,7 +102,8 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
             onClick={handleDrawerOpen}
             edge="start"
             sx={{
-              marginRight: 3,
+              marginLeft:-3.1,
+              marginRight: 4,
               ...(open && { display: "none" }),
               ...(useMediaQuery("(max-width:450px)") && { display: "none" }),
             }}
@@ -120,17 +122,14 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
             marginRight: "1rem",
           }}
         >
-          <Badge
-            badgeContent={4}
-            sx={{
-              cursor: "pointer",
-              "& .MuiBadge-badge": {
-                backgroundColor: "#5f071c",
-                color: "white", // This sets the text color of the badge
-              },
-            }}
-          >
-            <IoNotificationsOutline color="black" size={30} />
+
+          <Badge badgeContent={4} sx={{ cursor: "pointer",
+          '& .MuiBadge-badge': {
+          backgroundColor: "#3D3189",
+          color: "#fada65" // This sets the text color of the badge
+        } }}>
+            <IoNotificationsOutline color="#fada65" backgroundColor= "#3D3189" border= "2px solid #3D3189" size={30} />
+
           </Badge>
           <IconButton
             className="gap-2 rounded d-flex align-items-center"
