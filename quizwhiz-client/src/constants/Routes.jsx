@@ -69,4 +69,5 @@ export const ROUTES = [
     element: <AdminCategory />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
+ 
 ];

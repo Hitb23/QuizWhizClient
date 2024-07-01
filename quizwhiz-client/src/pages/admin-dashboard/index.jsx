@@ -11,7 +11,7 @@ import {
   faPlay,
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { DrawerHeader } from "../../components/admin-components";
 import AdminSlider from "../../components/header/admin-header";
 import QuizCard from "../../components/admin-cards/quiz-card";
@@ -26,6 +26,7 @@ import { getUserDetails } from "../../services/auth.service";
 import {
   changeRecordsSize,
   filterByCategory,
+  getAllStatusCount,
   getCategories,
   getDifficulties,
 } from "../../services/admindashboard.service";
@@ -47,11 +48,15 @@ const AdminDashboard = () => {
   const [category, setCategory] = useState(0);
   const [difficultyList, setDifficultyList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
-  const [Records, setRecords] = useState(3);
+  const [Records, setRecords] = useState(4);
   const [PageSize, SetPageSize] = useState(1);
   const [currentPage, SetCurrentPage] = useState(1);
   const [filteredData, SetFilteredData] = useState([]);
   const [searchedWord,SetSearchedWord]=useState('');
+  const [countOfPending,SetCountOfPending]=useState(null);
+  const [countOfUpcoming,SetCountOfUpcoming]=useState(null);
+  const [countOfActive,SetCountOfActive]=useState(null);
+  const [countOfCompleted,SetCountOfCompleted]=useState(null);
   const navigate = useNavigate();
   const params = useParams();
   var username = "";
@@ -67,12 +72,18 @@ const AdminDashboard = () => {
           CategoryId: 0,
           CurrentPage: 1,
         });
-        const Data = allData.data.data.GetQuizzes;
+        const data = allData.data.data.GetQuizzes;
         setDifficultyList(difficulties.data.data);
         setCategoryList(categories.data.data);
-        SetFilteredData(Data);
+        SetFilteredData(data);
+        const status=await getAllStatusCount();
+        SetCountOfPending(status?.data?.data?.PendingCount);
+        SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
+        SetCountOfActive(status?.data?.data?.ActiveCount);
+        SetCountOfCompleted(status?.data?.data?.CompletedCount);
         console.log(allData);
         SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
+        setRecords(allData?.data?.data?.Pagination?.RecordSize);
         console.log(allData?.data?.data?.Pagination?.TotalPages)
       } catch (error) {
         console.error("Error fetching data", error);
@@ -98,8 +109,8 @@ const AdminDashboard = () => {
     fetchUserDetails();
   }, []);
   const navigateToCategory = (id) => {
-    if (id === "pending") navigate(`/admin-dashboard`);
-    else navigate(`/admin-dashboard/${id}`);
+     if (id === "pending") navigate(`/admin-dashboard`);
+     else navigate(`/admin-dashboard/${id}`);
   };
 
   const handlePageSize = async(event) => {
@@ -191,28 +202,28 @@ const AdminDashboard = () => {
         <DrawerHeader/>
         <div className="mt-5 row">
           <CardComponent
-            count={3}
+            count={countOfUpcoming}
             text="Upcoming"
             icon={faCalendarAlt}
             onClickHandler={navigateToCategory}
             active={"total"}
           />
           <CardComponent
-            count={5}
+            count={countOfActive}
             text="Active"
             icon={faPlay}
             onClickHandler={navigateToCategory}
             active={"total"}
           />
           <CardComponent
-            count={2}
+            count={countOfCompleted}
             text="Completed"
             icon={faCheckCircle}
             onClickHandler={navigateToCategory}
             active={"total"}
           />
           <CardComponent
-            count={10}
+            count={countOfPending}
             text="Pending"
             icon={faQuestionCircle}
             onClickHandler={navigateToCategory}
@@ -230,7 +241,25 @@ const AdminDashboard = () => {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
-          <FormControl sx={{ m: 1, width: 200 }}>
+          <FormControl
+            sx={{
+              m: 1,
+              width: 200,
+              "& .MuiInputLabel-root": {
+                color: "white",
+                "& fieldset": { borderColor: "white" },
+                "&:hover fieldset": { borderColor: "white" },
+                "&.Mui-focused fieldset": { borderColor: "white" },
+              },
+              "& .MuiOutlinedInput-root": {
+                background:'#3d3189',
+                "& fieldset": { borderColor: "white" },
+                "&:hover fieldset": { borderColor: "white" },
+                "&.Mui-focused fieldset": { borderColor: "white" },
+              },
+              "& .MuiSelect-icon": { color: "white" },
+            }}
+          >
             <InputLabel id="demo-multiple-name-label">Difficulty</InputLabel>
             <Select
               labelId="demo-multiple-name-label"
@@ -239,6 +268,7 @@ const AdminDashboard = () => {
               onChange={handleDifficulty}
               label="Difficulty"
               MenuProps={MenuProps}
+              sx={{ color: "white", "& .MuiSvgIcon-root": { color: "white" } }}
             >
               <MenuItem key={0} value={0}>
                 All
@@ -251,7 +281,25 @@ const AdminDashboard = () => {
                 ))}
             </Select>
           </FormControl>
-          <FormControl sx={{ m: 1, width: 200 }}>
+          <FormControl
+            sx={{
+              m: 1,
+              width: 200,
+              "& .MuiInputLabel-root": {
+                color: "white",
+                "& fieldset": { borderColor: "white" },
+                "&:hover fieldset": { borderColor: "white" },
+                "&.Mui-focused fieldset": { borderColor: "white" },
+              },
+              "& .MuiOutlinedInput-root": {
+                background:'#3d3189',
+                "& fieldset": { borderColor: "white" },
+                "&:hover fieldset": { borderColor: "white" },
+                "&.Mui-focused fieldset": { borderColor: "white" },
+              },
+              "& .MuiSelect-icon": { color: "white" },
+            }}
+          >
             <InputLabel id="demo-multiple-name-label">Category</InputLabel>
             <Select
               labelId="demo-multiple-name-label"
@@ -260,6 +308,7 @@ const AdminDashboard = () => {
               onChange={handleCategory}
               label="Category"
               MenuProps={MenuProps}
+              sx={{ color: "white", "& .MuiSvgIcon-root": { color: "white" } }}
             >
               <MenuItem key={0} value={0}>
                 All
@@ -274,6 +323,7 @@ const AdminDashboard = () => {
           </FormControl>
           <button className={`${classes["add-quiz-btn"]}`}>Add Quiz</button>
         </div>
+       
         <h4>Pending Contest</h4>
         <div className="row">
           {filteredData &&
@@ -288,9 +338,23 @@ const AdminDashboard = () => {
         </div>
         {filteredData.length>0 && (
           <div className="d-flex justify-content-between mt-3 align-items-center">
-            <FormControl sx={{ m: 1, minWidth: 80 }} size="small">
+            <FormControl sx={{ m: 1, minWidth: 80,
+              "& .MuiInputLabel-root": {
+                color: "white",
+                "& fieldset": { borderColor: "white" },
+                "&:hover fieldset": { borderColor: "white" },
+                "&.Mui-focused fieldset": { borderColor: "white" },
+              },
+              "& .MuiOutlinedInput-root": {
+                background:'#3d3189',
+                "& fieldset": { borderColor: "white" },
+                "&:hover fieldset": { borderColor: "white" },
+                "&.Mui-focused fieldset": { borderColor: "white" },
+              },
+              "& .MuiSelect-icon": { color: "white" },
+            }} size="small">
               <InputLabel id="demo-simple-select-autowidth-label">
-                Page
+                Records
               </InputLabel>
               <Select
                 labelId="demo-simple-select-autowidth-label"
@@ -298,11 +362,12 @@ const AdminDashboard = () => {
                 value={Records}
                 onChange={handlePageSize}
                 autoWidth
-                label="Page"
+                label="Records"
+                sx={{ color: "white", "& .MuiSvgIcon-root": { color: "white" } }}
               >
-                <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={6}>6</MenuItem>
-                <MenuItem value={9}>9</MenuItem>
+                <MenuItem value={4}>4</MenuItem>
+                <MenuItem value={8}>8</MenuItem>
+                <MenuItem value={12}>12</MenuItem>
               </Select>
             </FormControl>
             <Pagination
@@ -321,6 +386,10 @@ const AdminDashboard = () => {
                 "& .MuiPaginationItem-root.Mui-selected": {
                   backgroundColor: "#5f071c",
                   color: "#fbd0da",
+                  "&:hover": {
+                    backgroundColor: "#fbd0da",
+                    color: "#5f071c",
+                  },
                 },
                 "& .MuiPaginationItem-ellipsis": {
                   backgroundColor: "white",
