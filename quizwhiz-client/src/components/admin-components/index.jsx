@@ -82,7 +82,7 @@ export const openedMixin = (theme) => ({
     backgroundColor: alpha(theme.palette.common.white, 0.95),
     '&:hover': {
       backgroundColor: alpha(theme.palette.common.white, 0.99),
-    outline: '1px solid #F47D0A' ,
+    outline: '1px solid #5f071c' ,
     border: '1px solid #f33404' ,
     boxShadow: '0 0 16px 0 rgba(228, 55, 55, 0.18), 0 2px 4px 0 rgba(228, 55, 55, 0.12)'
     },

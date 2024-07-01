@@ -3,7 +3,6 @@
   justify-content: space-between;
   padding: 0rem 1rem 0rem 1rem;
   align-items: center;
-  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.18), 0 2px 4px 0 rgba(0, 0, 0, 0.12);
 }
 
 .logo-div {
@@ -26,39 +25,30 @@
 .sign-up-button,
 .log-out-button {
   padding: 0.9rem 1rem 0.9rem 1rem;
-  background-color: #F47D0A;
-  color: #ffffff;
+  background-color: #fada65;
+  color: #000000;
   border-radius: 0.5rem;
-  border: 1px solid #F47D0A;
+  border: 1px solid #fada65;
 }
 
 .log-in-button {
   padding: 0.9rem 1.3rem 0.9rem 1.3rem;
-  background-color: #ffffff;
-  color: #F47D0A;
+  background-color: #6F41DB !important;
+  color: #fada65;
   border-radius: 0.5rem;
-  border: 1px solid #F47D0A;
+  border: 1px solid #fada65;
 }
 
 .log-in-button:hover {
-  background-color: #F47D0A;
-  color: #ffffff;
-}
-
-.sign-up-button:hover {
-  background-color: #ffffff;
-  color: #F47D0A;
-}
-
-.log-in-button:hover {
-  background-color: #F47D0A;
-  color: #ffffff;
+  background-color: #fada65 !important;
+  color: #000000;
 }
 
 .sign-up-button:hover,
 .log-out-button:hover {
-  background-color: #ffffff;
-  color: #F47D0A;
+  background-color: #6F41DB;
+  color: #fada65;
+  border: 1px solid #fada65;
 }
 
 
