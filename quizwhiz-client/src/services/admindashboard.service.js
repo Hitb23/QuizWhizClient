@@ -25,12 +25,19 @@ export const getCategories = async () => {
   });
 };
 export const changeRecordsSize = async (data) => {
-    debugger
-    return await axios.get(API_URLS.QUIZ_RECORDS,{
-      headers: {
-        "Content-Type": "application/json",
-        // token: "Bearer " + localStorage.getItem("token")
-      },
-      params: data
-    });
-  };
+  return await axios.get(API_URLS.QUIZ_RECORDS, {
+    headers: {
+      "Content-Type": "application/json",
+      // token: "Bearer " + localStorage.getItem("token")
+    },
+    params: data,
+  });
+};
+export const getAllStatusCount = async () => {
+  return await axios.get(API_URLS.QUIZ_STATUS, {
+    headers: {
+      "Content-Type": "application/json",
+      // token: "Bearer " + localStorage.getItem("token")
+    },
+  });
+};
