@@ -24,9 +24,15 @@ import {
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { Field,useFormik } from "formik";
+import { Field, useFormik, Formik } from "formik";
 import * as Yup from "yup";
 import { ADD_QUESTIONS_VALIDATIONS } from "../../../validations/addQuestionsValidation";
+import { Category, ContactSupportOutlined } from "@mui/icons-material";
+import {
+  addQuizQuestions,
+  getQuizDetailsByLink,
+} from "../../../services/admindashboard.service";
+import Swal from "sweetalert2";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -37,38 +43,114 @@ const initialQuestionState = {
   question: "",
   answerOptions: ["", "", "", ""],
   correctAnswers: [],
-  type: "MCQ",
+  type: 1,
 };
 
-export default function AddQuestions() {
+export default function AddQuestions({ openDialog, currentQuizLink }) {
   const [open, setOpen] = useState(false);
   // const [questions, setQuestions] = useState([]);
   const [questionTypeDialogOpen, setQuestionTypeDialogOpen] = useState(false);
-  const [newQuestionType, setNewQuestionType] = useState("MCQ");
-  const[isCurrentScreenValid, setIsCurrentScreenValid] = useState(true)
-  const handleSaveQuiz = (values) => {
-    console.log(values.questions);
+  const [newQuestionType, setNewQuestionType] = useState(1);
+  const [isCurrentScreenValid, setIsCurrentScreenValid] = useState(true);
+  const [currentQuizDetails, setCurrentQuizDetails] = useState({});
+  const [questionCount, setQuestionCount] = useState(0);
+
+  const renameKeys = (obj) => {
+    return {
+      QuestionText: obj.question,
+      Options: obj.answerOptions,
+      Answers: obj.correctAnswers,
+      QuestionTypeId: obj.type,
+    };
   };
 
+  const handleSaveQuiz = async (values, { resetForm }) => {
+    console.log(values.questions);
+    const QuestionsArray = values.questions;
+    const RenamedQuestionsArray = QuestionsArray.map((question) =>
+      renameKeys(question)
+    );
+    const sendData = {
+      QuizLink: currentQuizLink,
+      QuestionDTOs: RenamedQuestionsArray,
+    };
+
+    console.log(sendData);
+    var response = await addQuizQuestions(sendData);
+    console.log(response);
+    
+    try {
+      
+      if (response && response.statusCode === 200) {
+        debugger;
+        Swal.fire({
+          title: "Question Added Successfuly!",
+          text: "Yaay!, Your Quiz is Ready to Go",
+          icon: "success",
+          confirmButtonText: "Go to Dashboard",
+        });
+      } else {
+        Swal.fire({
+          title: "Error!",
+          text: "Error in Add Question",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
+
+    } catch (error) {
+      Swal.fire({
+        title: "Error!",
+        text: "An error occurred while Adding the Questions !",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+    resetForm();
+    handleClose();
+  };
+
+  useEffect(() => {
+    handleClickOpen();
+
+    const getQuizDetail = async () => {
+      if (currentQuizLink != "") {
+        const response = await getQuizDetailsByLink(currentQuizLink);
+        setCurrentQuizDetails(response.data);
+        console.log(response.data);
+      }
+    };
+
+    getQuizDetail();
+  }, [currentQuizLink]);
   const formik = useFormik({
     initialValues: {
       questions: [],
     },
     validationSchema: validationSchema,
     onSubmit: handleSaveQuiz,
-    validateOnBlur:true
+    validateOnBlur: true,
   });
 
-
-   
-
-  const { values, errors, touched, handleChange,index, handleBlur,setTouched, handleSubmit, setFieldValue, validateForm } =
-    formik;
+  const {
+    values,
+    errors,
+    touched,
+    handleChange,
+    index,
+    handleBlur,
+    setTouched,
+    handleSubmit,
+    setFieldValue,
+    validateForm,
+  } = formik;
 
   const handleClickOpen = () => {
-    setOpen(true);
-    if (values.questions.length === 0) {
-      setQuestionTypeDialogOpen(true);
+    if (openDialog) {
+      setOpen(true);
+      if (values.questions.length === 0) {
+        setQuestionTypeDialogOpen(true);
+      }
     }
   };
 
@@ -78,12 +160,12 @@ export default function AddQuestions() {
 
   const handleQuestionChange = (index, event) => {
     const { name, value } = event.target;
-  
+
     const newQuestions = [...values.questions];
-    
+
     if (
       name === `values.questions.${index}.correctAnswers` &&
-      newQuestions[index].type === "MSQ"
+      newQuestions[index].type === 2
     ) {
       const currentAnswers = newQuestions[index].correctAnswers || [];
       const answerIndex = currentAnswers.indexOf(value);
@@ -95,7 +177,6 @@ export default function AddQuestions() {
         );
       }
     } else {
-     
       var lastPart = name.split(".").pop();
       if (lastPart == "correctAnswers") {
         newQuestions[index][lastPart] = [value];
@@ -105,21 +186,20 @@ export default function AddQuestions() {
     }
 
     setFieldValue("questions", newQuestions);
-    
   };
-
-
 
   const handleOptionChange = (qIndex, optIndex, event) => {
     const newQuestions = [...values.questions];
     const optionValue = event.target.value || "";
     newQuestions[qIndex].answerOptions[optIndex] = optionValue;
-  
+
     // Ensure only valid options are in correctAnswers
-    newQuestions[qIndex].correctAnswers = newQuestions[qIndex].correctAnswers.filter((item) =>
+    newQuestions[qIndex].correctAnswers = newQuestions[
+      qIndex
+    ].correctAnswers.filter((item) =>
       newQuestions[qIndex].answerOptions.includes(item)
     );
-  
+
     setFieldValue("questions", newQuestions);
   };
 
@@ -153,7 +233,7 @@ export default function AddQuestions() {
     };
 
     setFieldValue("questions", [...values.questions, newQuestion]);
-
+    setQuestionCount(questionCount + 1);
     const newTouchedState = {
       question: false,
       answerOptions: [false, false, false, false],
@@ -164,8 +244,14 @@ export default function AddQuestions() {
       questions: [
         ...values.questions.map((_, index) => ({
           question: prevTouched.questions?.[index]?.question || false,
-          answerOptions: prevTouched.questions?.[index]?.answerOptions || [false, false, false, false],
-          correctAnswers: prevTouched.questions?.[index]?.correctAnswers || false,
+          answerOptions: prevTouched.questions?.[index]?.answerOptions || [
+            false,
+            false,
+            false,
+            false,
+          ],
+          correctAnswers:
+            prevTouched.questions?.[index]?.correctAnswers || false,
         })),
         newTouchedState,
       ],
@@ -177,7 +263,7 @@ export default function AddQuestions() {
     const newQuestions = JSON.parse(JSON.stringify(values.questions));
     let currentAnswers = newQuestions[qIndex].correctAnswers || [];
     const optionValue = newQuestions[qIndex].answerOptions[optIndex];
-  
+
     if (currentAnswers.includes(optionValue)) {
       currentAnswers = currentAnswers.filter((item) => item !== optionValue);
     } else {
@@ -185,42 +271,42 @@ export default function AddQuestions() {
         currentAnswers = [...currentAnswers, optionValue];
       }
     }
-  
+
     currentAnswers = currentAnswers.filter((item) =>
       newQuestions[qIndex].answerOptions.includes(item)
     );
-  
+
     newQuestions[qIndex].correctAnswers = currentAnswers;
     setFieldValue("questions", newQuestions);
   };
 
   const renderQuestionFields = (thisquestion, qIndex) => {
     switch (thisquestion.type) {
-      case "MCQ":
+      case 1:
         return (
           <>
             {thisquestion.answerOptions.map((option, optIndex) => (
-              <Field
-              as = {TextField}
+              <TextField
                 key={optIndex}
                 fullWidth
                 label={`Option ${optIndex + 1}`}
                 value={option || ""}
                 name={`values.questions.${qIndex}.answerOptions`[optIndex]}
-                onBlur= {handleBlur}
+                onBlur={handleBlur}
                 onChange={(event) =>
                   handleOptionChange(qIndex, optIndex, event)
                 }
-                error={           
-                  touched.questions &&               
-                  Boolean(                  
+                error={
+                  touched.questions &&
+                  Boolean(
                     errors.questions &&
-                    errors.questions[qIndex] &&
-                    errors.questions[qIndex].answerOptions &&
-                    errors.questions[qIndex].answerOptions[optIndex]
-                )}
-                helperText={               
-                  touched.questions &&                 
+                      errors.questions[qIndex] &&
+                      errors.questions[qIndex].answerOptions &&
+                      errors.questions[qIndex].answerOptions[optIndex]
+                  )
+                }
+                helperText={
+                  touched.questions &&
                   errors.questions &&
                   errors.questions[qIndex] &&
                   errors.questions[qIndex].answerOptions &&
@@ -228,11 +314,8 @@ export default function AddQuestions() {
                 }
                 margin="normal"
               />
-            
-            )
-            )
-            }
-           
+            ))}
+
             <FormControl fullWidth margin="normal">
               <InputLabel>Correct Answer</InputLabel>
               <Select
@@ -265,7 +348,7 @@ export default function AddQuestions() {
             </FormControl>
           </>
         );
-      case "MSQ":
+      case 2:
         return (
           <>
             {thisquestion.answerOptions.map((option, optIndex) => (
@@ -302,7 +385,7 @@ export default function AddQuestions() {
                   }
                 />
                 <Checkbox
-                 onBlur={handleBlur}
+                  onBlur={handleBlur}
                   checked={thisquestion.correctAnswers.includes(option)}
                   onChange={() => toggleCorrectAnswer(qIndex, optIndex)}
                   sx={{ marginLeft: "8px" }}
@@ -322,7 +405,7 @@ export default function AddQuestions() {
               )}
           </>
         );
-      case "TITA":
+      case 3:
         return (
           <TextField
             fullWidth
@@ -345,7 +428,7 @@ export default function AddQuestions() {
             }
           />
         );
-      case "TF":
+      case 4:
         return (
           <FormControl fullWidth margin="normal">
             <InputLabel>Correct Answer</InputLabel>
@@ -380,9 +463,9 @@ export default function AddQuestions() {
 
   return (
     <React.Fragment>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      {/* <Button variant="outlined" onClick={handleClickOpen}>
         Add Questions
-      </Button>
+      </Button> */}
       <Dialog
         fullScreen
         open={open}
@@ -405,8 +488,7 @@ export default function AddQuestions() {
               component="div"
               className="d-flex justify-content-between"
             >
-              Quiz Title (Science & Tech)
-              <div>Easy</div>
+              {currentQuizDetails.Title}
             </Typography>
             <Button
               autoFocus
@@ -428,7 +510,7 @@ export default function AddQuestions() {
                     Total Questions
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {values.questions.length}/10
+                    {`${values.questions.length} / ${currentQuizDetails.TotalQuestion}`}
                   </Typography>
                 </CardContent>
               </Card>
@@ -440,7 +522,7 @@ export default function AddQuestions() {
                     Marks per Question
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    5
+                    {currentQuizDetails.MarksPerQuestion}
                   </Typography>
                 </CardContent>
               </Card>
@@ -452,7 +534,7 @@ export default function AddQuestions() {
                     Negative Mark
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    1
+                    {currentQuizDetails.NegativePerQuestion}
                   </Typography>
                 </CardContent>
               </Card>
@@ -464,7 +546,9 @@ export default function AddQuestions() {
                     Total Marks
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {values.questions.length * 5} / 50
+                    {values.questions.length *
+                      currentQuizDetails.MarksPerQuestion}{" "}
+                    /{currentQuizDetails.TotalMarks}
                   </Typography>
                 </CardContent>
               </Card>
@@ -473,52 +557,48 @@ export default function AddQuestions() {
 
           {values.questions &&
             values.questions.map((q, qIndex) => (
-             
               <Box key={qIndex} sx={{ mt: 2 }}>
                 <Card>
                   <CardContent>
                     <Typography variant="h6" component="div">
                       Question {qIndex + 1} ({values.questions[qIndex].type})
                     </Typography>
-                    <Field
-                      as={TextField}
+                    <TextField
                       fullWidth
                       label="Question"
-                      name={`values.questions.${qIndex}.question`}             
+                      name={`values.questions.${qIndex}.question`}
                       value={q.question || ""}
-                      onBlur={handleBlur} 
+                      onBlur={handleBlur}
                       onChange={(event) => handleQuestionChange(qIndex, event)}
                       error={Boolean(
-                          touched.questions &&
-                       
+                        touched.questions &&
                           errors.questions &&
                           errors.questions[qIndex] &&
                           errors.questions[qIndex].question
                       )}
                       helperText={
-                        (touched.questions &&
-                      
+                        touched.questions &&
                         errors.questions &&
                         errors.questions[qIndex] &&
-                        errors.questions[qIndex].question)
+                        errors.questions[qIndex].question
                       }
                       margin="normal"
                     />
-                  
+
                     {renderQuestionFields(q, qIndex)}
                   </CardContent>
                 </Card>
               </Box>
-             
             ))}
 
           <Box sx={{ mt: 2 }}>
             <Button
               variant="contained"
               onClick={handleAddQuestionTypeDialogOpen}
+              disabled={questionCount >= currentQuizDetails.TotalQuestion}
             >
               Add Another Question
-            </Button> 
+            </Button>
           </Box>
         </Container>
       </Dialog>
@@ -538,10 +618,10 @@ export default function AddQuestions() {
               onChange={(event) => setNewQuestionType(event.target.value)}
               label="Select Question Type"
             >
-              <MenuItem value="MCQ">MCQ</MenuItem>
-              <MenuItem value="MSQ">MSQ</MenuItem>
-              <MenuItem value="TITA">TITA</MenuItem>
-              <MenuItem value="TF">True/False</MenuItem>
+              <MenuItem value={1}>MCQ</MenuItem>
+              <MenuItem value={2}>MSQ</MenuItem>
+              <MenuItem value={3}>TITA</MenuItem>
+              <MenuItem value={4}>True/False</MenuItem>
             </Select>
           </FormControl>
         </DialogContent>

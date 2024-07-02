@@ -238,8 +238,8 @@ const AdminDashboard = () => {
                   </MenuItem>
                 ))}
             </Select>
-          </FormControl>
-          <button className={`${classes["add-quiz-btn"]}` }  onClick={()=>{return <CreateQuizModal/>}} >Add Quiz</button>
+          </FormControl>       
+          <CreateQuizModal/>
         </div>
         <h4>Pending Contest</h4>
         <div className="row">

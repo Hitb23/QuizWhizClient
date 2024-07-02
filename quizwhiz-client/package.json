@@ -24,9 +24,9 @@
     "@mui/x-date-pickers-pro": "^7.7.0",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
+    "date-fns": "^3.6.0",
     "dayjs": "^1.11.11",
     "dotenv": "^16.4.5",
-    "date-fns": "^3.6.0",
     "formik": "^2.4.6",
     "formik-material-ui": "^4.0.0-alpha.2",
     "jwt-decode": "^4.0.0",
@@ -44,6 +44,7 @@
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
     "styled-components": "^6.1.11",
+    "sweetalert2": "^11.12.1",
     "typed.js": "^2.1.0",
     "yup": "^1.4.0"
   },

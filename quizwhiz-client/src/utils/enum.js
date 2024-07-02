@@ -11,6 +11,9 @@ export const RoutePaths = {
   PageNotFound: "/page-not-found",
   MyProfile: "/my-profile",
   AdminLogin: "/admin-login",
+  CreateNewQuiz:"/create-new-quiz",
+  GetQuizDetails:"/get-quiz-details",
+  AddQuizQuestions:"/add-quiz-questions"
 };
 
 export const Role = {
@@ -31,5 +34,8 @@ export const API_URLS = {
   UPLOAD_PHOTO: "/auth/upload-profile-photo",
   QUIZ_DIFFICULTIES:"/quiz/get-quiz-difficulties",
   QUIZ_CATEGORIES:"/quiz/get-quiz-categories",
-  QUIZ_FILTER:'/quiz/get-quizzes-filter'
+  QUIZ_FILTER:'/quiz/get-quizzes-filter',
+  CREATE_NEW_QUIZ:'/quiz/create-new-quiz',
+  GET_QUIZ_DETAILS_BY_LINK :`/quiz/get-quiz-details?quizLink=`,
+  ADD_QUIZ_QUESTIONS:'/quiz/add-quiz-questions'
 };

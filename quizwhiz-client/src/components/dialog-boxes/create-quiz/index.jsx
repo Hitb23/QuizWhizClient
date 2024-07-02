@@ -13,7 +13,7 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect  } from "react";
 import * as yup from "yup";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
@@ -24,10 +24,26 @@ import { Formik, Form, Field } from "formik";
 import { styled } from "@mui/material/styles";
 import { Style } from "@mui/icons-material";
 import AddQuestions from "../add-questions";
-import Typography from '@mui/material/Typography';
+import Typography from "@mui/material/Typography";
+import classes from "./style.module.css";
+import { resolvePath, useNavigate } from "react-router-dom";
+import { format } from "date-fns";
+import dayjs from "dayjs";
+import {
+  getCategories,
+  getDifficulties,
+  createNewQuiz
+} from "../../../services/admindashboard.service";
+import Swal from "sweetalert2";
+import ReactDOM from 'react-dom';
 
 export default function CreateQuizModal() {
   const [open, setOpen] = React.useState(false);
+  const [categoryDetails, setCategoryDetails] = useState([]);
+  const [difficultyDetails, setDifficultyDetails] = useState([]);
+  const navigate = useNavigate();
+  const [addQuestionsOpen, setAddQuestionsOpen] = useState(false); 
+  const [quizLink, setQuizLink]= useState("")
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -38,14 +54,78 @@ export default function CreateQuizModal() {
   };
 
   const validationSchema = yup.object().shape(CREATE_QUIZ_VALIDATIONS);
-  const handleSubmit = (values) => {
-    console.log(values);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const difficultyData = await getDifficulties();
+        const categoryData = await getCategories();
+        setCategoryDetails(categoryData.data.data);
+        setDifficultyDetails(difficultyData.data.data);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleSubmit = async (values, {resetForm}) => {
+    const formattedDate = dayjs(values.scheduledDateTime).format(
+      "YYYY-MM-DD HH:mm:ss.SSSSSS"
+    );
+    const sendData = {
+      Title: values.quizTitle,
+      Description: values.quizDescription,
+      CategoryId: values.category,
+      DifficultyId: values.difficulty,
+      TotalQuestion: values.totalQuestions,
+      MarksPerQuestion: values.marksPerQuestion,
+      NegativePerQuestion: values.negativeMarksPerQuestion,
+      TotalMarks: values.marksPerQuestion * values.totalQuestions,
+      MinMarks: values.minMarks,
+      WinningAmount: values.winningAmount,
+      ScheduleDate: formattedDate,
+    };
+
+    try {
+      var response = await createNewQuiz(sendData);
+      if (response && response.statusCode === 200) {
+        Swal.fire({
+          title: 'Quiz Created Successfully',
+          text: 'You can either go to the dashboard or add questions.',
+          icon: 'success',
+          showCancelButton: true,
+          confirmButtonText: 'Add Questions',
+          cancelButtonText: 'Go to Dashboard'
+        }).then((result) => {
+          
+          if (result.isConfirmed) {
+            setAddQuestionsOpen(true);
+            console.log(response.data);
+            setQuizLink(response.data);
+          } else {
+            navigate(`/admin-dashboard`)
+          }
+        });
+        resetForm();
+        handleClose();
+      }
+    } catch (error) {
+      alert("error in submitting quiz")
+      console.error("Error creating quiz", error);
+    }
+
+
   };
   return (
     <React.Fragment>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <button
+        className={`${classes["add-quiz-btn"]}`}
+        onClick={handleClickOpen}
+      >
         Create New Quiz
-      </Button>
+      </button>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -121,7 +201,7 @@ export default function CreateQuizModal() {
                   }
                 />
                 <Grid container spacing={2}>
-                  <Grid item xs={8}>
+                  <Grid item sm={8} xs={12}>
                     <FormControl
                       fullWidth
                       margin="normal"
@@ -140,16 +220,28 @@ export default function CreateQuizModal() {
                         onBlur={handleBlur}
                         name="category"
                       >
-                        <MenuItem value="10">Ten</MenuItem>
-                        <MenuItem value="20">Twenty</MenuItem>
-                        <MenuItem value="30">Thirty</MenuItem>
+                        {categoryDetails &&
+                          categoryDetails.map((ele) => (
+                            <MenuItem
+                              key={ele.CategoryId}
+                              value={ele.CategoryId}
+                            >
+                              {ele.CategoryName}
+                            </MenuItem>
+                          ))}
+
                       </Field>
                       {touched.category && errors.category && (
-                        <span className="text-danger "style={{fontSize: "12px"}}>{errors.category}</span>
+                        <span
+                          className="text-danger "
+                          style={{ fontSize: "12px" }}
+                        >
+                          {errors.category}
+                        </span>
                       )}
                     </FormControl>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item sm={4} xs={12}>
                     <FormControl
                       fullWidth
                       margin="normal"
@@ -166,18 +258,29 @@ export default function CreateQuizModal() {
                         onBlur={handleBlur}
                         name="difficulty"
                       >
-                        <MenuItem value="10">Ten</MenuItem>
-                        <MenuItem value="20">Twenty</MenuItem>
-                        <MenuItem value="30">Thirty</MenuItem>
+                        {difficultyDetails &&
+                          difficultyDetails.map((ele) => (
+                            <MenuItem
+                              key={ele.DifficultyId}
+                              value={ele.DifficultyId}
+                            >
+                              {ele.DifficultyName}
+                            </MenuItem>
+                          ))}
                       </Field>
                       {touched.difficulty && errors.difficulty && (
-                        <span className="text-danger "style={{fontSize: "12px"}}>{errors.difficulty}</span>
+                        <span
+                          className="text-danger "
+                          style={{ fontSize: "12px" }}
+                        >
+                          {errors.difficulty}
+                        </span>
                       )}
                     </FormControl>
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                  <Grid item xs={4}>
+                  <Grid item sm={4} xs={12}>
                     <Field
                       as={TextField}
                       fullWidth
@@ -196,7 +299,7 @@ export default function CreateQuizModal() {
                       }
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={12} sm={4}>
                     <Field
                       as={TextField}
                       fullWidth
@@ -216,7 +319,7 @@ export default function CreateQuizModal() {
                       }
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item sm={4} xs={12}>
                     <Field
                       as={TextField}
                       fullWidth
@@ -241,22 +344,23 @@ export default function CreateQuizModal() {
                 </Grid>
 
                 <Grid container spacing={2}>
-                  <Grid item xs={4}>
+                  <Grid item sm={4} xs={12}>
                     <Field
                       as={TextField}
                       fullWidth
+                      disabled
                       margin="normal"
                       label="Total Marks"
                       type="number"
                       name="totalMarks"
-                      value={values.totalMarks}
+                      value={values.totalQuestions * values.marksPerQuestion}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       error={touched.totalMarks && Boolean(errors.totalMarks)}
                       helperText={touched.totalMarks ? errors.totalMarks : ""}
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item sm={4} xs={12}>
                     <Field
                       as={TextField}
                       fullWidth
@@ -271,7 +375,7 @@ export default function CreateQuizModal() {
                       helperText={touched.minMarks ? errors.minMarks : ""}
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item sm={4} xs={12}>
                     <Field
                       as={TextField}
                       fullWidth
@@ -302,6 +406,7 @@ export default function CreateQuizModal() {
                       setFieldValue("scheduledDateTime", value)
                     }
                     onBlur={handleBlur}
+                    minDateTime={dayjs().add(1, 'hour')}
                     slots={{
                       textField: (props) => (
                         <TextField
@@ -335,12 +440,13 @@ export default function CreateQuizModal() {
                 >
                   Create
                 </Button>
-                <AddQuestions />
+             
               </DialogActions>
             </Form>
           )}
         </Formik>
       </Dialog>
+      {addQuestionsOpen && quizLink !== "" && <AddQuestions openDialog={true} currentQuizLink={quizLink} />}
     </React.Fragment>
   );
 }
