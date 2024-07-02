@@ -7,10 +7,11 @@ import { Box, Button } from "@mui/material";
 
 const QuizCard = ({ title, description, date, categoryName, time }) => {
   console.log(description);
-  console.log("Category name : " + categoryName);
-  var imageUrl = `src/assets/${categoryName}.jpg`;
-  if(categoryName === "general knowledge"){
-    imageUrl = `src/assets/general-knowledge.jpg`;
+  var name = categoryName.toLowerCase();
+  console.log("Category name : " + name);
+  var imageUrl = `${import.meta.env.VITE_PUBLIC_URL}src/assets/${name}.jpg`;
+  if(name == "general knowledge"){
+    imageUrl = `${import.meta.env.VITE_PUBLIC_URL}src/assets/gk.jpg`;
   }
   const formattedDate = new Date(date).toLocaleDateString("en-US", {
     year: "numeric",
@@ -70,7 +71,7 @@ const QuizCard = ({ title, description, date, categoryName, time }) => {
             className="fw-semibold text-center"
             sx={{ marginBottom: "16px" }}
           >
-            {description.substring(0,14)}
+            {(description.length < 20) ? description.substring(0,20) : `${description.substring(0,20)}...`} 
           </Typography>
           <Typography
             variant="body1"

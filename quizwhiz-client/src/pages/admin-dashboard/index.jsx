@@ -40,6 +40,7 @@ import {
 } from "../../services/admindashboard.service";
 import jwtDecoder from "../../services/jwtDecoder";
 import NO_DATA_FOUND from "../../assets/Server.gif";
+import { statusEnum } from "../../utils/enum";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -67,6 +68,7 @@ const AdminDashboard = () => {
   const [countOfUpcoming, SetCountOfUpcoming] = useState(null);
   const [countOfActive, SetCountOfActive] = useState(null);
   const [countOfCompleted, SetCountOfCompleted] = useState(null);
+
   const navigate = useNavigate();
   const params = useParams();
   var username = "";
@@ -74,14 +76,23 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+
+        console.log("In UseEffect: Called");
+        setDifficulty(0);
+        setCategory(0);
+        SetCurrentPage(1);
+        SetSearchedWord('');
+
         setUploadCount(uploadCount + 1);
+
         const difficulties = await getDifficulties();
         const categories = await getCategories();
         const allData = await filterByCategory({
-          StatusId: 2,
+          StatusId: statusEnum[params.id],
           DifficultyId: 0,
           CategoryId: 0,
           CurrentPage: 1,
+          SearchValue: '',
         });
         console.log("All data: ");
         const data = allData.data.data.GetQuizzes;
@@ -98,13 +109,13 @@ const AdminDashboard = () => {
         setRecords(allData?.data?.data?.Pagination?.RecordSize);
         console.log(allData?.data?.data?.Pagination?.TotalPages);
       } catch (error) {
+        SetFilteredData([]);
         console.error("Error fetching data", error);
       }
     };
 
     fetchData();
-  }, [Records, params]);
-
+  }, [Records,params]);
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
@@ -121,22 +132,26 @@ const AdminDashboard = () => {
   }, []);
   
   const navigateToCategory = (id) => {
-    if (id === "upcoming") navigate(`/admin-dashboard`);
-    else navigate(`/admin-dashboard/${id}`);
+    navigate(`/admin-dashboard/${id}`);
   };
 
   const handlePageSize = async (event) => {
     setRecords(event.target.value);
+    try{
     const result = await changeRecordsSize({
       recordSize: event.target.value,
     });
+    }
+    catch(error){
+      SetFilteredData([]);
+    }
   };
 
   const handleDifficulty = async (event) => {
     setDifficulty(event.target.value);
     try {
       const result = await filterByCategory({
-        StatusId: 2,
+        StatusId: statusEnum[params.id],
         DifficultyId: event.target.value,
         CategoryId: category,
         CurrentPage: currentPage,
@@ -144,6 +159,7 @@ const AdminDashboard = () => {
       });
       const filteredData = result.data.data.GetQuizzes;
       SetFilteredData(filteredData);
+      SetPageSize(result?.data?.data?.Pagination?.TotalPages);
     } catch (error) {
       SetFilteredData([]);
     }
@@ -151,27 +167,34 @@ const AdminDashboard = () => {
 
   const handlePageChange = async (event, value) => {
     SetCurrentPage(currentPage);
+    console.log(searchedWord)
+    try{
     const result = await filterByCategory({
-      StatusId: 2,
+      StatusId: statusEnum[params.id],
       DifficultyId: difficulty,
       CategoryId: category,
       CurrentPage: value,
       SearchValue: searchedWord,
     });
     SetFilteredData(result.data.data.GetQuizzes);
+   }
+   catch(error){
+    SetFilteredData([]);
+   }
   };
   const searchHandler = async (e) => {
     const searchedWord = e.target.value;
     SetSearchedWord(searchedWord);
     try {
       const result = await filterByCategory({
-        StatusId: 2,
+        StatusId: statusEnum[params.id],
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: currentPage,
         SearchValue: searchedWord,
       });
       SetFilteredData(result.data.data.GetQuizzes);
+      SetPageSize(result?.data?.data?.Pagination?.TotalPages);
     } catch (error) {
       console.log("error:", error);
       SetFilteredData([]);
@@ -181,13 +204,14 @@ const AdminDashboard = () => {
     setCategory(e.target.value);
     try {
       const result = await filterByCategory({
-        StatusId: 2,
+        StatusId: statusEnum[params.id],
         DifficultyId: difficulty,
         CategoryId: e.target.value,
         CurrentPage: currentPage,
         SearchValue: searchedWord,
       });
       const filteredData = result.data.data.GetQuizzes;
+      SetPageSize(result?.data?.data?.Pagination?.TotalPages);
       SetFilteredData(filteredData);
     } catch (error) {
       SetFilteredData([]);
@@ -230,28 +254,28 @@ const AdminDashboard = () => {
             text="Upcoming"
             icon={faCalendarAlt}
             onClickHandler={navigateToCategory}
-            active={"upcoming"}
+            active={params.id}
           />
           <CardComponent
             count={countOfActive}
             text="Active"
             icon={faPlay}
             onClickHandler={navigateToCategory}
-            active={"upcoming"}
+            active={params.id}
           />
           <CardComponent
             count={countOfCompleted}
             text="Completed"
             icon={faCheckCircle}
             onClickHandler={navigateToCategory}
-            active={"upcoming"}
+            active={params.id}
           />
           <CardComponent
             count={countOfPending}
             text="Pending"
             icon={faQuestionCircle}
             onClickHandler={navigateToCategory}
-            active={"upcoming"}
+            active={params.id}
           />
         </div>
         <div className="row">
@@ -303,9 +327,7 @@ const AdminDashboard = () => {
             />
           </div>
           <div className="col-lg-2 mb-4 col-sm-6 col-12">
-            <FormControl
-              sx={{width: "100%"}}
-            >
+            <FormControl sx={{ width: "100%" }}>
               <InputLabel
                 id="demo-multiple-name-label"
                 sx={{
@@ -363,9 +385,7 @@ const AdminDashboard = () => {
             </FormControl>
           </div>
           <div className="col-lg-2 mb-4 col-sm-6 col-12">
-            <FormControl
-              sx={{width: "100%"}}
-            >
+            <FormControl sx={{ width: "100%" }}>
               <InputLabel
                 id="demo-multiple-name-label"
                 sx={{
@@ -423,15 +443,14 @@ const AdminDashboard = () => {
             </FormControl>
           </div>
           <div className="col-lg-6 mb-4 col-sm-6 col-12 d-flex justify-content-end">
-            <button
-              className={` ${classes["add-quiz-btn"]} `}
-            >
-              Add Quiz
-            </button>
+            <button className={` ${classes["add-quiz-btn"]} `}>Add Quiz</button>
           </div>
         </div>
 
-        <h4>Pending Contest</h4>
+        <h4 className="text-white ms-2">
+          {params.id.substring(0, 1).toUpperCase() + params.id.substring(1)}{" "}
+          Contest
+        </h4>
         <div className="row">
           {filteredData.length > 0 ? (
             filteredData.map((ele, idx) => (
@@ -443,7 +462,7 @@ const AdminDashboard = () => {
                 key={idx}
               />
             ))
-          ) : (
+          ) :  (
             // <img
             //   src={NO_DATA_FOUND}
             //   alt="No Data Available"
@@ -508,7 +527,7 @@ const AdminDashboard = () => {
                   },
                 },
                 "& .MuiPaginationItem-root.Mui-selected": {
-                  backgroundColor: "#5f071c",
+                  // backgroundColor: "#5f071c",
                   color: "#fbd0da",
                   "&:hover": {
                     backgroundColor: "#fbd0da",
@@ -516,7 +535,7 @@ const AdminDashboard = () => {
                   },
                 },
                 "& .MuiPaginationItem-ellipsis": {
-                  backgroundColor: "white",
+                  backgroundColor: "transparent",
                   "&:hover": {
                     backgroundColor: "transparent",
                     color: "#fbd0da",

@@ -40,7 +40,7 @@ export const ROUTES = [
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path: "/admin-dashboard",
+    path: "/admin-dashboard/:id",
     element: <AdminDashboard />,
     roles: [Role.Admin],
   },
@@ -64,10 +64,10 @@ export const ROUTES = [
     element: <MyProfile />,
     roles: [Role.Admin, Role.Contestant],
   },
-  {
-    path: '/admin-dashboard/:id',
-    element: <AdminCategory />,
-    roles: [Role.Admin, Role.Contestant, Role.Public],
-  },
+  // {
+  //   path: '/admin-dashboard/:id',
+  //   element: <AdminCategory />,
+  //   roles: [Role.Admin, Role.Contestant, Role.Public],
+  // },
  
 ];

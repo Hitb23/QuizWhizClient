@@ -1,14 +1,12 @@
 
-import * as React from "react";
-import { useState, useEffect } from "react";
+import { React, useEffect, useState } from "react";
 import {
   Box,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
-  Stack,
-  // makeStyles,
+  TextField,
 } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import classes from "./style.module.css";
@@ -41,8 +39,6 @@ import {
 } from "../../services/admindashboard.service";
 import jwtDecoder from "../../services/jwtDecoder";
 import { statusEnum } from "../../utils/enum";
-import {TextField} from "@mui/material";
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -74,44 +70,38 @@ const AdminDashboard = () => {
   const params = useParams();
   var username = "";
 
-  useEffect(
-    () => {
-      const fetchData = async () => {
-        try {
-          const difficulties = await getDifficulties();
-          const categories = await getCategories();
-          setDifficulty(0);
-          setCategory(0);
-          SetSearchedWord("");
-          const allData = await filterByCategory({
-            StatusId: statusEnum[params.id],
-            DifficultyId: 0,
-            CategoryId: 0,
-            CurrentPage: 1,
-          });
-          const status=await getAllStatusCount();
-          const data = allData.data.data.GetQuizzes;
-          SetCountOfPending(status?.data?.data?.PendingCount);
-          SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
-          SetCountOfActive(status?.data?.data?.ActiveCount);
-          SetCountOfCompleted(status?.data?.data?.CompletedCount);
-          setDifficultyList(difficulties.data.data);
-          setCategoryList(categories.data.data);
-          SetFilteredData(data);
-          SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
-          setRecords(allData?.data?.data?.Pagination?.RecordSize);
-        } catch (error) {
-          console.error("Error fetching data", error);
-        }
-      };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const difficulties = await getDifficulties();
+        const categories = await getCategories();
+        setDifficulty(0);
+        setCategory(0);
+        SetSearchedWord("");
+        const allData = await filterByCategory({
+          StatusId: statusEnum[params.id],
+          DifficultyId: 0,
+          CategoryId: 0,
+          CurrentPage: 1,
+        });
+        const status = await getAllStatusCount();
+        const data = allData.data.data.GetQuizzes;
+        SetCountOfPending(status?.data?.data?.PendingCount);
+        SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
+        SetCountOfActive(status?.data?.data?.ActiveCount);
+        SetCountOfCompleted(status?.data?.data?.CompletedCount);
+        setDifficultyList(difficulties.data.data);
+        setCategoryList(categories.data.data);
+        SetFilteredData(data);
+        SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
+        setRecords(allData?.data?.data?.Pagination?.RecordSize);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
 
-      fetchData();
-    },
-    [Records, statusEnum[params.id]],
-    difficulty,
-    category,
-    searchedWord
-  );
+    fetchData();
+  }, [Records, statusEnum[params.id], difficulty, category, searchedWord]);
 
   useEffect(() => {
     const data = jwtDecoder();
@@ -320,9 +310,7 @@ const AdminDashboard = () => {
             />
           </div>
           <div className="col-lg-2 mb-4 col-sm-6 col-12">
-            <FormControl
-              sx={{width: "100%"}}
-            >
+            <FormControl sx={{ width: "100%" }}>
               <InputLabel
                 id="demo-multiple-name-label"
                 sx={{
@@ -380,9 +368,7 @@ const AdminDashboard = () => {
             </FormControl>
           </div>
           <div className="col-lg-2 mb-4 col-sm-6 col-12">
-            <FormControl
-              sx={{width: "100%"}}
-            >
+            <FormControl sx={{ width: "100%" }}>
               <InputLabel
                 id="demo-multiple-name-label"
                 sx={{
@@ -440,11 +426,7 @@ const AdminDashboard = () => {
             </FormControl>
           </div>
           <div className="col-lg-6 mb-4 col-sm-6 col-12 d-flex justify-content-end">
-            <button
-              className={` ${classes["add-quiz-btn"]} `}
-            >
-              Add Quiz
-            </button>
+            <button className={` ${classes["add-quiz-btn"]} `}>Add Quiz</button>
           </div>
         </div>
 
@@ -462,20 +444,25 @@ const AdminDashboard = () => {
         </div>
         {filteredData.length > 0 && (
           <div className="d-flex justify-content-between mt-3 align-items-center">
-            <FormControl sx={{ m: 1, minWidth: 80,
-              "& .MuiInputLabel-root": {
-                color: "white",
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
-                "&.Mui-focused fieldset": { borderColor: "white" },
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
-                "&.Mui-focused fieldset": { borderColor: "white" },
-              },
-              "& .MuiSelect-icon": { color: "white" },
-            }} size="small">
+            <FormControl
+              sx={{
+                m: 1,
+                minWidth: 80,
+                "& .MuiInputLabel-root": {
+                  color: "white",
+                  "& fieldset": { borderColor: "white" },
+                  "&:hover fieldset": { borderColor: "white" },
+                  "&.Mui-focused fieldset": { borderColor: "white" },
+                },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": { borderColor: "white" },
+                  "&:hover fieldset": { borderColor: "white" },
+                  "&.Mui-focused fieldset": { borderColor: "white" },
+                },
+                "& .MuiSelect-icon": { color: "white" },
+              }}
+              size="small"
+            >
               <InputLabel id="demo-simple-select-autowidth-label">
                 Records
               </InputLabel>
@@ -486,7 +473,10 @@ const AdminDashboard = () => {
                 onChange={handlePageSize}
                 autoWidth
                 label="Records"
-                sx={{ color: "white", "& .MuiSvgIcon-root": { color: "white" } }}
+                sx={{
+                  color: "white",
+                  "& .MuiSvgIcon-root": { color: "white" },
+                }}
               >
                 <MenuItem value={4}>4</MenuItem>
                 <MenuItem value={8}>8</MenuItem>
