@@ -1,5 +1,12 @@
 import { React, useEffect, useState } from "react";
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import classes from "./style.module.css";
@@ -63,44 +70,38 @@ const AdminDashboard = () => {
   const params = useParams();
   var username = "";
 
-  useEffect(
-    () => {
-      const fetchData = async () => {
-        try {
-          const difficulties = await getDifficulties();
-          const categories = await getCategories();
-          setDifficulty(0);
-          setCategory(0);
-          SetSearchedWord("");
-          const allData = await filterByCategory({
-            StatusId: statusEnum[params.id],
-            DifficultyId: 0,
-            CategoryId: 0,
-            CurrentPage: 1,
-          });
-          const status=await getAllStatusCount();
-          const data = allData.data.data.GetQuizzes;
-          SetCountOfPending(status?.data?.data?.PendingCount);
-          SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
-          SetCountOfActive(status?.data?.data?.ActiveCount);
-          SetCountOfCompleted(status?.data?.data?.CompletedCount);
-          setDifficultyList(difficulties.data.data);
-          setCategoryList(categories.data.data);
-          SetFilteredData(data);
-          SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
-          setRecords(allData?.data?.data?.Pagination?.RecordSize);
-        } catch (error) {
-          console.error("Error fetching data", error);
-        }
-      };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const difficulties = await getDifficulties();
+        const categories = await getCategories();
+        setDifficulty(0);
+        setCategory(0);
+        SetSearchedWord("");
+        const allData = await filterByCategory({
+          StatusId: statusEnum[params.id],
+          DifficultyId: 0,
+          CategoryId: 0,
+          CurrentPage: 1,
+        });
+        const status = await getAllStatusCount();
+        const data = allData.data.data.GetQuizzes;
+        SetCountOfPending(status?.data?.data?.PendingCount);
+        SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
+        SetCountOfActive(status?.data?.data?.ActiveCount);
+        SetCountOfCompleted(status?.data?.data?.CompletedCount);
+        setDifficultyList(difficulties.data.data);
+        setCategoryList(categories.data.data);
+        SetFilteredData(data);
+        SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
+        setRecords(allData?.data?.data?.Pagination?.RecordSize);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
 
-      fetchData();
-    },
-    [Records, statusEnum[params.id],
-    difficulty,
-    category,
-    searchedWord]
-  );
+    fetchData();
+  }, [Records, statusEnum[params.id], difficulty, category, searchedWord]);
 
   useEffect(() => {
     const data = jwtDecoder();
@@ -235,98 +236,173 @@ const AdminDashboard = () => {
             active={params.id}
           />
         </div>
-        <div className="d-flex  align-items-center flex-wrap column-gap-2 my-2">
-          <Search sx={{ height: 55, width: 40 }} onChange={searchHandler} value={searchedWord}>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              sx={{ height: 55 }}
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
+        <div className="row">
+          <div className="col-lg-2 mb-4 col-sm-6 col-12">
+            <TextField
+              id="demo-search-name"
+              label="Search"
+              onChange={searchHandler}
+              value={searchedWord}
+              variant="outlined"
+              sx={{
+                width: "100%",
+                backgroundColor: "#3d3189",
+                color: "#fada65 !important",
+                boxShadow: "none",
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    border: "1px solid #fada65",
+                    color: "#fada65",
+                    borderColor: "#fada65",
+                  },
+                  "&:hover fieldset": {
+                    border: "1px solid #fada65",
+                    color: "#fada65",
+                    borderColor: "#fada65",
+                  },
+                  "&.Mui-focused fieldset": {
+                    border: "1px solid #fada65",
+                    borderColor: "#fada65",
+                  },
+                  "& .MuiInputBase-input": {
+                    color: "#fada65",
+                  },
+                },
+              }}
+              InputLabelProps={{
+                sx: {
+                  color: "#fada65",
+                  paddingLeft: "0.2rem",
+                  paddingRight: "0.2rem",
+                  "&:hover": {
+                    color: "#fada65",
+                  },
+                  "&.Mui-focused": {
+                    color: "#fada65",
+                  },
+                },
+              }}
             />
-          </Search>
-          <FormControl
-            sx={{
-              m: 1,
-              width: 200,
-              "& .MuiInputLabel-root": {
-                color: "white",
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
-                "&.Mui-focused fieldset": { borderColor: "white" },
-              },
-              "& .MuiOutlinedInput-root": {
-                background:'#3d3189',
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
-                "&.Mui-focused fieldset": { borderColor: "white" },
-              },
-              "& .MuiSelect-icon": { color: "white" },
-            }}
-          >
-            <InputLabel id="demo-multiple-name-label">Difficulty</InputLabel>
-            <Select
-              labelId="demo-multiple-name-label"
-              id="demo-multiple-name"
-              value={difficulty}
-              onChange={handleDifficulty}
-              label="Difficulty"
-              MenuProps={MenuProps}
-              sx={{ color: "white", "& .MuiSvgIcon-root": { color: "white" } }}
-            >
-              <MenuItem key={0} value={0}>
-                All
-              </MenuItem>
-              {difficultyList &&
-                difficultyList.map((ele) => (
-                  <MenuItem key={ele.DifficultyId} value={ele.DifficultyId}>
-                    {ele.DifficultyName}
-                  </MenuItem>
-                ))}
-            </Select>
-          </FormControl>
-          <FormControl
-            sx={{
-              m: 1,
-              width: 200,
-              "& .MuiInputLabel-root": {
-                color: "white",
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
-                "&.Mui-focused fieldset": { borderColor: "white" },
-              },
-              "& .MuiOutlinedInput-root": {
-                background:'#3d3189',
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
-                "&.Mui-focused fieldset": { borderColor: "white" },
-              },
-              "& .MuiSelect-icon": { color: "white" },
-            }}
-          >
-            <InputLabel id="demo-multiple-name-label">Category</InputLabel>
-            <Select
-              labelId="demo-multiple-name-label"
-              id="demo-multiple-name"
-              value={category}
-              onChange={handleCategory}
-              label="Category"
-              MenuProps={MenuProps}
-              sx={{ color: "white", "& .MuiSvgIcon-root": { color: "white" } }}
-            >
-              <MenuItem key={0} value={0}>
-                All
-              </MenuItem>
-              {categoryList &&
-                categoryList.map((ele) => (
-                  <MenuItem key={ele.CategoryId} value={ele.CategoryId}>
-                    {ele.CategoryName}
-                  </MenuItem>
-                ))}
-            </Select>
-          </FormControl>
-          <button className={`${classes["add-quiz-btn"]}`}>Add Quiz</button>
+          </div>
+          <div className="col-lg-2 mb-4 col-sm-6 col-12">
+            <FormControl sx={{ width: "100%" }}>
+              <InputLabel
+                id="demo-multiple-name-label"
+                sx={{
+                  color: "#fada65",
+                  paddingLeft: "0.2rem",
+                  paddingRight: "0.2rem",
+                  "&:hover": {
+                    color: "#fada65",
+                  },
+                  "&.Mui-focused": {
+                    color: "#fada65",
+                  },
+                }}
+              >
+                Difficulty
+              </InputLabel>
+              <Select
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                value={difficulty}
+                onChange={handleDifficulty}
+                label="Difficulty"
+                MenuProps={MenuProps}
+                sx={{
+                  backgroundColor: "#3d3189",
+                  color: "#fada65",
+                  boxShadow: "none",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    border: "1px solid #fada65",
+                    borderColor: "#fada65", // Always set the border color to #fada65
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    border: "1px solid #fada65",
+                    borderColor: "#fada65", // Maintain the border color on focus
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    border: "1px solid #fada65",
+                    borderColor: "#fada65", // Maintain the border color on hover
+                  },
+                  "& .MuiSvgIcon-root": {
+                    color: "#fada65",
+                  },
+                }}
+              >
+                <MenuItem key={0} value={0}>
+                  All
+                </MenuItem>
+                {difficultyList &&
+                  difficultyList.map((ele) => (
+                    <MenuItem key={ele.DifficultyId} value={ele.DifficultyId}>
+                      {ele.DifficultyName}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </div>
+          <div className="col-lg-2 mb-4 col-sm-6 col-12">
+            <FormControl sx={{ width: "100%" }}>
+              <InputLabel
+                id="demo-multiple-name-label"
+                sx={{
+                  color: "#fada65",
+                  paddingLeft: "0.2rem",
+                  paddingRight: "0.2rem",
+                  "&:hover": {
+                    color: "#fada65",
+                  },
+                  "&.Mui-focused": {
+                    color: "#fada65",
+                  },
+                }}
+              >
+                Category
+              </InputLabel>
+              <Select
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                value={category}
+                onChange={handleCategory}
+                label="Category"
+                MenuProps={MenuProps}
+                sx={{
+                  backgroundColor: "#3d3189",
+                  color: "#fada65",
+                  boxShadow: "none",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    border: "1px solid #fada65",
+                    borderColor: "#fada65", // Always set the border color to #fada65
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    border: "1px solid #fada65",
+                    borderColor: "#fada65", // Maintain the border color on focus
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    border: "1px solid #fada65",
+                    borderColor: "#fada65", // Maintain the border color on hover
+                  },
+                  "& .MuiSvgIcon-root": {
+                    color: "#fada65",
+                  },
+                }}
+              >
+                <MenuItem key={0} value={0}>
+                  All
+                </MenuItem>
+                {categoryList &&
+                  categoryList.map((ele) => (
+                    <MenuItem key={ele.CategoryId} value={ele.CategoryId}>
+                      {ele.CategoryName}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </div>
+          <div className="col-lg-6 mb-4 col-sm-6 col-12 d-flex justify-content-end">
+            <button className={` ${classes["add-quiz-btn"]} `}>Add Quiz</button>
+          </div>
         </div>
 
         <h4>Pending Contest</h4>
@@ -343,20 +419,25 @@ const AdminDashboard = () => {
         </div>
         {filteredData.length > 0 && (
           <div className="d-flex justify-content-between mt-3 align-items-center">
-            <FormControl sx={{ m: 1, minWidth: 80,
-              "& .MuiInputLabel-root": {
-                color: "white",
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
-                "&.Mui-focused fieldset": { borderColor: "white" },
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
-                "&.Mui-focused fieldset": { borderColor: "white" },
-              },
-              "& .MuiSelect-icon": { color: "white" },
-            }} size="small">
+            <FormControl
+              sx={{
+                m: 1,
+                minWidth: 80,
+                "& .MuiInputLabel-root": {
+                  color: "white",
+                  "& fieldset": { borderColor: "white" },
+                  "&:hover fieldset": { borderColor: "white" },
+                  "&.Mui-focused fieldset": { borderColor: "white" },
+                },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": { borderColor: "white" },
+                  "&:hover fieldset": { borderColor: "white" },
+                  "&.Mui-focused fieldset": { borderColor: "white" },
+                },
+                "& .MuiSelect-icon": { color: "white" },
+              }}
+              size="small"
+            >
               <InputLabel id="demo-simple-select-autowidth-label">
                 Records
               </InputLabel>
@@ -367,7 +448,10 @@ const AdminDashboard = () => {
                 onChange={handlePageSize}
                 autoWidth
                 label="Records"
-                sx={{ color: "white", "& .MuiSvgIcon-root": { color: "white" } }}
+                sx={{
+                  color: "white",
+                  "& .MuiSvgIcon-root": { color: "white" },
+                }}
               >
                 <MenuItem value={4}>4</MenuItem>
                 <MenuItem value={8}>8</MenuItem>
