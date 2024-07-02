@@ -6,7 +6,7 @@ export const RoutePaths = {
   SignUp: "/sign-up",
   ForgotPassword: "/forgot-password",
   ResetPassword: "/reset-password",
-  AdminDashboard: "/admin-dashboard",
+  AdminDashboard: "/admin-dashboard/upcoming",
   UserDashboard: "/user-dashboard",
   PageNotFound: "/page-not-found",
   MyProfile: "/my-profile",
@@ -37,5 +37,14 @@ export const API_URLS = {
   QUIZ_FILTER:'/quiz/get-quizzes-filter',
   CREATE_NEW_QUIZ:'/quiz/create-new-quiz',
   GET_QUIZ_DETAILS_BY_LINK :`/quiz/get-quiz-details?quizLink=`,
-  ADD_QUIZ_QUESTIONS:'/quiz/add-quiz-questions'
+  ADD_QUIZ_QUESTIONS:'/quiz/add-quiz-questions',
+  QUIZ_RECORDS:'/auth/change-record-size',
+  QUIZ_STATUS:'/quiz/get-quiz-status-count'
+
 };
+export const statusEnum={
+  "pending": 1,
+  "upcoming": 2,
+  "active": 3,
+  "completed": 4
+}

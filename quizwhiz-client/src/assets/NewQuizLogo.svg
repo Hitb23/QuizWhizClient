@@ -3,7 +3,7 @@
   <defs>
     <style>
       .cls-1 {
-        fill: #f47e0d;
+        fill: #fada65;
       }
 
       .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9, .cls-10, .cls-11, .cls-12 {
@@ -11,47 +11,47 @@
       }
 
       .cls-2 {
-        fill: #4d5455;
+        fill: #fada65;
       }
 
       .cls-3 {
-        fill: #fffcfa;
+        fill: #6F41DB;
       }
 
       .cls-4 {
-        fill: #f0841c;
+        fill: #fada65;
       }
 
       .cls-5 {
-        fill: #f47f0d;
+        fill: #fada65;
       }
 
       .cls-6 {
-        fill: #f08217;
+        fill: #fada65;
       }
 
       .cls-7 {
-        fill: #fffdfc;
+        fill: #6F41DB;
       }
 
       .cls-8 {
-        fill: #4f5556;
+        fill: #fada65;
       }
 
       .cls-9 {
-        fill: #f18216;
+        fill: #fada65;
       }
 
       .cls-10 {
-        fill: #f47f0e;
+        fill: #fada65;
       }
 
       .cls-11 {
-        fill: #485256;
+        fill: #ffffff;
       }
 
       .cls-12 {
-        fill: #485255;
+        fill: #ffffff;
       }
     </style>
   </defs>

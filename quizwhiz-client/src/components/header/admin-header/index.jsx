@@ -19,7 +19,13 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import classes from "./style.module.css";
 import Logo from "../../../assets/NewQuizLogo.svg";
-import { Avatar, Badge, Collapse, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Avatar,
+  Badge,
+  Collapse,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import {
   ExpandLess,
   ExpandMore,
@@ -35,9 +41,8 @@ import { DrawerHeader, AppBar, Drawer } from "../../admin-components/index";
 import { RoutePaths } from "../../../utils/enum";
 import jwtDecoder from "../../../services/jwtDecoder";
 
-const AdminSlider = ({firstName, lastName, uploadCount}) => {
-  console.log(firstName);
-  console.log(lastName);
+
+const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [fullImagePath, setFullImagePath] = useState("");
@@ -48,7 +53,11 @@ const AdminSlider = ({firstName, lastName, uploadCount}) => {
   username = data["Username"];
 
   useEffect(() => {
-    setFullImagePath(`${import.meta.env.VITE_PUBLIC_URL}ProfilePhoto/${username}/${username}.jpg?${uploadCount}`);
+    setFullImagePath(
+      `${
+        import.meta.env.VITE_PUBLIC_URL
+      }ProfilePhoto/${userName}/${userName}.jpg?${uploadCount}`
+    );
   }, [uploadCount]);
 
   const handleDrawerOpen = () => {
@@ -71,14 +80,14 @@ const AdminSlider = ({firstName, lastName, uploadCount}) => {
   const clickOnProfile = () => {
     navigate(RoutePaths.MyProfile);
     setAnchorEl(null);
-  }
+  };
   return (
     <>
       <AppBar
         position="fixed"
         open={open}
         sx={{
-          backgroundColor: "#FFFFFF",
+          backgroundColor: "#6F41DB",
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
@@ -93,9 +102,10 @@ const AdminSlider = ({firstName, lastName, uploadCount}) => {
             onClick={handleDrawerOpen}
             edge="start"
             sx={{
-              marginRight: 3,
+              marginLeft:-3.1,
+              marginRight: 4,
               ...(open && { display: "none" }),
-              ...(useMediaQuery('(max-width:450px)') && { display: "none" })
+              ...(useMediaQuery("(max-width:450px)") && { display: "none" }),
             }}
           >
             <MenuIcon />
@@ -112,20 +122,26 @@ const AdminSlider = ({firstName, lastName, uploadCount}) => {
             marginRight: "1rem",
           }}
         >
+
           <Badge badgeContent={4} sx={{ cursor: "pointer",
           '& .MuiBadge-badge': {
-          backgroundColor: "#F47D0A",
-          color: "white" // This sets the text color of the badge
+          backgroundColor: "#3D3189",
+          color: "#fada65" // This sets the text color of the badge
         } }}>
-            <IoNotificationsOutline color="black" size={30} />
+            <IoNotificationsOutline color="#fada65" backgroundColor= "#3D3189" border= "2px solid #3D3189" size={30} />
+
           </Badge>
           <IconButton
             className="gap-2 rounded d-flex align-items-center"
             onClick={handleAvatarClick}
           >
-            <Avatar sx={{ background: "#F47D0A", cursor: "pointer" }} src={fullImagePath}>
-            </Avatar>
-            <p className="fs-5 mt-3 fw-semibold d-sm-inline d-none">{firstName} {lastName}</p>
+            <Avatar
+              sx={{ background: "#5f071c", cursor: "pointer" }}
+              src={fullImagePath}
+            ></Avatar>
+            <p className="fs-5 mt-3 fw-semibold d-sm-inline d-none">
+              {firstName} {lastName}
+            </p>
           </IconButton>
 
           <Menu
@@ -164,7 +180,6 @@ const AdminSlider = ({firstName, lastName, uploadCount}) => {
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
             <MenuItem onClick={clickOnProfile}>
-
               <Avatar /> Profile
             </MenuItem>
             <MenuItem onClick={handleAvatarClose}>
@@ -202,8 +217,10 @@ const AdminSlider = ({firstName, lastName, uploadCount}) => {
           }}
         >
           <Box sx={{ display: "flex", gap: "0.8rem", alignItems: "center" }}>
-            <Avatar sx={{ background: "#F47D0A" }}>PR</Avatar>
-            <Typography variant="p">Pravin Raina</Typography>
+            <Avatar sx={{ background: "#F47D0A" }} src={fullImagePath}></Avatar>
+            <Typography variant="p">
+              Hey, {firstName} {lastName}
+            </Typography>
           </Box>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
@@ -220,8 +237,11 @@ const AdminSlider = ({firstName, lastName, uploadCount}) => {
               <ListItemButton
                 onClick={() => handleClick(index)}
                 sx={{
-                  borderRadius:"10px",
-                  backgroundColor: openIndex === index || text=="Quiz Management" ? "#ffb165" : "inherit",
+                  borderRadius: "10px",
+                  backgroundColor:
+                    openIndex === index || text == "Quiz Management"
+                      ? "#ffb165"
+                      : "inherit",
                   color: openIndex === index ? "#fffff" : "inherit",
                   "&:hover": {
                     backgroundColor:

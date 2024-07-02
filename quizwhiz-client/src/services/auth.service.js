@@ -91,7 +91,6 @@ export const getUserDetails = async (userName) => {
 };
 
 export const editProfile = async (data) => {
-  debugger;
   return await axios.post(API_URLS.EDIT_PROFILE, JSON.stringify(data), {
     headers: {
       "Content-Type": "application/json",

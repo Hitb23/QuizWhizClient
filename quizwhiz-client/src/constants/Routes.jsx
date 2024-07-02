@@ -42,7 +42,7 @@ export const ROUTES = [
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path: "/admin-dashboard",
+    path: "/admin-dashboard/:id",
     element: <AdminDashboard />,
     roles: [Role.Admin],
   },
@@ -52,7 +52,7 @@ export const ROUTES = [
     roles: [Role.Contestant],
   },
   {
-    path: "/admin-login",
+    path: "/admin/login",
     element: <AdminLogin />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
@@ -66,8 +66,9 @@ export const ROUTES = [
     element: <MyProfile />,
     roles: [Role.Admin, Role.Contestant],
   },
+
   {
-    path: '/admin-dashboard/:id',
+    path: '/admin/dashboard/:id',
     element: <AdminCategory />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },

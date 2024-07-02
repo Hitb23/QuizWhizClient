@@ -28,6 +28,7 @@ export const getCategories = async () => {
   });
 };
 
+
 export const createNewQuiz = async (data) => {
   debugger;
   try {
@@ -77,3 +78,22 @@ export const addQuizQuestions = async (data) => {
     console.log(error);
   }
 };
+
+export const changeRecordsSize = async (data) => {
+  return await axios.get(API_URLS.QUIZ_RECORDS, {
+    headers: {
+      "Content-Type": "application/json",
+      // token: "Bearer " + localStorage.getItem("token")
+    },
+    params: data,
+  });
+};
+export const getAllStatusCount = async () => {
+  return await axios.get(API_URLS.QUIZ_STATUS, {
+    headers: {
+      "Content-Type": "application/json",
+      // token: "Bearer " + localStorage.getItem("token")
+    },
+  });
+};
+

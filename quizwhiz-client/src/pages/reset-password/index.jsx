@@ -104,7 +104,7 @@ const ResetPassword = () => {
               {({ errors, touched, isValid, isSubmitting }) => (
                 <Form>
                   <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
                       <label
                         htmlFor="password"
                         className={`form-label fw-bold ${classes["black-font"]}`}
@@ -137,12 +137,12 @@ const ResetPassword = () => {
                         )}
                       </Field>
                       {touched.password && errors.password ? (
-                        <span className="text-danger">{errors.password}</span>
+                        <span className={classes["error-message"]}>{errors.password}</span>
                       ) : null}
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
                       <label
                         htmlFor="confirmpassword"
                         className={`form-label fw-bold ${classes["black-font"]}`}
@@ -175,14 +175,14 @@ const ResetPassword = () => {
                         )}
                       </Field>
                       {touched.confirmPassword && errors.confirmPassword ? (
-                        <span className="text-danger">
+                        <span className={classes["error-message"]}>
                           {errors.confirmPassword}
                         </span>
                       ) : null}
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
+                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
                       <button
                         type="submit"
                         disabled={!isValid || isSubmitting}
