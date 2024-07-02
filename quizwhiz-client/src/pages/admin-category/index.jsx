@@ -30,11 +30,6 @@ import {
 import AdminSlider from "../../components/header/admin-header";
 import QuizCard from "../../components/admin-cards/quiz-card";
 import Pagination from "@mui/material/Pagination";
-import {
-  Search,
-  SearchIconWrapper,
-  StyledInputBase,
-} from "../../components/admin-components";
 import SearchIcon from "@mui/icons-material/Search";
 import { getUserDetails } from "../../services/auth.service";
 import {
@@ -46,6 +41,7 @@ import {
 } from "../../services/admindashboard.service";
 import jwtDecoder from "../../services/jwtDecoder";
 import { statusEnum } from "../../utils/enum";
+import {TextField} from "@mui/material";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -73,6 +69,7 @@ const AdminDashboard = () => {
   const [countOfUpcoming, SetCountOfUpcoming] = useState();
   const [countOfActive, SetCountOfActive] = useState();
   const [countOfCompleted, SetCountOfCompleted] = useState();
+  const [uploadCount, setUploadCount] = useState(0);
   const navigate = useNavigate();
   const params = useParams();
   var username = "";
@@ -229,7 +226,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     setUploadCount(uploadCount + 1);
-  }, [updatedText, stateVal, isDataFetched]);
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>  

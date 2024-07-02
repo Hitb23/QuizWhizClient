@@ -5,7 +5,13 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { Box, Button } from "@mui/material";
 
-const QuizCard = ({ title, description, date, time }) => {
+const QuizCard = ({ title, description, date, categoryName, time }) => {
+  console.log(description);
+  console.log("Category name : " + categoryName);
+  var imageUrl = `src/assets/${categoryName}.jpg`;
+  if(categoryName === "general knowledge"){
+    imageUrl = `src/assets/general-knowledge.jpg`;
+  }
   const formattedDate = new Date(date).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -37,7 +43,7 @@ const QuizCard = ({ title, description, date, time }) => {
           component="img"
           alt="image"
           height="140"
-          image="https://picsum.photos/seed/picsum/200/300"
+          image={imageUrl}
           sx={{
             width: "100%",
             objectFit: "cover",

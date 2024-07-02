@@ -83,6 +83,7 @@ const AdminDashboard = () => {
           CategoryId: 0,
           CurrentPage: 1,
         });
+        console.log("All data: ");
         const data = allData.data.data.GetQuizzes;
         setDifficultyList(difficulties.data.data);
         setCategoryList(categories.data.data);
@@ -102,7 +103,7 @@ const AdminDashboard = () => {
     };
 
     fetchData();
-  }, [Records]);
+  }, [Records, params]);
 
   useEffect(() => {
     const data = jwtDecoder();
@@ -118,6 +119,7 @@ const AdminDashboard = () => {
     };
     fetchUserDetails();
   }, []);
+  
   const navigateToCategory = (id) => {
     if (id === "upcoming") navigate(`/admin-dashboard`);
     else navigate(`/admin-dashboard/${id}`);
@@ -437,6 +439,7 @@ const AdminDashboard = () => {
                 title={ele.Title}
                 description={ele.Description}
                 date={ele.ScheduledDate}
+                categoryName={ele.CategoryName}
                 key={idx}
               />
             ))
