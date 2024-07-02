@@ -2,12 +2,12 @@
 
 /*Variables*/
 :root {
-  --background-color: #F47D0A;
+  --background-color: #5f071c;
   --font: "Fira Sans", sans-serif;
-  --white: #ffffff;
+  --white: #fbd0da;
   --black: #0c0e10;
   --gray: #202425;
-  --blue: #F47D0A;
+  --blue: #5f071c;
 }
 
 /*Mixins*/
@@ -63,7 +63,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #ffffff;
+  background-color: #f47d0a;
 }
 
 .logo-div {

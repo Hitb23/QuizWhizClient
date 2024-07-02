@@ -10,20 +10,22 @@
      box-shadow: 4px 3px 6px 0px black;
  }
  .add-quiz-btn{
-     padding: 0.5rem 2.1rem;
-     font-size: 20px;
-     background-color: #F47D0A;
-     color: #ffffff;
-     border-radius: 0.5rem;
-     border: none;
- }
- .add-quiz-btn:hover{
-     background-color: #F47D0A;
-     color: #ffffff;
-     box-shadow:2px 2px 3px black;
- }
+    padding: 0.9rem 2.1rem;
+    font-size: 20px;
+    background-color: #5f071c;
+    color: #fbd0da;
+    border-radius: 0.5rem;
+    border: none;
+}
+.add-quiz-btn:hover{
+    background-color: #5f071c;
+    color: #fbd0da;
+    box-shadow:1px 1px 3px black;
+    transform: scale(1.07);
+    transition: all 0.2s;
+}
  .link-style{
-     color: #F47D0A !important;
+     color: #5f071c !important;
      text-decoration: none;
      font-weight: 400;
  }

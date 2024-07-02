@@ -12,20 +12,21 @@ background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/s
 .add-quiz-btn{
     padding: 0.9rem 2.1rem;
     font-size: 20px;
-    background-color: #F47D0A;
-    color: #ffffff;
+    height: 58px;
+    background-color: #5f071c;
+    color: #fbd0da;
     border-radius: 0.5rem;
     border: none;
 }
 .add-quiz-btn:hover{
-    background-color: #F47D0A;
-    color: #ffffff;
+    background-color: #5f071c;
+    color: #fbd0da;
     box-shadow:1px 1px 3px black;
     transform: scale(1.07);
     transition: all 0.2s;
 }
 .link-style{
-    color: #F47D0A !important;
+    color: #5f071c !important;
     text-decoration: none;
     font-weight: 400;
 }
@@ -40,8 +41,7 @@ background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/s
         font-size: 0.93rem !important;
     }
     .add-quiz-btn{
-        margin-top: 1rem;
-        width: 100%;
+        padding: 0;
     }
   }
   @media (max-width: 695px) {
@@ -55,7 +55,7 @@ background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/s
         font-size: 0.93rem !important;
     }
     .add-quiz-btn{
-        margin-top: 1rem;
+        padding: 0;
         width: 100%;
     }
 }

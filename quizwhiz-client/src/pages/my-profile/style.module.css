@@ -1,25 +1,21 @@
 .main-box {
-  background-color: #ffffff;
   display: flex;
   justify-content: space-around;
   min-height: 80vh;
   /* margin-top: 9rem; */
   padding: 12rem 12rem;
-  background-color: #ffffff;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 800 800'%3E%3Cg %3E%3Ccircle fill='%23FFFFFF' cx='400' cy='400' r='600'/%3E%3Ccircle fill='%23fef5ed' cx='400' cy='400' r='500'/%3E%3Ccircle fill='%23fceada' cx='400' cy='400' r='400'/%3E%3Ccircle fill='%23fae0c8' cx='400' cy='400' r='300'/%3E%3Ccircle fill='%23f7d6b7' cx='400' cy='400' r='200'/%3E%3Ccircle fill='%23F4CCA5' cx='400' cy='400' r='100'/%3E%3C/g%3E%3C/svg%3E");
-  background-attachment: fixed;
-  background-size: cover;
 }
 
 .profile-photo {
-  background-color: #f47d0a !important;
+  background-color: #fada65 !important;
   height: 250px !important;
   width: 250px !important;
 }
 
 div.vertical-line-centre {
-  border-left: 3px solid #f47d0a;
+  border-left: 3px solid #fada65;
   position: relative;
+  margin-right: 2rem;
   /* left: 50%; */
 }
 
@@ -30,7 +26,7 @@ div.vertical-line-centre {
 }
 
 .log-in-title {
-  color: #f47d0a;
+  color: #fada65;
   font-size: 50px;
   padding-top: 6rem;
   text-align: center;
@@ -38,22 +34,64 @@ div.vertical-line-centre {
 
 .upload-btn {
   padding: 0.5rem 2.1rem;
-  background-color: #f47d0a;
-  color: #ffffff;
+  background-color: #fada65 !important; 
+  color: #000000 !important;
   border-radius: 0.5rem;
   border: none;
 }
 
+.upload-btn:hover{
+  background-color: #6F41DB !important;
+  color: #fada65 !important;
+  border: 1px solid #fada65 !important;
+}
+
 .edit-button {
-  background-color: #f47d0a !important;
-  color: #ffffff !important;
-  border: none !important;
+  background-color: #fada65 !important;
+  color: #000000 !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid #fada65 !important;
 }
 
 .edit-button:hover {
-  background-color: #485256 !important;
+  background-color: #6F41DB !important;
+  color: #fada65 !important;
+  border: 1px solid #fada65 !important;
 }
 
+.error-message {
+  font-size: 17px;
+  color: #fada65;
+}
+
+.form-group{
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 5px;
+  align-items: start;
+}
+
+.form-lavbel{
+  grid-column: 1;
+}
+
+.input-field {
+  background-color: #fbf5dd !important;
+  border: 1px solid #fada65 !important;
+  width: 30rem !important;
+  grid-column: 1;
+}
+
+.input-field:focus,
+.input-field:hover {
+  outline: 1px solid #f0c20c !important;
+  border: 1px solid #f0c20c !important;
+  box-shadow: 0 0 16px 0 rgba(228, 55, 55, 0.18), 0 2px 4px 0 rgba(228, 55, 55, 0.12) !important;
+}
+
+.black-font{
+  color: #fada65;
+}
 
 @media (max-width: 1199px) {
   .edit-button {
@@ -64,11 +102,15 @@ div.vertical-line-centre {
     height: 170px !important;
     margin-top: 9rem;
   }
+  
+  .input-field{
+    margin: auto !important;
+  }
 }
 
 @media (max-width: 900px) {
   .main-box {
-    padding: 2rem 6rem;
+    padding: 2rem 4rem;
   }
   .profile-photo {
     width: 140px !important;

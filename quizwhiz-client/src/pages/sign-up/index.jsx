@@ -125,7 +125,7 @@ const SignUp = () => {
               }) => (
                 <Form>
                   <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
                       <label
                         htmlFor="username"
                         className={`form-label fw-bold ${classes["black-font"]}`}
@@ -143,10 +143,10 @@ const SignUp = () => {
                         onKeyUp={() => setFieldTouched("username", true)}
                       />
                       {touched.username && errors.username ? (
-                        <span className="text-danger">{errors.username}</span>
+                        <span className={classes["error-message"]}>{errors.username}</span>
                       ) : (
                         touched.username && (
-                          <span className="text-success">
+                          <span className={classes["success-message"]}>
                             Username is available
                           </span>
                         )
@@ -154,7 +154,7 @@ const SignUp = () => {
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
                       <label
                         htmlFor="email"
                         className={`form-label fw-bold ${classes["black-font"]}`}
@@ -173,12 +173,12 @@ const SignUp = () => {
                         //onKeyUp={handleEmailChange}
                       />
                       {touched.email && errors.email ? (
-                        <span className="text-danger">{errors.email}</span>
+                        <span className={classes["error-message"]}>{errors.email}</span>
                       ) : null}
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
                       <label
                         htmlFor="password"
                         className={`form-label fw-bold ${classes["black-font"]}`}
@@ -211,12 +211,12 @@ const SignUp = () => {
                         )}
                       </Field>
                       {touched.password && errors.password ? (
-                        <span className="text-danger">{errors.password}</span>
+                        <span className={classes["error-message"]}>{errors.password}</span>
                       ) : null}
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
                       <label
                         htmlFor="confirmPassword"
                         className={`form-label fw-bold ${classes["black-font"]}`}
@@ -249,14 +249,14 @@ const SignUp = () => {
                         )}
                       </Field>
                       {touched.confirmPassword && errors.confirmPassword ? (
-                        <span className="text-danger">
+                        <span className={classes["error-message"]}>
                           {errors.confirmPassword}
                         </span>
                       ) : null}
                     </div>
                   </div>
                   <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
+                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
                       <button
                         type="submit"
                         className={`${classes["sign-up-button"]} ${
@@ -275,15 +275,15 @@ const SignUp = () => {
             </Formik>
 
             <div className={`d-flex justify-content-center`}>
-              <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
+              <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
                 <div
-                  className={`d-flex align-items-center ${classes["black-font"]}`}
+                  className={`d-flex align-items-center ${classes["link-message"]}`}
                 >
                   Already have an account?
                 </div>
                 <Link to={RoutePaths.Login}>
                   <label
-                    className={`form-label fw-bold text-end text-decoration-none m-0 text-black pe-auto ${classes["sign-up-label"]}`}
+                    className={`form-label fw-bold text-end text-decoration-none m-0 pe-auto ${classes["sign-up-label"]}`}
                   >
                     Log In
                   </label>

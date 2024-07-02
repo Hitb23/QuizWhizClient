@@ -12,15 +12,16 @@
 }
 
 .welcome-title {
-  font-size: 50px;
+  font-size: 60px;
   font-weight: bolder;
-  color: #F47D0A;
+  color: #fada65;
 }
 
 .welcome-slogan {
   font-size: 40px;
   font-weight: bolder;
-  color: #000000;
+  color: #FFFFFF;
+  padding: 1rem;
 }
 
 .poster {
@@ -37,20 +38,6 @@
   width: 550px;
   height: 550px;
 }
-
-.get-started-button {
-  padding: 0.9rem 1rem 0.9rem 1rem;
-  background-color: #F47D0A;
-  color: #FFFFFF;
-  border-radius: 0.5rem;
-  border: 1px solid #F47D0A;
-}
-
-.get-started-button:hover {
-  background-color: #ffffff;
-  color: #F47D0A;
-}
-
 
 @media (max-width: 1300px) {
   /* .welcome-message {
@@ -75,7 +62,6 @@
   }
 }
 
-
 @media (max-width: 900px) {
   /* .welcome-title {
     padding: 2rem 0rem 0rem 2rem;
@@ -93,8 +79,8 @@
 
 @media (max-width: 600px) {
 
-  .welcome-message {
-    padding: 1rem;
+  .welcome-title {
+    padding-top: 2rem;
   }
   
   .poster {

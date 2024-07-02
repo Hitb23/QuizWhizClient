@@ -24,8 +24,7 @@ const QuizCard = ({ title, description, date, time }) => {
         className="rounded-3 custom-card"
         sx={{
           cursor: "pointer",
-          margin: "3px",
-
+          margin: "9px",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           transition: "transform 0.3s, box-shadow 0.3s",
           "&:hover": {
@@ -45,11 +44,11 @@ const QuizCard = ({ title, description, date, time }) => {
           }}
         />
         <CardContent
-          className="d-flex  flex-column"
+          className="d-flex flex-column"
           sx={{
             paddingTop: "16px",
             paddingBottom: "16px",
-            textAlign: "center",
+            textAlign:'center'
           }}
         >
           <Typography
@@ -57,7 +56,7 @@ const QuizCard = ({ title, description, date, time }) => {
             className="fw-semibold"
             sx={{ marginBottom: "8px" }}
           >
-            {title}
+            {title.substring(0,14)}
           </Typography>
           <Typography
             variant="body2"
@@ -65,7 +64,7 @@ const QuizCard = ({ title, description, date, time }) => {
             className="fw-semibold text-center"
             sx={{ marginBottom: "16px" }}
           >
-            {description}
+            {description.substring(0,14)}
           </Typography>
           <Typography
             variant="body1"
@@ -80,11 +79,11 @@ const QuizCard = ({ title, description, date, time }) => {
           <Button
             className="mt-2"
             sx={{
-              outline: "1px solid #F47D0A",
+              outline: "1px solid #5f071c",
               fontWeight: "bold",
-              color: "#F47D0A",
+              color: "#5f071c",
               "&:hover": {
-                backgroundColor: "#F47D0A",
+                backgroundColor: "#5f071c",
                 color: "white",
                 borderColor: "primary.main",
                 fontWeight: "bold",
