@@ -62,12 +62,13 @@ const AdminDashboard = () => {
   const [PageSize, SetPageSize] = useState(1);
   const [currentPage, SetCurrentPage] = useState(1);
   const [filteredData, SetFilteredData] = useState([]);
+  const [uploadCount, setUploadCount] = useState(0);
   const [searchedWord, SetSearchedWord] = useState("");
   const [countOfPending, SetCountOfPending] = useState(null);
   const [countOfUpcoming, SetCountOfUpcoming] = useState(null);
   const [countOfActive, SetCountOfActive] = useState(null);
   const [countOfCompleted, SetCountOfCompleted] = useState(null);
-  
+
   const navigate = useNavigate();
   const params = useParams();
   var username = "";
@@ -75,11 +76,15 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+
         console.log("In UseEffect: Called");
         setDifficulty(0);
         setCategory(0);
         SetCurrentPage(1);
         SetSearchedWord('');
+
+        setUploadCount(uploadCount + 1);
+
         const difficulties = await getDifficulties();
         const categories = await getCategories();
         const allData = await filterByCategory({
@@ -210,14 +215,33 @@ const AdminDashboard = () => {
       SetFilteredData([]);
     }
   };
+  var username = "";
+
+  useEffect(() => {
+    const data = jwtDecoder();
+    username = data["Username"];
+    const fetchUserDetails = async () => {
+      try {
+        const response = await getUserDetails(data["Username"]);
+        setFirstName(response.data.data.FirstName);
+        setLastName(response.data.data.LastName);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>
       <CssBaseline />
       {/* Admin offcanvas with navbar */}
       <AdminSlider
-        firstName={firstName.toString()}
-        lastName={lastName.toString()}
+        firstName={firstName}
+        lastName={lastName}
+        uploadCount={uploadCount}
+        userName={jwtDecoder().userName}
       />
       {/* Main Content */}
       <Box className={`container`} component="main" sx={{ flexGrow: 1, p: 3 }}>
