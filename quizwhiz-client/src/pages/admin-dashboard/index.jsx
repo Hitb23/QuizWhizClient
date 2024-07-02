@@ -91,10 +91,8 @@ const AdminDashboard = () => {
         SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
         SetCountOfActive(status?.data?.data?.ActiveCount);
         SetCountOfCompleted(status?.data?.data?.CompletedCount);
-        console.log(allData);
         SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
         setRecords(allData?.data?.data?.Pagination?.RecordSize);
-        console.log(allData?.data?.data?.Pagination?.TotalPages);
       } catch (error) {
         console.error("Error fetching data", error);
       }
@@ -130,7 +128,6 @@ const AdminDashboard = () => {
   };
 
   const handleDifficulty = async (event) => {
-    console.log("hello");
     setDifficulty(event.target.value);
     try {
       const result = await filterByCategory({
@@ -241,6 +238,7 @@ const AdminDashboard = () => {
               onChange={searchHandler}
               value={searchedWord}
               variant="outlined"
+              autoComplete="off"
               sx={{
                 width: "100%",
                 backgroundColor: "#3d3189",
@@ -401,9 +399,9 @@ const AdminDashboard = () => {
               </Select>
             </FormControl>
           </div>
-          <div className="col-lg-6 mb-4 col-sm-6 col-12 d-flex justify-content-end">
+          <div className="col-lg-6 col-sm-6 col-12 d-flex justify-content-end">
             <button
-              className={` ${classes["add-quiz-btn"]} `}
+              className={` ${classes["add-quiz-btn"]} `}  
             >
               Add Quiz
             </button>
@@ -436,23 +434,21 @@ const AdminDashboard = () => {
               sx={{
                 m: 1,
                 minWidth: 80,
-                "& .MuiInputLabel-root": {
-                  color: "white",
-                  "& fieldset": { borderColor: "white" },
-                  "&:hover fieldset": { borderColor: "white" },
-                  "&.Mui-focused fieldset": { borderColor: "white" },
-                },
-                "& .MuiOutlinedInput-root": {
-                  background: "#3d3189",
-                  "& fieldset": { borderColor: "white" },
-                  "&:hover fieldset": { borderColor: "white" },
-                  "&.Mui-focused fieldset": { borderColor: "white" },
-                },
-                "& .MuiSelect-icon": { color: "white" },
               }}
               size="small"
             >
-              <InputLabel id="demo-simple-select-autowidth-label">
+              <InputLabel id="demo-simple-select-autowidth-label"
+              sx={{
+                color: "#fada65",
+                paddingLeft: "0.2rem",
+                paddingRight: "0.2rem",
+                "&:hover": {
+                  color: "#fada65",
+                },
+                "&.Mui-focused": {
+                  color: "#fada65",
+                },
+              }}>
                 Records
               </InputLabel>
               <Select
@@ -463,8 +459,24 @@ const AdminDashboard = () => {
                 autoWidth
                 label="Records"
                 sx={{
-                  color: "white",
-                  "& .MuiSvgIcon-root": { color: "white" },
+                  backgroundColor: "#3d3189",
+                  color: "#fada65",
+                  boxShadow: "none",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    border: "1px solid #fada65",
+                    borderColor: "#fada65", // Always set the border color to #fada65
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    border: "1px solid #fada65",
+                    borderColor: "#fada65", // Maintain the border color on focus
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    border: "1px solid #fada65",
+                    borderColor: "#fada65", // Maintain the border color on hover
+                  },
+                  "& .MuiSvgIcon-root": {
+                    color: "#fada65",
+                  },
                 }}
               >
                 <MenuItem value={4}>4</MenuItem>
@@ -480,24 +492,26 @@ const AdminDashboard = () => {
                 "& .MuiPaginationItem-root": {
                   backgroundColor: "white",
                   color: "black",
+                  border: "1px solid #fada65",
                   "&:hover": {
-                    backgroundColor: "#5f071c",
-                    color: "#fbd0da",
+                    backgroundColor: "#fada65", 
+                    color: "#000000",
                   },
                 },
                 "& .MuiPaginationItem-root.Mui-selected": {
-                  backgroundColor: "#5f071c",
-                  color: "#fbd0da",
+                  backgroundColor: "#fada65",
+                  color: "#000000",
+                  border: "1px solid #fada65",
                   "&:hover": {
-                    backgroundColor: "#fbd0da",
-                    color: "#5f071c",
+                    backgroundColor: "#fada65",
+                    color: "#000000",
                   },
                 },
                 "& .MuiPaginationItem-ellipsis": {
-                  backgroundColor: "white",
+                  backgroundColor: "fada65",
                   "&:hover": {
-                    backgroundColor: "transparent",
-                    color: "#fbd0da",
+                    backgroundColor: "fbd0da",
+                    color: "#5f071c",
                   },
                 },
               }}
