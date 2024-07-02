@@ -76,12 +76,11 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-
         console.log("In UseEffect: Called");
         setDifficulty(0);
         setCategory(0);
         SetCurrentPage(1);
-        SetSearchedWord('');
+        SetSearchedWord("");
 
         setUploadCount(uploadCount + 1);
 
@@ -92,7 +91,7 @@ const AdminDashboard = () => {
           DifficultyId: 0,
           CategoryId: 0,
           CurrentPage: 1,
-          SearchValue: '',
+          SearchValue: "",
         });
         const data = allData.data.data.GetQuizzes;
         setDifficultyList(difficulties.data.data);
@@ -103,10 +102,8 @@ const AdminDashboard = () => {
         SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
         SetCountOfActive(status?.data?.data?.ActiveCount);
         SetCountOfCompleted(status?.data?.data?.CompletedCount);
-        console.log(allData);
         SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
         setRecords(allData?.data?.data?.Pagination?.RecordSize);
-        console.log(allData?.data?.data?.Pagination?.TotalPages);
       } catch (error) {
         SetFilteredData([]);
         console.error("Error fetching data", error);
@@ -114,7 +111,7 @@ const AdminDashboard = () => {
     };
 
     fetchData();
-  }, [Records,params]);
+  }, [Records, params]);
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
@@ -135,12 +132,11 @@ const AdminDashboard = () => {
 
   const handlePageSize = async (event) => {
     setRecords(event.target.value);
-    try{
-    const result = await changeRecordsSize({
-      recordSize: event.target.value,
-    });
-    }
-    catch(error){
+    try {
+      const result = await changeRecordsSize({
+        recordSize: event.target.value,
+      });
+    } catch (error) {
       SetFilteredData([]);
     }
   };
@@ -165,20 +161,19 @@ const AdminDashboard = () => {
 
   const handlePageChange = async (event, value) => {
     SetCurrentPage(currentPage);
-    console.log(searchedWord)
-    try{
-    const result = await filterByCategory({
-      StatusId: statusEnum[params.id],
-      DifficultyId: difficulty,
-      CategoryId: category,
-      CurrentPage: value,
-      SearchValue: searchedWord,
-    });
-    SetFilteredData(result.data.data.GetQuizzes);
-   }
-   catch(error){
-    SetFilteredData([]);
-   }
+    console.log(searchedWord);
+    try {
+      const result = await filterByCategory({
+        StatusId: statusEnum[params.id],
+        DifficultyId: difficulty,
+        CategoryId: category,
+        CurrentPage: value,
+        SearchValue: searchedWord,
+      });
+      SetFilteredData(result.data.data.GetQuizzes);
+    } catch (error) {
+      SetFilteredData([]);
+    }
   };
   const searchHandler = async (e) => {
     const searchedWord = e.target.value;
@@ -284,6 +279,7 @@ const AdminDashboard = () => {
               onChange={searchHandler}
               value={searchedWord}
               variant="outlined"
+              autoComplete="off"
               sx={{
                 width: "100%",
                 backgroundColor: "#3d3189",
@@ -459,38 +455,38 @@ const AdminDashboard = () => {
                 key={idx}
               />
             ))
-          ) :  (
+          ) : (
             // <img
             //   src={NO_DATA_FOUND}
             //   alt="No Data Available"
             //   style={{height:'500px',width:'500px'}}
             // />
-            <h2 className="text-center bg-white">No Data Available</h2>
+            <h2 className="text-center text-white">No Data Available</h2>
           )}
         </div>
         {filteredData.length > 0 && (
-          <div className="d-flex justify-content-between mt-3 align-items-center">
+          <div className={`${classes["pagination"]} mt-3`}>
             <FormControl
               sx={{
                 m: 1,
                 minWidth: 80,
-                "& .MuiInputLabel-root": {
-                  color: "white",
-                  "& fieldset": { borderColor: "white" },
-                  "&:hover fieldset": { borderColor: "white" },
-                  "&.Mui-focused fieldset": { borderColor: "white" },
-                },
-                "& .MuiOutlinedInput-root": {
-                  background: "#3d3189",
-                  "& fieldset": { borderColor: "white" },
-                  "&:hover fieldset": { borderColor: "white" },
-                  "&.Mui-focused fieldset": { borderColor: "white" },
-                },
-                "& .MuiSelect-icon": { color: "white" },
               }}
               size="small"
             >
-              <InputLabel id="demo-simple-select-autowidth-label">
+              <InputLabel
+                id="demo-simple-select-autowidth-label"
+                sx={{
+                  color: "#fada65",
+                  paddingLeft: "0.2rem",
+                  paddingRight: "0.2rem",
+                  "&:hover": {
+                    color: "#fada65",
+                  },
+                  "&.Mui-focused": {
+                    color: "#fada65",
+                  },
+                }}
+              >
                 Records
               </InputLabel>
               <Select
@@ -501,8 +497,24 @@ const AdminDashboard = () => {
                 autoWidth
                 label="Records"
                 sx={{
-                  color: "white",
-                  "& .MuiSvgIcon-root": { color: "white" },
+                  backgroundColor: "#3d3189",
+                  color: "#fada65",
+                  boxShadow: "none",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    border: "1px solid #fada65",
+                    borderColor: "#fada65", // Always set the border color to #fada65
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    border: "1px solid #fada65",
+                    borderColor: "#fada65", // Maintain the border color on focus
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    border: "1px solid #fada65",
+                    borderColor: "#fada65", // Maintain the border color on hover
+                  },
+                  "& .MuiSvgIcon-root": {
+                    color: "#fada65",
+                  },
                 }}
               >
                 <MenuItem value={4}>4</MenuItem>
@@ -511,32 +523,42 @@ const AdminDashboard = () => {
               </Select>
             </FormControl>
             <Pagination
+              defaultPage={1}
+              siblingCount={1}
               count={PageSize}
-              color="primary"
+              variant="outlined"
               onChange={handlePageChange}
               sx={{
-                "& .MuiPaginationItem-root": {
-                  backgroundColor: "white",
-                  color: "black",
+                "& .MuiButtonBase-root": {
+                  backgroundColor: "#3d3189",
+                  color: "#fada65",
+                  border: "1px solid #fada65",
+                  marginTop: "10px",
+                  marginBottom: "10px",
                   "&:hover": {
-                    backgroundColor: "#5f071c",
-                    color: "#fbd0da",
+                    backgroundColor: "#fada65",
+                    color: "#000000",
                   },
                 },
                 "& .MuiPaginationItem-root.Mui-selected": {
-                  // backgroundColor: "#5f071c",
-                  color: "#fbd0da",
+                  backgroundColor: "#fada65",
+                  color: "#000000",
+                  border: "1px solid #fada65",
                   "&:hover": {
-                    backgroundColor: "#fbd0da",
-                    color: "#5f071c",
+                    backgroundColor: "#fada65",
+                    color: "#000000",
                   },
                 },
                 "& .MuiPaginationItem-ellipsis": {
-                  backgroundColor: "transparent",
+                  fontWeight: "bolder",
+                  color: "#fada65",
                   "&:hover": {
-                    backgroundColor: "transparent",
-                    color: "#fbd0da",
+                    color: "#fada65",
                   },
+                },
+                "@media (max-width: 600px)": {
+                  flexDirection: "column",
+                  rowGap: "10px",
                 },
               }}
             />
