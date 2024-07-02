@@ -28,6 +28,15 @@ background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/s
     font-weight: 400;
 }
 
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    row-gap: 15px;
+    column-gap: 20px;
+}
+
 @media (max-width: 450px) {
     .logo-image{
         height: 3rem;
@@ -55,5 +64,8 @@ background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/s
     .add-quiz-btn{
         padding: 0;
         width: 100%;
+    }
+    .pagination {
+        justify-content: center;
     }
 }

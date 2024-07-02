@@ -1,6 +1,14 @@
-import { React, useEffect, useState } from "react";
-import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-
+import * as React from "react";
+import { useState, useEffect } from "react";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  // makeStyles,
+} from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import classes from "./style.module.css";
 import CardComponent from "../../components/admin-cards/quiz-category";
@@ -11,12 +19,12 @@ import {
   faPlay,
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
-import { DrawerHeader } from "../../components/admin-components";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import AdminSlider from "../../components/header/admin-header";
 import QuizCard from "../../components/admin-cards/quiz-card";
 import Pagination from "@mui/material/Pagination";
 import {
+  DrawerHeader,
   Search,
   SearchIconWrapper,
   StyledInputBase,
@@ -63,44 +71,38 @@ const AdminDashboard = () => {
   const params = useParams();
   var username = "";
 
-  useEffect(
-    () => {
-      const fetchData = async () => {
-        try {
-          const difficulties = await getDifficulties();
-          const categories = await getCategories();
-          setDifficulty(0);
-          setCategory(0);
-          SetSearchedWord("");
-          const allData = await filterByCategory({
-            StatusId: statusEnum[params.id],
-            DifficultyId: 0,
-            CategoryId: 0,
-            CurrentPage: 1,
-          });
-          const status=await getAllStatusCount();
-          const data = allData.data.data.GetQuizzes;
-          SetCountOfPending(status?.data?.data?.PendingCount);
-          SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
-          SetCountOfActive(status?.data?.data?.ActiveCount);
-          SetCountOfCompleted(status?.data?.data?.CompletedCount);
-          setDifficultyList(difficulties.data.data);
-          setCategoryList(categories.data.data);
-          SetFilteredData(data);
-          SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
-          setRecords(allData?.data?.data?.Pagination?.RecordSize);
-        } catch (error) {
-          console.error("Error fetching data", error);
-        }
-      };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const difficulties = await getDifficulties();
+        const categories = await getCategories();
+        setDifficulty(0);
+        setCategory(0);
+        SetSearchedWord("");
+        const allData = await filterByCategory({
+          StatusId: statusEnum[params.id],
+          DifficultyId: 0,
+          CategoryId: 0,
+          CurrentPage: 1,
+        });
+        const status = await getAllStatusCount();
+        const data = allData.data.data.GetQuizzes;
+        SetCountOfPending(status?.data?.data?.PendingCount);
+        SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
+        SetCountOfActive(status?.data?.data?.ActiveCount);
+        SetCountOfCompleted(status?.data?.data?.CompletedCount);
+        setDifficultyList(difficulties.data.data);
+        setCategoryList(categories.data.data);
+        SetFilteredData(data);
+        SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
+        setRecords(allData?.data?.data?.Pagination?.RecordSize);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
 
-      fetchData();
-    },
-    [Records, statusEnum[params.id]],
-    difficulty,
-    category,
-    searchedWord
-  );
+    fetchData();
+  }, [Records, statusEnum[params.id], difficulty, category, searchedWord]);
 
   useEffect(() => {
     const data = jwtDecoder();
@@ -194,14 +196,39 @@ const AdminDashboard = () => {
       SetFilteredData([]);
     }
   };
+  var fname = "";
+  var lname = "";
+  var username = "";
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const data = jwtDecoder();
+        const response = await getUserDetails(data["Username"]);
+        setFirstName(response.data.data.FirstName);
+        setLastName(response.data.data.LastName);
+        setIsDataFetched(true);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
+  useEffect(() => {
+    setUploadCount(uploadCount + 1);
+  }, [updatedText, stateVal, isDataFetched]);
 
   return (
-    <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>
+    <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>  
       <CssBaseline />
       {/* Admin offcanvas with navbar */}
       <AdminSlider
-        firstName={firstName.toString()}
-        lastName={lastName.toString()}
+        firstName={firstName}
+        lastName={lastName}
+        uploadCount={uploadCount}
+        userName={jwtDecoder().Username}
       />
       {/* Main Content */}
       <Box className={`container`} component="main" sx={{ flexGrow: 1, p: 3 }}>
@@ -285,9 +312,7 @@ const AdminDashboard = () => {
             />
           </div>
           <div className="col-lg-2 mb-4 col-sm-6 col-12">
-            <FormControl
-              sx={{width: "100%"}}
-            >
+            <FormControl sx={{ width: "100%" }}>
               <InputLabel
                 id="demo-multiple-name-label"
                 sx={{
@@ -345,9 +370,7 @@ const AdminDashboard = () => {
             </FormControl>
           </div>
           <div className="col-lg-2 mb-4 col-sm-6 col-12">
-            <FormControl
-              sx={{width: "100%"}}
-            >
+            <FormControl sx={{ width: "100%" }}>
               <InputLabel
                 id="demo-multiple-name-label"
                 sx={{
@@ -405,11 +428,7 @@ const AdminDashboard = () => {
             </FormControl>
           </div>
           <div className="col-lg-6 mb-4 col-sm-6 col-12 d-flex justify-content-end">
-            <button
-              className={` ${classes["add-quiz-btn"]} `}
-            >
-              Add Quiz
-            </button>
+            <button className={` ${classes["add-quiz-btn"]} `}>Add Quiz</button>
           </div>
         </div>
 
@@ -427,20 +446,25 @@ const AdminDashboard = () => {
         </div>
         {filteredData.length > 0 && (
           <div className="d-flex justify-content-between mt-3 align-items-center">
-            <FormControl sx={{ m: 1, minWidth: 80,
-              "& .MuiInputLabel-root": {
-                color: "white",
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
-                "&.Mui-focused fieldset": { borderColor: "white" },
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
-                "&.Mui-focused fieldset": { borderColor: "white" },
-              },
-              "& .MuiSelect-icon": { color: "white" },
-            }} size="small">
+            <FormControl
+              sx={{
+                m: 1,
+                minWidth: 80,
+                "& .MuiInputLabel-root": {
+                  color: "white",
+                  "& fieldset": { borderColor: "white" },
+                  "&:hover fieldset": { borderColor: "white" },
+                  "&.Mui-focused fieldset": { borderColor: "white" },
+                },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": { borderColor: "white" },
+                  "&:hover fieldset": { borderColor: "white" },
+                  "&.Mui-focused fieldset": { borderColor: "white" },
+                },
+                "& .MuiSelect-icon": { color: "white" },
+              }}
+              size="small"
+            >
               <InputLabel id="demo-simple-select-autowidth-label">
                 Records
               </InputLabel>
@@ -451,7 +475,10 @@ const AdminDashboard = () => {
                 onChange={handlePageSize}
                 autoWidth
                 label="Records"
-                sx={{ color: "white", "& .MuiSvgIcon-root": { color: "white" } }}
+                sx={{
+                  color: "white",
+                  "& .MuiSvgIcon-root": { color: "white" },
+                }}
               >
                 <MenuItem value={4}>4</MenuItem>
                 <MenuItem value={8}>8</MenuItem>
