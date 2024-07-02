@@ -435,14 +435,14 @@ const AdminDashboard = () => {
                 key={idx}
               />
             ))
-          ) : Loading ? (
+          ) :  (
             // <img
             //   src={NO_DATA_FOUND}
             //   alt="No Data Available"
             //   style={{height:'500px',width:'500px'}}
             // />
             <h2 className="text-center bg-white">No Data Available</h2>
-          ) : (<h1>Loading...</h1>)}
+          )}
         </div>
         {filteredData.length > 0 && (
           <div className="d-flex justify-content-between mt-3 align-items-center">
