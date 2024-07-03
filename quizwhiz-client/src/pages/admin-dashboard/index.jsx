@@ -11,7 +11,12 @@ import {
 
 import CssBaseline from "@mui/material/CssBaseline";
 import classes from "./style.module.css";
+import AuthHeader from "../../components/header/auth-header";
+import LandingHeader from "../../components/header/landing-header";
+import AdminSideBar from "../../components/admin-sidebar";
+import CreateQuizModal from "../../components/dialog-boxes/create-quiz";
 import CardComponent from "../../components/admin-cards/quiz-category";
+
 
 import {
   faQuestionCircle,
@@ -41,6 +46,7 @@ import {
 import jwtDecoder from "../../services/jwtDecoder";
 import NO_DATA_FOUND from "../../assets/Server.gif";
 import { statusEnum } from "../../utils/enum";
+import ViewQuizModal from "../../components/dialog-boxes/view-quiz";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -321,6 +327,7 @@ const AdminDashboard = () => {
                 },
               }}
             />
+           
           </div>
           <div className="col-lg-2 mb-4 col-sm-6 col-12">
             <FormControl sx={{ width: "100%" }}>
@@ -439,8 +446,10 @@ const AdminDashboard = () => {
             </FormControl>
           </div>
           <div className="col-lg-6 mb-4 col-sm-6 col-12 d-flex justify-content-end">
-            <button className={` ${classes["add-quiz-btn"]} `}>Add Quiz</button>
+            <ViewQuizModal/>
+            <CreateQuizModal/>
           </div>
+          
         </div>
 
         <h4 className="text-white ms-2">
@@ -569,6 +578,7 @@ const AdminDashboard = () => {
         )}
       </Box>
     </Box>
+    
   );
 };
 export default AdminDashboard;

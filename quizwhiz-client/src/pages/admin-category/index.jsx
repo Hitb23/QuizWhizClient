@@ -20,11 +20,13 @@ import {
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  DrawerHeader,
+} from "../../components/admin-components";
 import AdminSlider from "../../components/header/admin-header";
 import QuizCard from "../../components/admin-cards/quiz-card";
 import Pagination from "@mui/material/Pagination";
 import {
-  DrawerHeader,
   Search,
   SearchIconWrapper,
   StyledInputBase,
