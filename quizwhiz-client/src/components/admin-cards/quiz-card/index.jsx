@@ -5,7 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { Box, Button } from "@mui/material";
 
-const QuizCard = ({ title, description, date, time }) => {
+const QuizCard = ({ title, description, date, time,Link,onClickHandler }) => {
   const formattedDate = new Date(date).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -19,8 +19,9 @@ const QuizCard = ({ title, description, date, time }) => {
     }
   );
   return (
-    <div className="col-lg-3 col-md-6 col-12 mb-2">
+    <div className="col-lg-3 col-md-6 col-12 mb-2" onClick={()=> onClickHandler(Link)}>
       <Card
+      
         className="rounded-3 custom-card"
         sx={{
           cursor: "pointer",
@@ -64,7 +65,7 @@ const QuizCard = ({ title, description, date, time }) => {
             className="fw-semibold text-center"
             sx={{ marginBottom: "16px" }}
           >
-            {description.substring(0,14)}
+            {description.substring(0,25)}...
           </Typography>
           <Typography
             variant="body1"
@@ -77,6 +78,7 @@ const QuizCard = ({ title, description, date, time }) => {
             {formattedDate}
           </h5>
           <Button
+          onClick={()=> onClickHandler(Link)}
             className="mt-2"
             sx={{
               outline: "1px solid #5f071c",

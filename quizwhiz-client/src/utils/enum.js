@@ -33,7 +33,8 @@ export const API_URLS = {
   QUIZ_CATEGORIES:"/quiz/get-quiz-categories",
   QUIZ_FILTER:'/quiz/get-quizzes-filter',
   QUIZ_RECORDS:'/auth/change-record-size',
-  QUIZ_STATUS:'/quiz/get-quiz-status-count'
+  QUIZ_STATUS:'/quiz/get-quiz-status-count',
+  QUIZ_DETAILS:'/quiz/get-quiz-details?quizLink='
 };
 export const statusEnum={
   "pending": 1,

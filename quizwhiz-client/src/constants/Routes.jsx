@@ -12,7 +12,7 @@ import AdminLogin from "../pages/admin-login";
 import MyProfile from "../pages/my-profile";
 
 import AdminCategory from "../pages/admin-category";
-import QuizDescription from "../pages/quiz-description";
+import QuizDescription from "../pages/problem-description";
 
 export const ROUTES = [
   {
@@ -66,7 +66,7 @@ export const ROUTES = [
     roles: [Role.Admin, Role.Contestant],
   },
   {
-    path: "/admin-dashboard/:id/:quizId",
+    path: "/admin-dashboard/:id/:quizLink",
     element: <QuizDescription />,
     roles: [Role.Admin, Role.Contestant,Role.Public],
   }

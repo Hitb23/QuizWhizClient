@@ -14,3 +14,8 @@
   color: #fada65;
   border: 1px solid #fada65;
 }
+.text-wrap {
+  word-wrap: break-word; /* Ensures long words break and wrap */
+  white-space: normal; /* Allows text to wrap when reaching container edge */
+}
+

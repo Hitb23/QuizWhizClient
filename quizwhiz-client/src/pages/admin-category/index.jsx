@@ -1,5 +1,6 @@
 
 import { React, useEffect, useState } from "react";
+
 import {
   Box,
   FormControl,
@@ -20,15 +21,15 @@ import {
   faPlay,
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
+
+
 import {  useNavigate, useParams } from "react-router-dom";
-import {
-  DrawerHeader,
-  Search,
- 
-} from "../../components/admin-components";
 import AdminSlider from "../../components/header/admin-header";
 import QuizCard from "../../components/admin-cards/quiz-card";
 import Pagination from "@mui/material/Pagination";
+import {
+  DrawerHeader,
+} from "../../components/admin-components";
 
 import { getUserDetails } from "../../services/auth.service";
 import {
@@ -119,6 +120,7 @@ const AdminDashboard = () => {
     };
     fetchUserDetails();
   }, []);
+  
   const navigateToCategory = (id) => {
     if (id === "upcoming") navigate(`/admin-dashboard`);
     else navigate(`/admin-dashboard/${id}`);
@@ -490,26 +492,30 @@ const AdminDashboard = () => {
               onChange={handlePageChange}
               sx={{
                 "& .MuiPaginationItem-root": {
-                  backgroundColor: "white",
-                  color: "black",
+                  backgroundColor: "#3D3189",
+                  color: "#fada65",
+                  border: "1px solid #fada65",
                   "&:hover": {
-                    backgroundColor: "#5f071c",
-                    color: "#fbd0da",
+                    backgroundColor: "#fada65", 
+                    color: "#000000",
+                    border: "1px solid #fada65",
                   },
                 },
                 "& .MuiPaginationItem-root.Mui-selected": {
-                  backgroundColor: "#5f071c",
-                  color: "#fbd0da",
+                  backgroundColor: "#fada65",
+                  color: "#000000",
+                  border: "1px solid #fada65",
                   "&:hover": {
-                    backgroundColor: "#fbd0da",
-                    color: "#5f071c",
+                    backgroundColor: "#fada65",
+                    color: "#000000",
+                    border: "1px solid #fada65",
                   },
                 },
                 "& .MuiPaginationItem-ellipsis": {
-                  backgroundColor: "white",
+                  backgroundColor: "fada65",
                   "&:hover": {
-                    backgroundColor: "transparent",
-                    color: "#fbd0da",
+                    backgroundColor: "fbd0da",
+                    color: "#5f071c",
                   },
                 },
               }}

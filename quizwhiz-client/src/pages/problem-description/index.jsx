@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Typography,
@@ -13,43 +13,74 @@ import AdminSlider from "../../components/header/admin-header";
 import classes from "./style.module.css";
 import { IoTime } from "react-icons/io5";
 import { FaUsers } from "react-icons/fa";
-import description from "../../assets/quizdesc.svg";
+import description from "../../assets/scheduleimg.svg";
 import { GiPodiumWinner } from "react-icons/gi";
 import { Button, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { styled } from "@mui/material/styles";
-import { TbListDetails } from "react-icons/tb";
+import { TbListDetails, TbRotate360 } from "react-icons/tb";
+import { useParams } from "react-router";
+import { getQuizDetails } from "../../services/admindashboard.service";
+import { ShiningButton } from "../../components/admin-components";
+import { AnimationOutlined, Rotate90DegreesCcwRounded } from "@mui/icons-material";
 const QuizDescription = () => {
-  const ShiningButton = styled(Button)({
-    position: "relative",
-    overflow: "hidden",
-    backgroundColor: "#6200ea",
-    backgroundImage: "linear-gradient(270deg, #ff00c8, #6200ea)",
-    backgroundSize: "200% 200%",
-    color: "white",
-    padding: "10px 20px",
-    borderRadius: "8px",
-    boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
-    transition: "background-position 1s",
-    "&:hover": {
-      backgroundPosition: "right center",
-    },
-    "&:before": {
-      content: '""',
-      position: "absolute",
-      top: "0",
-      left: "0",
-      width: "100%",
-      height: "100%",
-      background: "rgba(255, 255, 255, 0.2)",
-      opacity: "0",
-      transition: "opacity 0.3s",
-    },
-    "&:hover:before": {
-      opacity: "1",
-    },
-  });
+  const [quizData,SetQuizData]=useState(null);
+  const params=useParams();
+  const formatDate = (dateString) => {
+    const options = {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+      // Remove timeZoneName option to exclude time zone name
+    };
+  
+    // Create a Date object from the dateString
+    const date = new Date(dateString);
+  
+    // Format the date using toLocaleString
+    return date.toLocaleString('en-US', options);
+  };
+  const addOneHour = (dateString) => {
+    // Create a Date object from the dateString
+    const date = new Date(dateString);
+  
+    // Add one hour to the Date object
+    date.setHours(date.getHours() + 1);
+    const options = {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+      // Remove timeZoneName option to exclude time zone name
+    };
+  
+    // Create a Date object from the dateString
+    const newDate = new Date(date);
+  
+    // Format the date using toLocaleString
+    return newDate.toLocaleString('en-US', options);
+    // Return the updated date as a string
+    // return newDate.toISOString(); // Return ISO string for consistent formatting
+  };
+  useEffect(()=>{
+    const QuizDetailsHandler=async()=>{
+    try{
+       const data=await getQuizDetails(params.quizLink);
+       console.log(data?.data.data);
+       SetQuizData(data?.data.data);
+    }
+    catch(error){
+       console.log(error);
+    }
+  }
+  QuizDetailsHandler();
+  },[]);
   return (
     <>
       {/* <AdminSlider/>
@@ -66,17 +97,24 @@ const QuizDescription = () => {
             alt="Quiz Logo"
             style={{ width: "100%", maxHeight: "400px" }}
           />
+          <div className="d-flex align-items-center flex-wrap gap-2">
           <Typography
             variant="h2"
             gutterBottom
-            className={`${classes["text-background"]} text-white fw-bold mt-3`}
+            className={`text-white fw-bold mt-3 text-break`}
           >
-            Quiz Competition 2024
-            <small className="text-white bg-success rounded-4 p-2 ms-4 fs-5">
-              Live
-            </small>
+           {quizData && quizData.Title.substring(0,25)}
           </Typography>
-
+            <h3 className="text-white bg-success rounded-4 p-2 ms-4 fw-bold text-center">
+              Live
+            </h3>
+            <ShiningButton className="fw-bold fs-5 " style={{textTransform:'capitalize'}}>
+              Edit Quiz Details  <EditIcon/>
+            </ShiningButton>
+            <ShiningButton  className="fw-bold fs-5 " style={{textTransform:'capitalize'}}> 
+              Delete  <DeleteIcon/>
+            </ShiningButton>
+           </div>
           <Typography
             variant="h5"
             gutterBottom
@@ -94,31 +132,28 @@ const QuizDescription = () => {
           <div
             style={{
               borderRadius: "10px",
-              gap: "2rem",
-              justifyContent: "space-between",
-              display: "flex",
-              padding: "40px",
               marginTop: "20px",
               backgroundImage: `url(${description})`,
               // "linear-gradient(90deg, hsla(284, 100%, 53%, 1) 0%, hsla(77, 100%, 64%, 1) 100%)",
             }}
+            className="row p-4 gy-3 gx-2"
           >
-            <div className="text-center">
+            <div className="text-center col-xl-4 col-md-6 mt-2  shadow py-3">
               <h3 className="text-white fw-bold">Opens on</h3>
               <h5 className="text-white fw-semibold">
-                <IoTime size={25} /> Jun 08, 2024, 09:00 AM IST
+                <IoTime size={25} /> {formatDate(quizData?.ScheduledDate)} 
               </h5>
             </div>
-            <div className="text-center">
+            <div className="text-center col-xl-4 col-md-6  mt-2  shadow py-3">
               <h3 className="text-white fw-bold">Closes on</h3>
               <h5 className="text-white fw-semibold">
-                <IoTime size={25} /> Jun 09, 2024, 08:00 PM IST
+                <IoTime size={25} /> {addOneHour(quizData?.ScheduledDate)} 
               </h5>
             </div>
-            <div className="text-center">
+            <div className="text-center col-xl-4 col-md-12  mt-2 shadow py-3">
               <h4 className="text-white fw-bold">Total Participants</h4>
-              <h4 className="text-white">
-                <FaUsers size={25} /> 10002
+              <h4 className="text-white fw-semibold">
+                <FaUsers size={25} /> 100K+
               </h4>
             </div>
           </div>
@@ -138,25 +173,28 @@ const QuizDescription = () => {
             About Contest <TbListDetails />
           </Typography>
           <Typography variant="h6" className="text-white mb-2">
-            - The quiz will consist of multiple-choice questions.
-            <br />
-            - There will be three rounds.
-            <br />
-            - Points will be awarded for each correct answer.
-            <br />
-            - Participants must maintain decorum.
-            <br />
-            - The quiz will cover a range of topics.
-            <br />
-            - There will be prizes for the top participants.
-            <br />
-            - Electronic devices are not allowed during the quiz.
-            <br />
-            - Registration is required to participate.
-            <br />
-          </Typography>
+          - The quiz will consist of multiple-choice questions (MCQ), multiple select questions (MSQ), true or false questions, and written quizzes.
+          <br />
+          - Each question carries 4 marks.
+          <br />
+          - Negative marking is applied for every wrong answer.
+          <br />
+          - If you leave the contest midway, your score will not be counted.
+          <br />
+          - Plagiarism is strictly prohibited and will result in disqualification.
+          <br />
+          - The quiz has three difficulty levels: Easy, Medium, and Hard. You will be asked questions specific to the chosen category.
+          <br />
+          - There will be only one winner for the quiz.
+          <br />
+          - Participants must score a minimum of 34 marks out of 100 to be considered for ranking.
+          <br />
+          - Judging will be based on the timing of quiz completion, and only correct answers will contribute to the final score.
+          <br />
+          - Participants can view their marks and rank on the leaderboard.
+        </Typography>
 
-          <Typography
+          {/* <Typography
             variant="h4"
             gutterBottom
             className="text-white fw-semibold"
@@ -167,7 +205,7 @@ const QuizDescription = () => {
               WebkitTextFillColor: "transparent",
             }}
           >
-            Registration
+            
           </Typography>
           <Typography variant="h6" paragraph className="text-white mb-2">
             To register, click the button below and fill out the registration
@@ -180,7 +218,7 @@ const QuizDescription = () => {
             <ShiningButton>
               Delete <DeleteIcon />
             </ShiningButton>
-          </div>
+          </div> */}
           <Typography
             variant="h4"
             gutterBottom

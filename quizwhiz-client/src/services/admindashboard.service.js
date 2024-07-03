@@ -41,3 +41,12 @@ export const getAllStatusCount = async () => {
     },
   });
 };
+export const getQuizDetails = async (Link) => {
+ 
+  return await axios.get(API_URLS.QUIZ_DETAILS+Link, {
+    headers: {
+      "Content-Type": "application/json",
+      // token: "Bearer " + localStorage.getItem("token")
+    },
+  });
+};
