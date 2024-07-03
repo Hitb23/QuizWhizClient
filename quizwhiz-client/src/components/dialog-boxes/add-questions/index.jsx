@@ -84,8 +84,8 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
       if (response && response.statusCode === 200) {
         debugger;
         Swal.fire({
-          title: "Question Added Successfuly!",
-          text: "Yaay!, Your Quiz is Ready to Go",
+          title: "Questions Added Successfuly!",
+          text: "Your Quiz is Saved in Drafts",
           icon: "success",
           confirmButtonText: "Go to Dashboard",
         });

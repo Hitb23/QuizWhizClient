@@ -1,17 +1,25 @@
-.add-quiz-btn{
+.add-quiz-btn {
     padding: 0.9rem 2.1rem;
     font-size: 20px;
-    background-color: #F47D0A;
-    color: #ffffff;
+    height: 58px;
+    background-color: #FADA65;
+    color: #000000;
     border-radius: 0.5rem;
-    border: none;
+    border: 1px solid #fada65;
 }
 
 .add-quiz-btn:hover{
-    background-color: #F47D0A;
-    color: #ffffff;
-    box-shadow:1px 1px 3px black;
-    transform: scale(1.07);
-    transition: all 0.2s;
+    background: none;
+    color: #FADA65;
 }
 
+@media (max-width: 450px) {
+    .add-quiz-btn{
+        width: 100%;
+    }
+  }
+  @media (max-width: 695px) {
+    .add-quiz-btn{
+        width: 100%;
+    }
+  }

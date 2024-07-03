@@ -1,4 +1,3 @@
-
 import { React, useEffect, useState } from "react";
 import {
   Box,
@@ -124,6 +123,7 @@ const AdminDashboard = () => {
     };
     fetchUserDetails();
   }, []);
+  
   const navigateToCategory = (id) => {
     if (id === "upcoming") navigate(`/admin-dashboard`);
     else navigate(`/admin-dashboard/${id}`);
@@ -495,26 +495,30 @@ const AdminDashboard = () => {
               onChange={handlePageChange}
               sx={{
                 "& .MuiPaginationItem-root": {
-                  backgroundColor: "white",
-                  color: "black",
+                  backgroundColor: "#3D3189",
+                  color: "#fada65",
+                  border: "1px solid #fada65",
                   "&:hover": {
-                    backgroundColor: "#5f071c",
-                    color: "#fbd0da",
+                    backgroundColor: "#fada65", 
+                    color: "#000000",
+                    border: "1px solid #fada65",
                   },
                 },
                 "& .MuiPaginationItem-root.Mui-selected": {
-                  backgroundColor: "#5f071c",
-                  color: "#fbd0da",
+                  backgroundColor: "#fada65",
+                  color: "#000000",
+                  border: "1px solid #fada65",
                   "&:hover": {
-                    backgroundColor: "#fbd0da",
-                    color: "#5f071c",
+                    backgroundColor: "#fada65",
+                    color: "#000000",
+                    border: "1px solid #fada65",
                   },
                 },
                 "& .MuiPaginationItem-ellipsis": {
-                  backgroundColor: "white",
+                  backgroundColor: "fada65",
                   "&:hover": {
-                    backgroundColor: "transparent",
-                    color: "#fbd0da",
+                    backgroundColor: "fbd0da",
+                    color: "#5f071c",
                   },
                 },
               }}

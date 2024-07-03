@@ -124,7 +124,7 @@ export default function CreateQuizModal() {
         className={`${classes["add-quiz-btn"]}`}
         onClick={handleClickOpen}
       >
-        Create New Quiz
+        Add Quiz
       </button>
       <Dialog
         open={open}
