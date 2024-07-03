@@ -6,8 +6,6 @@ import {
   MenuItem,
   Select,
   TextField,
-} from "@mui/material";
-import {
   Stack,
   // makeStyles,
 } from "@mui/material";
@@ -44,7 +42,6 @@ import {
 } from "../../services/admindashboard.service";
 import jwtDecoder from "../../services/jwtDecoder";
 import { statusEnum } from "../../utils/enum";
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -71,6 +68,7 @@ const AdminDashboard = () => {
   const [countOfUpcoming, SetCountOfUpcoming] = useState();
   const [countOfActive, SetCountOfActive] = useState();
   const [countOfCompleted, SetCountOfCompleted] = useState();
+  const [uploadCount, setUploadCount] = useState(0);
   const navigate = useNavigate();
   const params = useParams();
   var username = "";
@@ -222,7 +220,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     setUploadCount(uploadCount + 1);
-  }, [updatedText, stateVal, isDataFetched]);
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>  

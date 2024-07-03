@@ -23,6 +23,7 @@ import {
   Avatar,
   Badge,
   Collapse,
+  Paper,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -41,8 +42,7 @@ import { DrawerHeader, AppBar, Drawer } from "../../admin-components/index";
 import { RoutePaths } from "../../../utils/enum";
 import jwtDecoder from "../../../services/jwtDecoder";
 
-
-const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
+const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [fullImagePath, setFullImagePath] = useState("");
@@ -102,7 +102,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
             onClick={handleDrawerOpen}
             edge="start"
             sx={{
-              marginLeft:-3.1,
+              marginLeft: -3.1,
               marginRight: 4,
               ...(open && { display: "none" }),
               ...(useMediaQuery("(max-width:450px)") && { display: "none" }),
@@ -110,9 +110,11 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
           >
             <MenuIcon />
           </IconButton>
-          <Link to="/">
-            <img className={classes["logo-image"]} src={Logo} height={70} />
-          </Link>
+          {open ? null : (
+            <Link to="/">
+              <img className={classes["logo-image"]} src={Logo} height={70} />
+            </Link>
+          )}
         </Toolbar>
         <Box
           sx={{
@@ -122,14 +124,22 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
             marginRight: "1rem",
           }}
         >
-
-          <Badge badgeContent={4} sx={{ cursor: "pointer",
-          '& .MuiBadge-badge': {
-          backgroundColor: "#3D3189",
-          color: "#fada65" // This sets the text color of the badge
-        } }}>
-            <IoNotificationsOutline color="#fada65" backgroundColor= "#3D3189" border= "2px solid #3D3189" size={30} />
-
+          <Badge
+            badgeContent={4}
+            sx={{
+              cursor: "pointer",
+              "& .MuiBadge-badge": {
+                backgroundColor: "#3D3189",
+                color: "#fada65", // This sets the text color of the badge
+              },
+            }}
+          >
+            <IoNotificationsOutline
+              color="#fada65"
+              backgroundColor="#3D3189"
+              border="2px solid #3D3189"
+              size={30}
+            />
           </Badge>
           <IconButton
             className="gap-2 rounded d-flex align-items-center"
@@ -207,69 +217,84 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
           </Menu>
         </Box>
       </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader
-          sx={{
-            paddingY: "2rem",
-            display: "flex",
-            justifyContent: "space-between",
-            marginX: "0.3rem",
-          }}
-        >
-          <Box sx={{ display: "flex", gap: "0.8rem", alignItems: "center" }}>
-            <Avatar sx={{ background: "#F47D0A" }} src={fullImagePath}></Avatar>
-            <Typography variant="p">
-              Hey, {firstName} {lastName}
-            </Typography>
-          </Box>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {adminDashboardSections.map((text, index) => (
-            <ListItem key={text.title} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                onClick={() => handleClick(index)}
-                sx={{
-                  borderRadius: "10px",
-                  backgroundColor:
-                    openIndex === index || text == "Quiz Management"
-                      ? "#ffb165"
-                      : "inherit",
-                  color: openIndex === index ? "#fffff" : "inherit",
-                  "&:hover": {
-                    backgroundColor:
-                      openIndex === index ? "#ffb165" : "#f5f5f5",
-                    color: openIndex === index ? "#fffff" : "inherit",
-                  },
-                }}
+      <Drawer
+        variant="permanent"
+        open={open}
+        sx={{ backgroundColor: "#3D3189" }}
+      >
+        <Paper sx={{ backgroundColor: "#3D3189", height: "100vh" }}>
+          <DrawerHeader
+            sx={{
+              backgroundColor: "#3D3189",
+              paddingY: "2rem",
+              display: "flex",
+              justifyContent: "space-between",
+              marginX: "0.3rem",
+            }}
+          >
+            <Box sx={{ margin: "auto" }}>
+              <Link to="/">
+                <img
+                  className={`mx-auto ${classes["logo-image"]}`}
+                  src={Logo}
+                  height={70}
+                />
+              </Link>
+            </Box>
+            <IconButton
+              sx={{ backgroundColor: "#3D3189" }}
+              onClick={handleDrawerClose}
+            >
+              {theme.direction === "rtl" ? (
+                <ChevronRightIcon sx={{color: "#fada65"}} />
+              ) : (
+                <ChevronLeftIcon sx={{color: "#fada65"}} />
+              )}
+            </IconButton>
+          </DrawerHeader>
+          <Divider sx={{ backgroundColor: "#3D3189" }} />
+          <List sx={{ backgroundColor: "#3D3189" }}>
+            {adminDashboardSections.map((text, index) => (
+              <ListItem
+                key={text.title}
+                disablePadding
+                sx={{ display: "block", color: "fada65" }}
               >
-                <ListItemIcon sx={{ display: open ? "none" : "block" }}>
-                  {text.icon}
-                </ListItemIcon>
-                <ListItemText variant="h4" primary={text.title} />
-                {openIndex === index ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-              <Collapse in={openIndex === index} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemIcon>
-                      <StarBorder />
-                    </ListItemIcon>
-                    <ListItemText primary="Starred" />
-                  </ListItemButton>
-                </List>
-              </Collapse>
-              {/* </ListItemButton> */}
-            </ListItem>
-          ))}
-        </List>
+                <ListItemButton
+                  onClick={() => handleClick(index)}
+                  sx={{
+                    borderRadius: "10px",
+                    backgroundColor:
+                      openIndex === index || text == "Quiz Management"
+                        ? "#3D3189"
+                        : "inherit",
+                    "&:hover": {
+                      backgroundColor:
+                        openIndex === index ? "#000000" : "#f5f5f5",
+                      color: openIndex === index ? "#000000" : "inherit",
+                    },
+                  }}
+                >
+                  <ListItemIcon sx={{ display: open ? "none" : "block", color: "#fada65" }}>
+                    {text.icon}
+                  </ListItemIcon>
+                  <ListItemText variant="h4" primary={text.title} sx={{color: "#fada65"}} />
+                </ListItemButton>
+                <Collapse in={openIndex === index} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    <ListItemButton sx={{ pl: 4 }}>
+                      <ListItemIcon sx={{color: "#fada65"}}>
+                        <StarBorder />
+                      </ListItemIcon>
+                      <ListItemText primary="Starred" sx={{color: "#fada65"}}/>
+                    </ListItemButton>
+                  </List>
+                </Collapse>
+                {/* </ListItemButton> */}
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
       </Drawer>
     </>
   );

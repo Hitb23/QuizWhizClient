@@ -99,6 +99,7 @@ const AdminDashboard = () => {
           CurrentPage: 1,
           SearchValue: "",
         });
+        console.log("All data: ");
         const data = allData.data.data.GetQuizzes;
         setDifficultyList(difficulties.data.data);
         setCategoryList(categories.data.data);
@@ -132,6 +133,7 @@ const AdminDashboard = () => {
     };
     fetchUserDetails();
   }, []);
+  
   const navigateToCategory = (id) => {
     navigate(`/admin-dashboard/${id}`);
   };
@@ -461,6 +463,7 @@ const AdminDashboard = () => {
                 title={ele.Title}
                 description={ele.Description}
                 date={ele.ScheduledDate}
+                categoryName={ele.CategoryName}
                 key={idx}
               />
             ))
