@@ -72,7 +72,7 @@ const QuizDescription = () => {
             className={`${classes["text-background"]} text-white fw-bold mt-3`}
           >
             Quiz Competition 2024
-            <small className="text-white bg-success rounded-4 p-2 ms-4">
+            <small className="text-white bg-success rounded-4 p-2 ms-4 fs-5">
               Live
             </small>
           </Typography>
