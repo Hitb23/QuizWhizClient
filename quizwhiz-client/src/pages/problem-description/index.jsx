@@ -103,7 +103,8 @@ const QuizDescription = () => {
             gutterBottom
             className={`text-white fw-bold mt-3 text-break`}
           >
-           {quizData && quizData.Title.substring(0,25)}
+           {/* {quizData && quizData.Title.substring(0,25)} */}
+           The Quiz Competition 2024
           </Typography>
             <h3 className="text-white bg-success rounded-4 p-2 ms-4 fw-bold text-center">
               Live
@@ -111,9 +112,9 @@ const QuizDescription = () => {
             <ShiningButton className="fw-bold fs-5 " style={{textTransform:'capitalize'}}>
               Edit Quiz Details  <EditIcon/>
             </ShiningButton>
-            <ShiningButton  className="fw-bold fs-5 " style={{textTransform:'capitalize'}}> 
+            {/* <ShiningButton  className="fw-bold fs-5 " style={{textTransform:'capitalize'}}> 
               Delete  <DeleteIcon/>
-            </ShiningButton>
+            </ShiningButton> */}
            </div>
           <Typography
             variant="h5"
@@ -141,13 +142,13 @@ const QuizDescription = () => {
             <div className="text-center col-xl-4 col-md-6 mt-2  shadow py-3">
               <h3 className="text-white fw-bold">Opens on</h3>
               <h5 className="text-white fw-semibold">
-                <IoTime size={25} /> {formatDate(quizData?.ScheduledDate)} 
+                <IoTime size={25} /> 18 June,2024 
               </h5>
             </div>
             <div className="text-center col-xl-4 col-md-6  mt-2  shadow py-3">
               <h3 className="text-white fw-bold">Closes on</h3>
               <h5 className="text-white fw-semibold">
-                <IoTime size={25} /> {addOneHour(quizData?.ScheduledDate)} 
+                <IoTime size={25} /> 18 June,2024 
               </h5>
             </div>
             <div className="text-center col-xl-4 col-md-12  mt-2 shadow py-3">

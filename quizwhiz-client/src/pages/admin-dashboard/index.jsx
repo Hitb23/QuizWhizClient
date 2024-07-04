@@ -11,7 +11,12 @@ import {
 
 import CssBaseline from "@mui/material/CssBaseline";
 import classes from "./style.module.css";
+import AuthHeader from "../../components/header/auth-header";
+import LandingHeader from "../../components/header/landing-header";
+import AdminSideBar from "../../components/admin-sidebar";
+import CreateQuizModal from "../../components/dialog-boxes/create-quiz";
 import CardComponent from "../../components/admin-cards/quiz-category";
+
 
 import {
   faQuestionCircle,
@@ -34,6 +39,9 @@ import {
   getDifficulties,
 } from "../../services/admindashboard.service";
 import jwtDecoder from "../../services/jwtDecoder";
+
+import ViewQuizModal from "../../components/dialog-boxes/view-quiz";
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -85,6 +93,7 @@ const AdminDashboard = () => {
           CurrentPage: 1,
           SearchValue: "",
         });
+        console.log("All data: ");
         const data = allData.data.data.GetQuizzes;
         setDifficultyList(difficulties.data.data);
         setCategoryList(categories.data.data);
@@ -119,6 +128,7 @@ const AdminDashboard = () => {
     };
     fetchUserDetails();
   }, []);
+  
   const navigateToCategory = (id) => {
     navigate(`/admin-dashboard/${id}`);
   };
@@ -316,6 +326,7 @@ const AdminDashboard = () => {
                 },
               }}
             />
+           
           </div>
           <div className="col-lg-2 mb-4 col-sm-6 col-12">
             <FormControl sx={{ width: "100%" }}>
@@ -434,25 +445,35 @@ const AdminDashboard = () => {
             </FormControl>
           </div>
           <div className="col-lg-6 mb-4 col-sm-6 col-12 d-flex justify-content-end">
-            <button className={` ${classes["add-quiz-btn"]} `}>Add Quiz</button>
+            <ViewQuizModal/>
+            <CreateQuizModal/>
           </div>
+          
         </div>
 
         <h4 className="text-white ms-2">
-          {params.id.substring(0, 1).toUpperCase() + params.id.substring(1)}
-          Contest
+          {params.id.substring(0, 1).toUpperCase() + params.id.substring(1)}  Contest
         </h4>
         <div className="row">
-          {filteredData.length > 0 ? (
+          <QuizCard
+          title='Tech Questions'
+          description='This is A Quiz Competition'
+          date='21 June 2025'
+          categoryName='Technology'
+          onClickHandler={ViewDetailsHandler}
+          Link='gshgahGD@'
+        />
+          {/* {filteredData.length > 0 ? (
             filteredData.map((ele, idx) => (
-              <QuizCard
-                title={ele.Title}
-                description={ele.Description}
-                date={ele.ScheduledDate}
-                key={idx}
-                onClickHandler={ViewDetailsHandler}
-                Link={ele.QuizLink}
-              />
+              // <QuizCard
+              //   title={ele.Title}
+              //   description={ele.Description}
+              //   date={ele.ScheduledDate}
+              //   categoryName={ele.CategoryName}
+              //   key={idx}
+              //   onClickHandler={ViewDetailsHandler}
+              //   Link={ele.QuizLink}
+              // />
             ))
           ) : (
             // <img
@@ -461,7 +482,7 @@ const AdminDashboard = () => {
             //   style={{height:'500px',width:'500px'}}
             // />
             <h2 className="text-center text-white">No Data Available</h2>
-          )}
+          )} */}
         </div>
         {filteredData.length > 0 && (
           <div className={`${classes["pagination"]} mt-3`}>
@@ -565,6 +586,7 @@ const AdminDashboard = () => {
         )}
       </Box>
     </Box>
+    
   );
 };
 export default AdminDashboard;

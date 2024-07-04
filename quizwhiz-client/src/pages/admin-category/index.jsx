@@ -1,6 +1,4 @@
-
 import { React, useEffect, useState } from "react";
-
 import {
   Box,
   FormControl,
@@ -8,6 +6,7 @@ import {
   MenuItem,
   Select,
   TextField,
+
 } from "@mui/material";
 
 
@@ -22,14 +21,15 @@ import {
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
-
-import {  useNavigate, useParams } from "react-router-dom";
-import AdminSlider from "../../components/header/admin-header";
-import QuizCard from "../../components/admin-cards/quiz-card";
-import Pagination from "@mui/material/Pagination";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   DrawerHeader,
 } from "../../components/admin-components";
+
+import AdminSlider from "../../components/header/admin-header";
+import QuizCard from "../../components/admin-cards/quiz-card";
+import Pagination from "@mui/material/Pagination";
+
 
 import { getUserDetails } from "../../services/auth.service";
 import {
@@ -41,7 +41,6 @@ import {
 } from "../../services/admindashboard.service";
 import jwtDecoder from "../../services/jwtDecoder";
 import { statusEnum } from "../../utils/enum";
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -68,6 +67,7 @@ const AdminDashboard = () => {
   const [countOfUpcoming, SetCountOfUpcoming] = useState();
   const [countOfActive, SetCountOfActive] = useState();
   const [countOfCompleted, SetCountOfCompleted] = useState();
+  const [uploadCount, setUploadCount] = useState(0);
   const navigate = useNavigate();
   const params = useParams();
   var username = "";
@@ -219,7 +219,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     setUploadCount(uploadCount + 1);
-  }, [updatedText, stateVal, isDataFetched]);
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>  
