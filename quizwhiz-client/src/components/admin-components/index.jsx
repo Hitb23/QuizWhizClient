@@ -1,4 +1,4 @@
-import { Fab, InputBase } from "@mui/material";
+import { Button, Fab, InputBase } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -96,7 +96,35 @@ export const SearchIconWrapper = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
 }));
-
+export const ShiningButton = styled(Button)({
+  position: "relative",
+  overflow: "hidden",
+  backgroundColor: "#6200ea",
+  backgroundImage: "linear-gradient(270deg, #ff00c8, #6200ea)",
+  backgroundSize: "200% 200%",
+  color: "white",
+  padding: "10px 20px",
+  borderRadius: "8px",
+  boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
+  transition: "background-position 1s",
+  "&:hover": {
+    backgroundPosition: "right center",
+  },
+  "&:before": {
+    content: '""',
+    position: "absolute",
+    top: "0",
+    left: "0",
+    width: "100%",
+    height: "100%",
+    background: "rgba(255, 255, 255, 0.2)",
+    opacity: "0",
+    transition: "opacity 0.3s",
+  },
+  "&:hover:before": {
+    opacity: "1",
+  },
+});
 export const StyledInputBase = styled(InputBase)(({ theme }) => ({
   width: "100%",
   color: "#fada65",

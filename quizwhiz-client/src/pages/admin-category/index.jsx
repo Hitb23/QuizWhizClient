@@ -6,9 +6,10 @@ import {
   MenuItem,
   Select,
   TextField,
-  Stack,
-  // makeStyles,
+
 } from "@mui/material";
+
+
 import CssBaseline from "@mui/material/CssBaseline";
 import classes from "./style.module.css";
 import CardComponent from "../../components/admin-cards/quiz-category";
@@ -19,19 +20,17 @@ import {
   faPlay,
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
+
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   DrawerHeader,
 } from "../../components/admin-components";
+
 import AdminSlider from "../../components/header/admin-header";
 import QuizCard from "../../components/admin-cards/quiz-card";
 import Pagination from "@mui/material/Pagination";
-import {
-  Search,
-  SearchIconWrapper,
-  StyledInputBase,
-} from "../../components/admin-components";
-import SearchIcon from "@mui/icons-material/Search";
+
+
 import { getUserDetails } from "../../services/auth.service";
 import {
   changeRecordsSize,

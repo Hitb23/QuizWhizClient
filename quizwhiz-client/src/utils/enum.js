@@ -39,8 +39,8 @@ export const API_URLS = {
   GET_QUIZ_DETAILS_BY_LINK :`/quiz/get-quiz-details?quizLink=`,
   ADD_QUIZ_QUESTIONS:'/quiz/add-quiz-questions',
   QUIZ_RECORDS:'/auth/change-record-size',
-  QUIZ_STATUS:'/quiz/get-quiz-status-count'
-
+  QUIZ_STATUS:'/quiz/get-quiz-status-count',
+  QUIZ_DETAILS:'/quiz/get-quiz-details?quizLink='
 };
 export const statusEnum={
   "pending": 1,

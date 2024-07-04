@@ -4,15 +4,31 @@ import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { Box, Button } from "@mui/material";
-
-const QuizCard = ({ title, description, date, categoryName, time }) => {
+import { styled } from "@mui/system";
+import Imgurl from "../../../assets/gk.jpg";
+import { IoTimeOutline } from "react-icons/io5";
+import { LuFileSpreadsheet } from "react-icons/lu";
+import { FaListCheck } from "react-icons/fa6";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import { HiOutlineTrophy } from "react-icons/hi2";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+const QuizCard = ({
+  title,
+  description,
+  date,
+  categoryName,
+  time,
+  Link,
+  onClickHandler,
+}) => {
   console.log(description);
   var name = categoryName.toLowerCase();
   console.log("Category name : " + name);
   var imageUrl = `${import.meta.env.VITE_PUBLIC_URL}src/assets/${name}.jpg`;
-  if(name == "general knowledge"){
+  if (name == "general knowledge") {
     imageUrl = `${import.meta.env.VITE_PUBLIC_URL}src/assets/gk.jpg`;
   }
+
   const formattedDate = new Date(date).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -25,83 +41,72 @@ const QuizCard = ({ title, description, date, categoryName, time }) => {
       minute: "2-digit",
     }
   );
+  const AnimatedButton = styled(Button)({
+    position: "relative",
+    overflow: "hidden",
+    transition: "background-color 0.3s ease, transform 0.3s ease",
+    "&:hover": {
+      backgroundColor: "#4caf50", // Change to your preferred hover color
+      transform: "scale(1.05)",
+    },
+    "& .MuiButton-endIcon": {
+      transition: "transform 0.3s ease, margin-left 0.3s ease",
+    },
+    "&:hover .MuiButton-endIcon": {
+      transform: "translateX(5px)",
+    },
+  });
+
   return (
-    <div className="col-lg-3 col-md-6 col-12 mb-2">
-      <Card
-        className="rounded-3 custom-card"
-        sx={{
-          cursor: "pointer",
-          margin: "9px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-          transition: "transform 0.3s, box-shadow 0.3s",
-          "&:hover": {
-            transform: "scale(1.05)",
-            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
-          },
-        }}
+    <>
+      <div
+        className="row gy-3 py-2 rounded-2"
+        style={{ background: "#3d3189" }}
       >
-        <CardMedia
-          component="img"
-          alt="image"
-          height="140"
-          image={imageUrl}
-          sx={{
-            width: "100%",
-            objectFit: "cover",
-          }}
-        />
-        <CardContent
-          className="d-flex flex-column"
-          sx={{
-            paddingTop: "16px",
-            paddingBottom: "16px",
-            textAlign:'center'
-          }}
-        >
-          <Typography
-            variant="h5"
-            className="fw-semibold"
-            sx={{ marginBottom: "8px" }}
+        <div className="col-xl-3 col-12 col text-center my-auto">
+          <img src={Imgurl} height={120} width={250} />
+        </div>
+        <div className="col-xl-5 col-sm-6 text-xl-start my-2 text-center">
+          <h6 className="text-white my-1">{formattedDate}</h6>
+          <h3 className="text-white my-1">
+            {title} <small>(Medium)</small>
+          </h3>
+          <h6 className="text-white my-1">{categoryName}</h6>
+          <div className="d-flex  gap-2 my-2">
+            <div>
+              {" "}
+              <IoTimeOutline color="white" size={25} />
+              <small className="text-white m-2">1 Hour</small>{" "}
+            </div>
+            <div>
+              {" "}
+              <LuFileSpreadsheet color="white" size={25} />
+              <small className="text-white m-2">{100} Marks</small>{" "}
+            </div>
+            <div>
+              {" "}
+              <FaListCheck color="white" size={25} />
+              <small className="text-white m-2">40 Questions</small>{" "}
+            </div>
+          </div>
+        </div>
+        <div className="col-xl-4 col-sm-6  text-white my-auto float-lg-start float-end">
+          {/* <div className="d-flex gap-2 align-items-center justify">
+            <HiOutlineTrophy size={25} />
+            <h3 className="pt-2">Winning Amount</h3>
+          </div>
+          <h5>1000$(1st price)</h5> */}
+          <AnimatedButton
+            variant="contained"
+            endIcon={<ArrowForwardIcon />}
+            color="primary"
+            className="text-start text-md-center"
           >
-            {title.substring(0,14)}
-          </Typography>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            className="fw-semibold text-center"
-            sx={{ marginBottom: "16px" }}
-          >
-            {(description.length < 20) ? description.substring(0,20) : `${description.substring(0,20)}...`} 
-          </Typography>
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            sx={{ marginBottom: "8px" }}
-          >
-            Contest Starts In
-          </Typography>
-          <h5 variant="h6" className="text-black fw-semibold">
-            {formattedDate}
-          </h5>
-          <Button
-            className="mt-2"
-            sx={{
-              outline: "1px solid #5f071c",
-              fontWeight: "bold",
-              color: "#5f071c",
-              "&:hover": {
-                backgroundColor: "#5f071c",
-                color: "white",
-                borderColor: "primary.main",
-                fontWeight: "bold",
-              },
-            }}
-            >
-            View Details
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
+            Join Now
+          </AnimatedButton>
+        </div>
+      </div>
+    </>
   );
 };
 
