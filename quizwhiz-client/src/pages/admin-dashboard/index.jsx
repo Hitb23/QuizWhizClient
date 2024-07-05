@@ -463,17 +463,17 @@ const AdminDashboard = () => {
           onClickHandler={ViewDetailsHandler}
           Link='gshgahGD@'
         />
-          {/* {filteredData.length > 0 ? (
+          {filteredData.length > 0 ? (
             filteredData.map((ele, idx) => (
-              // <QuizCard
-              //   title={ele.Title}
-              //   description={ele.Description}
-              //   date={ele.ScheduledDate}
-              //   categoryName={ele.CategoryName}
-              //   key={idx}
-              //   onClickHandler={ViewDetailsHandler}
-              //   Link={ele.QuizLink}
-              // />
+              <QuizCard
+                title={ele.Title}
+                description={ele.Description}
+                date={ele.ScheduledDate}
+                categoryName={ele.CategoryName}
+                key={idx}
+                onClickHandler={ViewDetailsHandler}
+                Link={ele.QuizLink}
+              />
             ))
           ) : (
             // <img
@@ -482,7 +482,7 @@ const AdminDashboard = () => {
             //   style={{height:'500px',width:'500px'}}
             // />
             <h2 className="text-center text-white">No Data Available</h2>
-          )} */}
+          )}
         </div>
         {filteredData.length > 0 && (
           <div className={`${classes["pagination"]} mt-3`}>
