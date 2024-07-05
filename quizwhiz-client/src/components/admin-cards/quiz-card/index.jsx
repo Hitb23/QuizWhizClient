@@ -63,7 +63,7 @@ const QuizCard = ({
         className="row gy-3 py-2 rounded-2"
         style={{ background: "#3d3189" }}
       >
-        <div className="col-xl-3 col-12 col text-center my-auto">
+        <div className="col-xl-3 col-sm-6 col text-center my-auto">
           <img src={Imgurl} height={120} width={250} />
         </div>
         <div className="col-xl-5 col-sm-6 text-xl-start my-2 text-center">
@@ -74,33 +74,33 @@ const QuizCard = ({
           <h6 className="text-white my-1">{categoryName}</h6>
           <div className="d-flex  gap-2 my-2">
             <div>
-              {" "}
+              
               <IoTimeOutline color="white" size={25} />
-              <small className="text-white m-2">1 Hour</small>{" "}
+              <small className="text-white m-2">1 Hour</small>
             </div>
             <div>
-              {" "}
+              
               <LuFileSpreadsheet color="white" size={25} />
-              <small className="text-white m-2">{100} Marks</small>{" "}
+              <small className="text-white m-2">{100} Marks</small>
             </div>
             <div>
-              {" "}
+              
               <FaListCheck color="white" size={25} />
-              <small className="text-white m-2">40 Questions</small>{" "}
+              <small className="text-white m-2">40 Questions</small>
             </div>
           </div>
         </div>
-        <div className="col-xl-4 col-sm-6  text-white my-auto float-lg-start float-end">
+        <div className="col-xl-4 col-sm-12   text-white my-auto float-lg-start float-end">
           {/* <div className="d-flex gap-2 align-items-center justify">
             <HiOutlineTrophy size={25} />
             <h3 className="pt-2">Winning Amount</h3>
-          </div>
+          </div> 
           <h5>1000$(1st price)</h5> */}
           <AnimatedButton
             variant="contained"
             endIcon={<ArrowForwardIcon />}
             color="primary"
-            className="text-start text-md-center"
+            className="text-start text-md-center w-100"
           >
             Join Now
           </AnimatedButton>
