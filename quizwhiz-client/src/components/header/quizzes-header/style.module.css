@@ -1,0 +1,23 @@
+.logo-image {
+  padding-left: 8px;
+}
+
+.username {
+  color: #fada65;
+}
+
+@media (max-width: 450px) {
+  .logo-image {
+    height: 3rem;
+  }
+
+  .header {
+    padding: 0;
+  }
+  .title-size {
+    font-size: 1rem;
+  }
+  .count-size {
+    font-size: 0.93rem !important;
+  }
+}
