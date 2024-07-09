@@ -41,6 +41,8 @@ export const API_URLS = {
   ADD_QUIZ_QUESTIONS:'/quiz/add-quiz-questions',
   QUIZ_RECORDS:'/auth/change-record-size',
   QUIZ_STATUS:'/quiz/get-quiz-status-count',
+  GET_SINGLE_QUESTION:'/quiz/get-single-quiz-question',
+  GET_COUNT_OF_QUESTIONS: '/quiz/get-count-of-questions',
   QUIZ_DETAILS:'/quiz/get-quiz-details?quizLink='
 };
 export const statusEnum={
