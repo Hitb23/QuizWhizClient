@@ -218,23 +218,6 @@ const AdminDashboard = () => {
       SetFilteredData([]);
     }
   };
-  var username = "";
-
-  useEffect(() => {
-    const data = jwtDecoder();
-    username = data["Username"];
-    const fetchUserDetails = async () => {
-      try {
-        const response = await getUserDetails(data["Username"]);
-        setFirstName(response.data.data.FirstName);
-        setLastName(response.data.data.LastName);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchUserDetails();
-  }, []);
 
   return (
     <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>

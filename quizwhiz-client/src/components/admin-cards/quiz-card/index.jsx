@@ -9,9 +9,9 @@ const QuizCard = ({ title, description, date, categoryName, time }) => {
   console.log(description);
   var name = categoryName.toLowerCase();
   console.log("Category name : " + name);
-  var imageUrl = `${import.meta.env.VITE_PUBLIC_URL}src/assets/${name}.jpg`;
+  var imageUrl = `${import.meta.env.VITE_ASSETS_URL}/${name}.jpg`;
   if(name == "general knowledge"){
-    imageUrl = `${import.meta.env.VITE_PUBLIC_URL}src/assets/gk.jpg`;
+    imageUrl = `${import.meta.env.VITE_ASSETS_URL}/gk.jpg`;
   }
   const formattedDate = new Date(date).toLocaleDateString("en-US", {
     year: "numeric",

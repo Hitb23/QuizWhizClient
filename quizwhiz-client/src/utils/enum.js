@@ -39,7 +39,9 @@ export const API_URLS = {
   GET_QUIZ_DETAILS_BY_LINK :`/quiz/get-quiz-details?quizLink=`,
   ADD_QUIZ_QUESTIONS:'/quiz/add-quiz-questions',
   QUIZ_RECORDS:'/auth/change-record-size',
-  QUIZ_STATUS:'/quiz/get-quiz-status-count'
+  QUIZ_STATUS:'/quiz/get-quiz-status-count',
+  GET_SINGLE_QUESTION:'/quiz/get-single-quiz-question',
+  GET_COUNT_OF_QUESTIONS: '/quiz/get-count-of-questions',
 
 };
 export const statusEnum={
