@@ -17,7 +17,6 @@ import AdminSideBar from "../../components/admin-sidebar";
 import CreateQuizModal from "../../components/dialog-boxes/create-quiz";
 import CardComponent from "../../components/admin-cards/quiz-category";
 
-
 import {
   faQuestionCircle,
   faCalendarAlt,
@@ -114,6 +113,7 @@ const AdminDashboard = () => {
 
     fetchData();
   }, [Records, params]);
+  
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
@@ -178,6 +178,7 @@ const AdminDashboard = () => {
       SetFilteredData([]);
     }
   };
+
   const searchHandler = async (e) => {
     const searchedWord = e.target.value;
     SetSearchedWord(searchedWord);
@@ -196,6 +197,7 @@ const AdminDashboard = () => {
       SetFilteredData([]);
     }
   };
+
   const ViewDetailsHandler=(e)=>{
        navigate(`/admin-dashboard/${params.id}/${e}`);
   }
