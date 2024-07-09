@@ -17,24 +17,18 @@ import AdminSideBar from "../../components/admin-sidebar";
 import CreateQuizModal from "../../components/dialog-boxes/create-quiz";
 import CardComponent from "../../components/admin-cards/quiz-category";
 
-
 import {
   faQuestionCircle,
   faCalendarAlt,
   faPlay,
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import {  useNavigate, useParams } from "react-router-dom";
 import { DrawerHeader } from "../../components/admin-components";
 import AdminSlider from "../../components/header/admin-header";
 import QuizCard from "../../components/admin-cards/quiz-card";
 import Pagination from "@mui/material/Pagination";
-import {
-  Search,
-  SearchIconWrapper,
-  StyledInputBase,
-} from "../../components/admin-components";
-import SearchIcon from "@mui/icons-material/Search";
+import { statusEnum } from "../../utils/enum";
 import { getUserDetails } from "../../services/auth.service";
 import {
   changeRecordsSize,
@@ -44,9 +38,9 @@ import {
   getDifficulties,
 } from "../../services/admindashboard.service";
 import jwtDecoder from "../../services/jwtDecoder";
-import NO_DATA_FOUND from "../../assets/Server.gif";
-import { statusEnum } from "../../utils/enum";
+
 import ViewQuizModal from "../../components/dialog-boxes/view-quiz";
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -74,7 +68,6 @@ const AdminDashboard = () => {
   const [countOfUpcoming, SetCountOfUpcoming] = useState(null);
   const [countOfActive, SetCountOfActive] = useState(null);
   const [countOfCompleted, SetCountOfCompleted] = useState(null);
-
   const navigate = useNavigate();
   const params = useParams();
   var username = "";
@@ -104,6 +97,7 @@ const AdminDashboard = () => {
         setDifficultyList(difficulties.data.data);
         setCategoryList(categories.data.data);
         SetFilteredData(data);
+     
         const status = await getAllStatusCount();
         SetCountOfPending(status?.data?.data?.PendingCount);
         SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
@@ -119,6 +113,7 @@ const AdminDashboard = () => {
 
     fetchData();
   }, [Records, params]);
+  
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
@@ -183,6 +178,7 @@ const AdminDashboard = () => {
       SetFilteredData([]);
     }
   };
+
   const searchHandler = async (e) => {
     const searchedWord = e.target.value;
     SetSearchedWord(searchedWord);
@@ -201,6 +197,11 @@ const AdminDashboard = () => {
       SetFilteredData([]);
     }
   };
+
+  const ViewDetailsHandler=(e)=>{
+       navigate(`/admin-dashboard/${params.id}/${e}`);
+  }
+
   const handleCategory = async (e) => {
     setCategory(e.target.value);
     try {
@@ -436,10 +437,17 @@ const AdminDashboard = () => {
         </div>
 
         <h4 className="text-white ms-2">
-          {params.id.substring(0, 1).toUpperCase() + params.id.substring(1)}{" "}
-          Contest
+          {params.id.substring(0, 1).toUpperCase() + params.id.substring(1)}  Contest
         </h4>
         <div className="row">
+          <QuizCard
+          title='Tech Questions'
+          description='This is A Quiz Competition'
+          date='21 June 2025'
+          categoryName='Technology'
+          onClickHandler={ViewDetailsHandler}
+          Link='gshgahGD@'
+        />
           {filteredData.length > 0 ? (
             filteredData.map((ele, idx) => (
               <QuizCard
@@ -448,6 +456,8 @@ const AdminDashboard = () => {
                 date={ele.ScheduledDate}
                 categoryName={ele.CategoryName}
                 key={idx}
+                onClickHandler={ViewDetailsHandler}
+                Link={ele.QuizLink}
               />
             ))
           ) : (

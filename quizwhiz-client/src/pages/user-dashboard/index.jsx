@@ -83,7 +83,7 @@ const UserDashboard = () => {
   return (
     <React.Fragment>
       <LandingHeader />
-      <h1>User Dashboard</h1>
+        <h1>User Dashboard</h1>
       <ToastContainer />
       <button onClick={attendQuiz}>Attend Quiz</button>
       <h1 className="text-white">Current Question:</h1>
@@ -122,5 +122,5 @@ const UserDashboard = () => {
     </React.Fragment>
   );
 };
-
+ 
 export default UserDashboard;

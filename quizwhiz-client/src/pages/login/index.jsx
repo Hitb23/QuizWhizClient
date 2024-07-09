@@ -61,7 +61,7 @@ const Login = () => {
           state: { IsSuccessMessage: true, Message: response.data.message },
         });
       } else if (userRole === "Contestant") {
-        navigate(RoutePaths.UserDashboard, {
+        navigate(RoutePaths.Quizzes, {
           state: { IsSuccessMessage: true, Message: response.data.message },
         });
       } else {
