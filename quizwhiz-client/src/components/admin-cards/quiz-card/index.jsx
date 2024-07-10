@@ -18,7 +18,6 @@ const QuizCard = ({
 }) => {
   const [minutes, setMinutes] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(0);
-
   var quizDate = new Date(scheduledDate);
 
   useEffect(() => {

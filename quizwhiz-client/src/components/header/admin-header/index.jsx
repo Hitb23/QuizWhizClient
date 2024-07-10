@@ -42,7 +42,7 @@ import { DrawerHeader, AppBar, Drawer } from "../../admin-components/index";
 import { RoutePaths } from "../../../utils/enum";
 import jwtDecoder from "../../../services/jwtDecoder";
 
-const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
+const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [fullImagePath, setFullImagePath] = useState("");
@@ -52,12 +52,13 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
   const data = jwtDecoder();
   username = data["Username"];
 
+  const storedImageUrl = localStorage.getItem("profilePhotoUrl");
+
   useEffect(() => {
-    setFullImagePath(
-      `${
-        import.meta.env.VITE_PUBLIC_URL
-      }ProfilePhoto/${userName}/${userName}.jpg?${uploadCount}`
-    );
+    const imgPath = `${
+      import.meta.env.VITE_PUBLIC_URL
+    }/ProfilePhoto/${username}/${username}.jpg`;
+    setFullImagePath(imgPath);
   }, [uploadCount]);
 
   const handleDrawerOpen = () => {
@@ -87,7 +88,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
         position="fixed"
         open={open}
         sx={{
-          backgroundColor: "#6F41DB",
+          background: "#6F41DB",
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
@@ -129,14 +130,14 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             sx={{
               cursor: "pointer",
               "& .MuiBadge-badge": {
-                backgroundColor: "#3D3189",
+                background: "#3D3189",
                 color: "#fada65", // This sets the text color of the badge
               },
             }}
           >
             <IoNotificationsOutline
               color="#fada65"
-              backgroundColor="#3D3189"
+              background="#3D3189"
               border="2px solid #3D3189"
               size={30}
             />
@@ -220,12 +221,12 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
       <Drawer
         variant="permanent"
         open={open}
-        sx={{ backgroundColor: "#3D3189" }}
+        sx={{ background: "#3D3189" }}
       >
-        <Paper sx={{ backgroundColor: "#3D3189", height: "100vh" }}>
+        <Paper sx={{ background: "#3D3189", height: "100vh" }}>
           <DrawerHeader
             sx={{
-              backgroundColor: "#3D3189",
+              background: "#3D3189",
               paddingY: "2rem",
               display: "flex",
               justifyContent: "space-between",
@@ -242,7 +243,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
               </Link>
             </Box>
             <IconButton
-              sx={{ backgroundColor: "#3D3189" }}
+              sx={{ background: "#3D3189" }}
               onClick={handleDrawerClose}
             >
               {theme.direction === "rtl" ? (
@@ -252,8 +253,8 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
               )}
             </IconButton>
           </DrawerHeader>
-          <Divider sx={{ backgroundColor: "#3D3189" }} />
-          <List sx={{ backgroundColor: "#3D3189" }}>
+          <Divider sx={{ background: "#3D3189" }} />
+          <List sx={{ background: "#3D3189" }}>
             {adminDashboardSections.map((text, index) => (
               <ListItem
                 key={text.title}
@@ -264,12 +265,12 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
                   onClick={() => handleClick(index)}
                   sx={{
                     borderRadius: "10px",
-                    backgroundColor:
+                    background:
                       openIndex === index || text == "Quiz Management"
                         ? "#3D3189"
                         : "inherit",
                     "&:hover": {
-                      backgroundColor:
+                      background:
                         openIndex === index ? "#000000" : "#f5f5f5",
                       color: openIndex === index ? "#000000" : "inherit",
                     },

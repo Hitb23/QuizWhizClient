@@ -51,6 +51,7 @@ import countries from "../../components/list-of-countries/listOfCountries";
 import Select from "@mui/material/Select";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Flag from "react-world-flags";
+import axios from "axios";
 
 const drawerWidth = 240;
 const ITEM_HEIGHT = 48;
@@ -86,48 +87,48 @@ const closedMixin = (theme) => ({
   },
 });
 
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  ...theme.mixins.toolbar,
-}));
+// const DrawerHeader = styled("div")(({ theme }) => ({
+//   display: "flex",
+//   alignItems: "center",
+//   justifyContent: "flex-end",
+//   padding: theme.spacing(0, 1),
+//   ...theme.mixins.toolbar,
+// }));
 
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
+// const AppBar = styled(MuiAppBar, {
+//   shouldForwardProp: (prop) => prop !== "open",
+// })(({ theme, open }) => ({
+//   zIndex: theme.zIndex.drawer + 1,
+//   transition: theme.transitions.create(["width", "margin"], {
+//     easing: theme.transitions.easing.sharp,
+//     duration: theme.transitions.duration.leavingScreen,
+//   }),
+//   ...(open && {
+//     marginLeft: drawerWidth,
+//     width: `calc(100% - ${drawerWidth}px)`,
+//     transition: theme.transitions.create(["width", "margin"], {
+//       easing: theme.transitions.easing.sharp,
+//       duration: theme.transitions.duration.enteringScreen,
+//     }),
+//   }),
+// }));
 
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  boxSizing: "border-box",
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
-}));
+// const Drawer = styled(MuiDrawer, {
+//   shouldForwardProp: (prop) => prop !== "open",
+// })(({ theme, open }) => ({
+//   width: drawerWidth,
+//   flexShrink: 0,
+//   whiteSpace: "nowrap",
+//   boxSizing: "border-box",
+//   ...(open && {
+//     ...openedMixin(theme),
+//     "& .MuiDrawer-paper": openedMixin(theme),
+//   }),
+//   ...(!open && {
+//     ...closedMixin(theme),
+//     "& .MuiDrawer-paper": closedMixin(theme),
+//   }),
+// }));
 
 const validationSchema = yup.object().shape({
   firstName: yup
@@ -168,6 +169,9 @@ const AdminSideBar = () => {
   const [uploadCount, setUploadCount] = useState(0);
   const [countryName, setCountryName] = useState([]);
   const [uploadKey, setUploadKey] = useState(Date.now());
+  const [url, setUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [preview, setPreview] = useState(null);
 
   const formik = useFormik({
     initialValues: {
@@ -205,18 +209,19 @@ const AdminSideBar = () => {
 
   useEffect(() => {
     const data = jwtDecoder();
-    username = data["Username"];
-    console.log("Username in dashboard" + username);
-    setUserName(data["Username"]);
-    setEmail(data["Email"]);
-    const imagePath = `${
-      import.meta.env.VITE_PUBLIC_URL
-    }ProfilePhoto/${username}/${username}.jpg`;
-    console.log("Profile: " + imagePath);
-    setFullImagePath(imagePath);
+    const username = data.Username;
+    console.log("Username in dashboard: " + username);
+    setUserName(username);
+    setEmail(data.Email);
+
     const fetchUserDetails = async () => {
+      const imgPath = `${
+        import.meta.env.VITE_PUBLIC_URL
+      }/ProfilePhoto/${username}/${username}.jpg`;
+      setFullImagePath(imgPath);
+      console.log("Fetched path : " + imgPath);
       try {
-        const response = await getUserDetails(data["Username"]);
+        const response = await getUserDetails(username);
         setFirstName(response.data.data.FirstName);
         setLastName(response.data.data.LastName);
         setPhoneNumber(response.data.data.PhoneNumber);
@@ -231,29 +236,47 @@ const AdminSideBar = () => {
         console.log(error);
       }
     };
+
     fetchUserDetails();
   }, []);
 
-  const theme = useTheme();
+  useEffect(() => {
+    debugger;
+    console.log("Image state updated: ", image);
+    const data = jwtDecoder();
+    const Username = data.Username;
+    const imgPath = `${
+      import.meta.env.VITE_PUBLIC_URL
+    }/ProfilePhoto/${Username}/${Username}.jpg`;
+    setFullImagePath(imgPath);
+  }, [image]);
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+  const handleImageUpload = async (event) => {
+    const ProfilePhoto = event.target.files[0];
+    if (ProfilePhoto) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        console.log("FileReader onload called");
+        setImage(e.target.result); // Update state
+        setUploadCount(uploadCount + 1);
+        setUploadKey(Date.now());
+      };
+      reader.readAsDataURL(ProfilePhoto);
+      const data = jwtDecoder();
+      const Username = data.Username;
+      const imgPath = `${
+        import.meta.env.VITE_PUBLIC_URL
+      }/ProfilePhoto/${Username}/${Username}.jpg`;
+      setFullImagePath(imgPath);
+    }
 
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
-  const handleClick = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
-  const handleAvatarClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleAvatarClose = () => {
-    setAnchorEl(null);
+    try {
+      const data = jwtDecoder();
+      const Username = data.Username;
+      const response = await uploadProfilePhoto(ProfilePhoto, Username);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const VisuallyHiddenInput = styled("input")({
@@ -282,51 +305,27 @@ const AdminSideBar = () => {
     setIsEditable(false);
   };
 
-  const submitUserDetails = async () => {
-    // console.log(firstName);
-    // console.log(lastName);
-    // console.log(phoneNumber);
-    // console.log(country);
-  };
+  // const theme = useTheme();
 
-  const handleImageUpload = async (event) => {
-    const ProfilePhoto = event.target.files[0];
-    if (ProfilePhoto) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        console.log("FileReader onload called");
-        setImage(e.target.result); // Update state
-        setUploadCount(uploadCount + 1);
-        setUploadKey(Date.now());
-      };
-      reader.readAsDataURL(ProfilePhoto);
-      const data = jwtDecoder();
-      const Username = data.Username;
-      const imagePath = `${
-        import.meta.env.VITE_PUBLIC_URL
-      }ProfilePhoto/${Username}/${Username}.jpg`;
-      setFullImagePath(imagePath);
-    }
+  // const handleDrawerOpen = () => {
+  //   setOpen(true);
+  // };
 
-    try {
-      const data = jwtDecoder();
-      const Username = data.Username;
-      const response = await uploadProfilePhoto(ProfilePhoto, Username);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const handleDrawerClose = () => {
+  //   setOpen(false);
+  // };
 
-  useEffect(() => {
-    debugger;
-    console.log("Image state updated: ", image);
-    const data = jwtDecoder();
-    const Username = data.Username;
-    const imagePath = `${
-      import.meta.env.VITE_PUBLIC_URL
-    }ProfilePhoto/${Username}/${Username}.jpg`;
-    setFullImagePath(imagePath);
-  }, [image]);
+  // const handleClick = (index) => {
+  //   setOpenIndex(openIndex === index ? null : index);
+  // };
+
+  // const handleAvatarClick = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
+
+  // const handleAvatarClose = () => {
+  //   setAnchorEl(null);
+  // };
 
   const FileUploadButton = styled(Button)(({ theme }) => ({
     color: "#fbd0da",
@@ -357,10 +356,7 @@ const AdminSideBar = () => {
   //   return `https://flagpedia.net/data/flags-mini/${countryName.toLowerCase()}.png`;
   // };
 
-  // const fullImagePath = `${
-  //   import.meta.env.VITE_PUBLIC_URL
-  // }ProfilePhoto/${userName}/${userName}.jpg`;
-  // console.log("Profile image path: " + fullImagePath);
+  
 
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
