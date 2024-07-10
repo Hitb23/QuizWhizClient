@@ -8,7 +8,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-
+import { SlNote } from "react-icons/sl";
 import CssBaseline from "@mui/material/CssBaseline";
 import classes from "./style.module.css";
 import AuthHeader from "../../components/header/auth-header";
@@ -41,6 +41,8 @@ import {
 import jwtDecoder from "../../services/jwtDecoder";
 
 import ViewQuizModal from "../../components/dialog-boxes/view-quiz";
+import QuizEditTable from "../../components/admin-quiz-edit";
+import { HashLoader } from "react-spinners";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -98,7 +100,7 @@ const AdminDashboard = () => {
         setDifficultyList(difficulties.data.data);
         setCategoryList(categories.data.data);
         SetFilteredData(data);
-     
+        console.log(data)
         const status = await getAllStatusCount();
         SetCountOfPending(status?.data?.data?.PendingCount);
         SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
@@ -236,7 +238,7 @@ const AdminDashboard = () => {
   }, []);
 
   return (
-    <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>
+    <div  className={`${classes["bgimage"]} d-flex m-0 bg-white`}>
       <CssBaseline />
       {/* Admin offcanvas with navbar */}
       <AdminSlider
@@ -246,7 +248,7 @@ const AdminDashboard = () => {
         userName={jwtDecoder().userName}
       />
       {/* Main Content */}
-      <Box className={`container`} component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box className='container h-100' component="main" sx={{ boxSizing:'border-box', p: 3}} style={{background:'white'}}>
         <DrawerHeader />
         <div className="mt-5 row">
           <CardComponent
@@ -289,39 +291,39 @@ const AdminDashboard = () => {
               autoComplete="off"
               sx={{
                 width: "100%",
-                backgroundColor: "#3d3189",
-                color: "#fada65 !important",
+                backgroundColor: "#fffff",
+                color: "#21201e !important",
                 boxShadow: "none",
                 "& .MuiOutlinedInput-root": {
                   "& fieldset": {
-                    border: "1px solid #fada65",
-                    color: "#fada65",
-                    borderColor: "#fada65",
+                    border: "1px solid #21201e",
+                    color: "#21201e",
+                    borderColor: "#21201e",
                   },
                   "&:hover fieldset": {
-                    border: "1px solid #fada65",
-                    color: "#fada65",
-                    borderColor: "#fada65",
+                    border: "1px solid #21201e",
+                    color: "#21201e",
+                    borderColor: "#21201e",
                   },
                   "&.Mui-focused fieldset": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65",
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e",
                   },
                   "& .MuiInputBase-input": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 },
               }}
               InputLabelProps={{
                 sx: {
-                  color: "#fada65",
+                  color: "#21201e",
                   paddingLeft: "0.2rem",
                   paddingRight: "0.2rem",
                   "&:hover": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                   "&.Mui-focused": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 },
               }}
@@ -333,14 +335,14 @@ const AdminDashboard = () => {
               <InputLabel
                 id="demo-multiple-name-label"
                 sx={{
-                  color: "#fada65",
+                  color: "#21201e",
                   paddingLeft: "0.2rem",
                   paddingRight: "0.2rem",
                   "&:hover": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                   "&.Mui-focused": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 }}
               >
@@ -354,23 +356,23 @@ const AdminDashboard = () => {
                 label="Difficulty"
                 MenuProps={MenuProps}
                 sx={{
-                  backgroundColor: "#3d3189",
-                  color: "#fada65",
+                  backgroundColor: "#fffff",
+                  color: "#21201e",
                   boxShadow: "none",
                   "& .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Always set the border color to #fada65
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Always set the border color to #21201e
                   },
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Maintain the border color on focus
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Maintain the border color on focus
                   },
                   "&:hover .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Maintain the border color on hover
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Maintain the border color on hover
                   },
                   "& .MuiSvgIcon-root": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 }}
               >
@@ -391,14 +393,14 @@ const AdminDashboard = () => {
               <InputLabel
                 id="demo-multiple-name-label"
                 sx={{
-                  color: "#fada65",
+                  color: "#21201e",
                   paddingLeft: "0.2rem",
                   paddingRight: "0.2rem",
                   "&:hover": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                   "&.Mui-focused": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 }}
               >
@@ -412,23 +414,23 @@ const AdminDashboard = () => {
                 label="Category"
                 MenuProps={MenuProps}
                 sx={{
-                  backgroundColor: "#3d3189",
-                  color: "#fada65",
+                  backgroundColor: "#fffff",
+                  color: "#21201e",
                   boxShadow: "none",
                   "& .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Always set the border color to #fada65
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Always set the border color to #21201e
                   },
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Maintain the border color on focus
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Maintain the border color on focus
                   },
                   "&:hover .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Maintain the border color on hover
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Maintain the border color on hover
                   },
                   "& .MuiSvgIcon-root": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 }}
               >
@@ -451,37 +453,32 @@ const AdminDashboard = () => {
           
         </div>
 
-        <h4 className="text-white ms-2">
-          {params.id.substring(0, 1).toUpperCase() + params.id.substring(1)}  Contest
+        <h4 className="ms-2 text-black my-3" >
+          {params.id.substring(0, 1).toUpperCase() + params.id.substring(1)}  Contest 
         </h4>
         <div className="row">
-          <QuizCard
-          title='Tech Questions'
-          description='This is A Quiz Competition'
-          date='21 June 2025'
-          categoryName='Technology'
-          onClickHandler={ViewDetailsHandler}
-          Link='gshgahGD@'
-        />
+         
           {filteredData.length > 0 ? (
-            filteredData.map((ele, idx) => (
-              <QuizCard
-                title={ele.Title}
-                description={ele.Description}
-                date={ele.ScheduledDate}
-                categoryName={ele.CategoryName}
-                key={idx}
-                onClickHandler={ViewDetailsHandler}
-                Link={ele.QuizLink}
-              />
-            ))
+            
+              // <QuizCard
+              //   title={ele.Title}
+              //   description={ele.Description}
+              //   date={ele.ScheduledDate}
+              //   categoryName={ele.CategoryName}
+              //   key={idx}
+              //   onClickHandler={ViewDetailsHandler}
+              //   Link={ele.QuizLink}
+              // />
+              <QuizEditTable data={filteredData} Status={params.id}/>
           ) : (
             // <img
             //   src={NO_DATA_FOUND}
             //   alt="No Data Available"
             //   style={{height:'500px',width:'500px'}}
             // />
-            <h2 className="text-center text-white">No Data Available</h2>
+            <div className="d-flex justify-content-center align-items-center">
+            <HashLoader className="text-center me-2" style={{color:'#a89ee9'}}/> 
+            </div>
           )}
         </div>
         {filteredData.length > 0 && (
@@ -496,14 +493,14 @@ const AdminDashboard = () => {
               <InputLabel
                 id="demo-simple-select-autowidth-label"
                 sx={{
-                  color: "#fada65",
+                  color: "#21201e",
                   paddingLeft: "0.2rem",
                   paddingRight: "0.2rem",
                   "&:hover": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                   "&.Mui-focused": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 }}
               >
@@ -517,23 +514,23 @@ const AdminDashboard = () => {
                 autoWidth
                 label="Records"
                 sx={{
-                  backgroundColor: "#3d3189",
-                  color: "#fada65",
+                  backgroundColor: "#fffff",
+                  color: "#21201e",
                   boxShadow: "none",
                   "& .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Always set the border color to #fada65
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Always set the border color to #21201e
                   },
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Maintain the border color on focus
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Maintain the border color on focus
                   },
                   "&:hover .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Maintain the border color on hover
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Maintain the border color on hover
                   },
                   "& .MuiSvgIcon-root": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 }}
               >
@@ -550,30 +547,30 @@ const AdminDashboard = () => {
               onChange={handlePageChange}
               sx={{
                 "& .MuiButtonBase-root": {
-                  backgroundColor: "#3d3189",
-                  color: "#fada65",
-                  border: "1px solid #fada65",
+                  backgroundColor: "#fffff",
+                  color: "#21201e",
+                  border: "1px solid #21201e",
                   marginTop: "10px",
                   marginBottom: "10px",
                   "&:hover": {
-                    backgroundColor: "#fada65",
+                    backgroundColor: "#ffe541",
                     color: "#000000",
                   },
                 },
                 "& .MuiPaginationItem-root.Mui-selected": {
-                  backgroundColor: "#fada65",
+                  backgroundColor: "#ffe541",
                   color: "#000000",
-                  border: "1px solid #fada65",
+                  border: "1px solid #21201e",
                   "&:hover": {
-                    backgroundColor: "#fada65",
+                    backgroundColor: "#ffe541",
                     color: "#000000",
                   },
                 },
                 "& .MuiPaginationItem-ellipsis": {
                   fontWeight: "bolder",
-                  color: "#fada65",
+                  color: "#21201e",
                   "&:hover": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 },
                 "@media (max-width: 600px)": {
@@ -585,8 +582,7 @@ const AdminDashboard = () => {
           </div>
         )}
       </Box>
-    </Box>
-    
+    </div>
   );
 };
 export default AdminDashboard;

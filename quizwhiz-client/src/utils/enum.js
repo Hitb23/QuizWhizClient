@@ -48,3 +48,8 @@ export const statusEnum={
   "active": 3,
   "completed": 4
 }
+export const Difficulties={
+   1:'Easy',
+   2:'Medium',
+   3:'Hard',
+}

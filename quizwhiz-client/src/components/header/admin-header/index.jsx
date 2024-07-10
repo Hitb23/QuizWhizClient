@@ -87,13 +87,13 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
         position="fixed"
         open={open}
         sx={{
-          backgroundColor: "#6F41DB",
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
           padding: "1rem",
         }}
+        className={`${classes['nav-color']}`}
       >
         <Toolbar>
           <IconButton
@@ -220,12 +220,12 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
       <Drawer
         variant="permanent"
         open={open}
-        sx={{ backgroundColor: "#3D3189" }}
+        sx={{ backgroundColor: "#a89ee9",height:'100%' }}
       >
-        <Paper sx={{ backgroundColor: "#3D3189", height: "100vh" }}>
+        <Paper sx={{ backgroundColor: "#6f41db", height: "100%" }}>
           <DrawerHeader
             sx={{
-              backgroundColor: "#3D3189",
+              backgroundColor: "#6f41db !important",
               paddingY: "2rem",
               display: "flex",
               justifyContent: "space-between",
@@ -235,30 +235,30 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             <Box sx={{ margin: "auto" }}>
               <Link to="/">
                 <img
-                  className={`mx-auto ${classes["logo-image"]}`}
+                  className={`mx-auto ${classes["logo-image"]} `}
                   src={Logo}
                   height={70}
                 />
               </Link>
             </Box>
             <IconButton
-              sx={{ backgroundColor: "#3D3189" }}
+              sx={{ backgroundColor: "#6f41db" }}
               onClick={handleDrawerClose}
             >
               {theme.direction === "rtl" ? (
-                <ChevronRightIcon sx={{color: "#fada65"}} />
+                <ChevronRightIcon sx={{color: "#fffff"}} />
               ) : (
-                <ChevronLeftIcon sx={{color: "#fada65"}} />
+                <ChevronLeftIcon sx={{color: "#fffff"}} />
               )}
             </IconButton>
           </DrawerHeader>
-          <Divider sx={{ backgroundColor: "#3D3189" }} />
-          <List sx={{ backgroundColor: "#3D3189" }}>
+          <Divider sx={{ backgroundColor: "#a89ee9" }} />
+          <List sx={{ backgroundColor: "#6f41db" }}>
             {adminDashboardSections.map((text, index) => (
               <ListItem
                 key={text.title}
                 disablePadding
-                sx={{ display: "block", color: "fada65" }}
+                sx={{ display: "block", color: "#a89ee9" }}
               >
                 <ListItemButton
                   onClick={() => handleClick(index)}
