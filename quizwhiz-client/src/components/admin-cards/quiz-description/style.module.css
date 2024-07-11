@@ -1,0 +1,10 @@
+.div-underline {
+  border-bottom: none;
+}
+
+
+@media (max-width: 576px) {
+  .div-underline {
+    border-bottom: 1px solid #fada65 !important;
+  }
+}

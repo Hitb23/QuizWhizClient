@@ -76,7 +76,6 @@ const Quizzes = () => {
           CurrentPage: 1,
           SearchValue: "",
         });
-        console.log("All data: ");
         const data = allData.data.data.GetQuizzes;
         setDifficultyList(difficulties.data.data);
         setCategoryList(categories.data.data);

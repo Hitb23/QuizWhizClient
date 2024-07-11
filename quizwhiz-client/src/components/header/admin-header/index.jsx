@@ -42,7 +42,7 @@ import { DrawerHeader, AppBar, Drawer } from "../../admin-components/index";
 import { RoutePaths } from "../../../utils/enum";
 import jwtDecoder from "../../../services/jwtDecoder";
 
-const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
+const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [fullImagePath, setFullImagePath] = useState("");
@@ -95,9 +95,10 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
           alignItems: "center",
           padding: "1rem",
         }}
+        className={`${classes["nav-color"]}`}
       >
         <Toolbar>
-          <IconButton
+          {/* <IconButton
             color="black"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
@@ -110,12 +111,12 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
             }}
           >
             <MenuIcon />
-          </IconButton>
-          {open ? null : (
-            <Link to="/">
-              <img className={classes["logo-image"]} src={Logo} height={70} />
-            </Link>
-          )}
+          </IconButton> */}
+          {/* {open ? null : ( */}
+          <Link to="/">
+            <img className={classes["logo-image"]} src={Logo} height={70} />
+          </Link>
+          {/* )} */}
         </Toolbar>
         <Box
           sx={{
@@ -218,11 +219,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
           </Menu>
         </Box>
       </AppBar>
-      <Drawer
-        variant="permanent"
-        open={open}
-        sx={{ background: "#3D3189" }}
-      >
+      {/* <Drawer variant="permanent" open={open} sx={{ background: "#3D3189" }}>
         <Paper sx={{ background: "#3D3189", height: "100vh" }}>
           <DrawerHeader
             sx={{
@@ -236,7 +233,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
             <Box sx={{ margin: "auto" }}>
               <Link to="/">
                 <img
-                  className={`mx-auto ${classes["logo-image"]}`}
+                  className={`mx-auto ${classes["logo-image"]} `}
                   src={Logo}
                   height={70}
                 />
@@ -247,9 +244,9 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
               onClick={handleDrawerClose}
             >
               {theme.direction === "rtl" ? (
-                <ChevronRightIcon sx={{color: "#fada65"}} />
+                <ChevronRightIcon sx={{ color: "#fffff" }} />
               ) : (
-                <ChevronLeftIcon sx={{color: "#fada65"}} />
+                <ChevronLeftIcon sx={{ color: "#fffff" }} />
               )}
             </IconButton>
           </DrawerHeader>
@@ -259,7 +256,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
               <ListItem
                 key={text.title}
                 disablePadding
-                sx={{ display: "block", color: "fada65" }}
+                sx={{ display: "block", color: "#a89ee9" }}
               >
                 <ListItemButton
                   onClick={() => handleClick(index)}
@@ -270,33 +267,40 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName}) => {
                         ? "#3D3189"
                         : "inherit",
                     "&:hover": {
-                      background:
-                        openIndex === index ? "#000000" : "#f5f5f5",
+                      background: openIndex === index ? "#000000" : "#f5f5f5",
                       color: openIndex === index ? "#000000" : "inherit",
                     },
                   }}
                 >
-                  <ListItemIcon sx={{ display: open ? "none" : "block", color: "#fada65" }}>
+                  <ListItemIcon
+                    sx={{ display: open ? "none" : "block", color: "#fada65" }}
+                  >
                     {text.icon}
                   </ListItemIcon>
-                  <ListItemText variant="h4" primary={text.title} sx={{color: "#fada65"}} />
+                  <ListItemText
+                    variant="h4"
+                    primary={text.title}
+                    sx={{ color: "#fada65" }}
+                  />
                 </ListItemButton>
                 <Collapse in={openIndex === index} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
                     <ListItemButton sx={{ pl: 4 }}>
-                      <ListItemIcon sx={{color: "#fada65"}}>
+                      <ListItemIcon sx={{ color: "#fada65" }}>
                         <StarBorder />
                       </ListItemIcon>
-                      <ListItemText primary="Starred" sx={{color: "#fada65"}}/>
+                      <ListItemText
+                        primary="Starred"
+                        sx={{ color: "#fada65" }}
+                      />
                     </ListItemButton>
                   </List>
                 </Collapse>
-                {/* </ListItemButton> */}
               </ListItem>
             ))}
           </List>
         </Paper>
-      </Drawer>
+      </Drawer> */}
     </>
   );
 };

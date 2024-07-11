@@ -15,7 +15,7 @@ import CreateQuizModal from "../components/dialog-boxes/create-quiz";
 import AddQuestions from "../components/dialog-boxes/add-questions";
 import QuizDescription from "../pages/problem-description";
 import QuizList from "../pages/quiz-list";
-
+import Quiz from "../pages/QuizHub";
 
 export const ROUTES = [
   {
@@ -69,33 +69,38 @@ export const ROUTES = [
     roles: [Role.Admin, Role.Contestant],
   },
   {
-    path: '/admin/dashboard/:id',
+    path: "/admin/dashboard/:id",
     element: <AdminCategory />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path:'/create-new-quiz/:token',
-    element:<CreateQuizModal/>,
-    roles:[Role.Admin],
+    path: "/create-new-quiz/:token",
+    element: <CreateQuizModal />,
+    roles: [Role.Admin],
   },
   {
-    path:'/get-quiz-details/:quizLink',
-    element:<AddQuestions/>,
+    path: "/get-quiz-details/:quizLink",
+    element: <AddQuestions />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path:'/add-quiz-questions/:token',
-    element:<AddQuestions/>,
-    roles:[Role.Admin]
+    path: "/add-quiz-questions/:token",
+    element: <AddQuestions />,
+    roles: [Role.Admin],
   },
   {
-    path:'/admin-dashboard/:id/:quizLink',
-    element:<QuizDescription/>,
-    roles:[Role.Admin, Role.Contestant, Role.Public]
+    path: "/admin-dashboard/:id/:quizLink",
+    element: <QuizDescription />,
+    roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path:'/user-dashboard/:quizLink',
-    element:<UserDashboard/>,
-    roles:[Role.Admin, Role.Contestant, Role.Public]
-  }
+    path: "/user-dashboard/:quizLink",
+    element: <UserDashboard />,
+    roles: [Role.Admin, Role.Contestant, Role.Public],
+  },
+  {
+    path: "/admin-dashboard/quiz",
+    element: <Quiz />,
+    roles: [Role.Admin, Role.Contestant, Role.Public],
+  },
 ];

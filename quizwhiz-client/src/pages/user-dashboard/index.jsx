@@ -10,13 +10,11 @@ import { HubConnectionBuilder } from "@microsoft/signalr";
 const UserDashboard = () => {
   const { quizLink } = useParams();
   const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [intervalId, setIntervalId] = useState(null);
   const [questionCount, setQuestionCount] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [questionId, setQuestionId] = useState(0);
   const [connection, setConnection] = useState(null);
   const [correctAnswer, setCorrectAnswer] = useState(null);
-  // const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     async function fetchQuizData() {
@@ -32,9 +30,6 @@ const UserDashboard = () => {
       .withUrl("https://localhost:44361/quizhub")
       .build();
     setConnection(connection);
-    // connection.on("ReceiveMessage", (user, message) => {
-    //   setMessages((prevMessages) => [...prevMessages, { user, message }]);
-    // });
 
     connection.on("ReceiveQuestion", (question) => {
       console.log("Question : ");
@@ -59,47 +54,7 @@ const UserDashboard = () => {
     });
 
     fetchQuestion(0);
-    setTimeout(() => attendQuiz(), 0);
-
-    // return () => {
-    //   connection.stop();
-    // };
   }, []);
-
-  useEffect(() => {
-    if (questionCount <= totalQuestions) {
-      console.log(questionCount);
-      console.log(totalQuestions);
-      attendQuiz();
-    }
-  }, [questionCount, totalQuestions]);
-
-  useEffect(() => {
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-    };
-  }, [intervalId]);
-
-  const attendQuiz = () => {
-    if (intervalId) {
-      clearInterval(intervalId);
-    }
-    var newIntervalId = 0;
-    if (questionCount !== 0) {
-      newIntervalId = setInterval(() => {
-        fetchQuestion(questionCount + 1);
-        setTimeout(() => {
-          getCorrectAnswer(quizLink, questionCount);
-        }, 3000); // Display correct answer at the 17th second
-      }, 5000);
-    } else {
-      fetchQuestion(questionCount);
-    }
-
-    setIntervalId(newIntervalId);
-  };
 
   const fetchQuestion = async (updatedQuestionCount) => {
     if (questionCount <= totalQuestions) {
@@ -122,25 +77,17 @@ const UserDashboard = () => {
     }
   };
 
+  useEffect(() => {
+    if (questionCount <= totalQuestions) {
+      fetchQuestion(questionCount);
+      getCorrectAnswer(quizLink, questionCount);
+    }
+  }, [questionCount, totalQuestions]);
+
   return (
     <React.Fragment>
       <h1>User Dashboard</h1>
       <ToastContainer />
-      {/* <ul>
-        {messages.map((message, index) => (
-          <li key={index}>
-            {message.user}: {message.message}
-          </li>
-        ))}
-      </ul>
-      <input
-        type="text"
-        value={newMessage}
-        onChange={(event) => setNewMessage(event.target.value)}
-        placeholder="Type a message..."
-      />
-      <button onClick={handleSendMessage}>Send</button> */}
-
       <h1 className="text-white">Current Question:</h1>
       <div className="d-flex justify-content-center">
         <div className="text-white">
@@ -190,8 +137,6 @@ const UserDashboard = () => {
       ) : (
         <div className="text-white">No question available</div>
       )}
-
-      {/* <div className="text-white">Correct answer: {correctAnswer}</div> */}
     </React.Fragment>
   );
 };

@@ -34,6 +34,7 @@ const Welcome =  () => {
   }, []);
   return (
     <React.Fragment>
+      <div className={`${classes['full-screen']}`}>
       <LandingHeader />
       <main className={classes["main-component"]}>
         <div className={`text-center`}>
@@ -51,6 +52,7 @@ const Welcome =  () => {
         </div>
       </main>
       <LandingFooter />
+      </div>
     </React.Fragment>
   );
 }

@@ -7,6 +7,7 @@ import { FaListCheck } from "react-icons/fa6";
 import classes from "./style.module.css";
 import { DIFFICULTIES, CATEGORIES } from "../../../utils/enum";
 import { useNavigate } from "react-router-dom";
+import QuizDescription from "../quiz-description";
 const QuizCard = ({
   title,
   scheduledDate,
@@ -22,12 +23,11 @@ const QuizCard = ({
     console.log(quizLink);
   }
   const [minutes, setMinutes] = useState(0);
-  
+  const [isModalOpen, setIsModalOpen] = useState(0);
   var quizDate = new Date(scheduledDate);
 
   useEffect(() => {
     setMinutes(Math.round((quizDate.getTime() - new Date().getTime()) / 60000));
-    console.log(minutes);
   });
 
   var categoryName = CATEGORIES[categoryId];
@@ -65,6 +65,14 @@ const QuizCard = ({
 
   const navigateToQuiz = () => {
     navigate(`/user-dashboard/${quizLink}`);
+  }
+  const viewDetailsHandler = () => {
+    setIsModalOpen(1);
+    console.log("open");
+  };
+
+  const closeModalHandler = () => {
+    setIsModalOpen(0);
   }
 
   return (
@@ -131,7 +139,7 @@ const QuizCard = ({
             </div>
           ) : null}
           <div className="d-none d-xl-inline">
-            <button type="submit" className={classes["join-now-button"]}>
+            <button type="submit" className={classes["join-now-button"]} onClick={viewDetailsHandler}>
               View Details
             </button>
           </div>
@@ -179,12 +187,17 @@ const QuizCard = ({
             </div>
           ) : null}
           <div>
-            <button type="submit" className={classes["join-now-button"]}>
+            <button
+              type="submit"
+              className={classes["join-now-button"]}
+              onClick={viewDetailsHandler}
+            >
               View Details
             </button>
           </div>
         </div>
       </div>
+      {isModalOpen == 1 ? <QuizDescription quizLink={quizLink} modalClose={closeModalHandler} /> : null}
     </>
   );
 };
