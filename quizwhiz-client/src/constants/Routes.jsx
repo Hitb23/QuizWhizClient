@@ -17,6 +17,7 @@ import CreateQuizModal from "../components/dialog-boxes/create-quiz";
 import AddQuestions from "../components/dialog-boxes/add-questions";
 import QuizDescription from "../pages/problem-description";
 import QuizList from "../pages/quiz-list";
+import Quiz from "../pages/QuizHub";
 
 
 export const ROUTES = [
@@ -93,6 +94,11 @@ export const ROUTES = [
   {
     path:'/admin-dashboard/:id/:quizLink',
     element:<QuizDescription/>,
+    roles:[Role.Admin, Role.Contestant, Role.Public]
+  },
+  {
+    path:'/admin-dashboard/quiz',
+    element:<Quiz/>,
     roles:[Role.Admin, Role.Contestant, Role.Public]
   }
 ];
