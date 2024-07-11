@@ -159,3 +159,25 @@ export const updateQuizDetails = async (data) => {
     console.log(error);
   }
 };
+export const getQuizDetails = async (Link) => {
+  return await axios.get(API_URLS.QUIZ_DETAILS + Link, {
+    headers: {
+      "Content-Type": "application/json",
+      // token: "Bearer " + localStorage.getItem("token")
+    },
+  });
+};
+
+export const DeleteQuiz = async (quizLink) => {
+  // try {
+    const response = await axios.get(API_URLS.DELETE_QUIZ + quizLink, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${CurrentToken}`,
+      },
+    });
+    return response.data;
+  // } catch (error) {
+  //   console.log(error);
+  // }
+};

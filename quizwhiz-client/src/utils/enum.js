@@ -8,7 +8,7 @@ export const RoutePaths = {
   ForgotPassword: "/forgot-password",
   ResetPassword: "/reset-password",
   AdminDashboard: "/admin-dashboard/upcoming",
-  UserDashboard: "/user-dashboard",
+  Quizzes: "/quizzes",
   PageNotFound: "/page-not-found",
   MyProfile: "/my-profile",
   AdminLogin: "/admin-login",
@@ -23,6 +23,7 @@ export const Role = {
   Admin: "Admin",
   Contestant: "Contestant",
 };
+
 export const API_URLS = {
   LOGIN_URL: "/auth/login/",
   ADMIN_URL: "/auth/admin-login/",
@@ -45,17 +46,36 @@ export const API_URLS = {
   GET_QUIZ_QUESTIONS : `/quiz/get-quiz-questions?quizLink=`,
   UPDATE_QUIZ_QUESTION:`/quiz/update-quiz-question`,
   DELETE_QUIZ_QUESTION:`/quiz/delete-quiz-question?questionId=`,
-  UPDATE_QUIZ_DETAILS:"/quiz/update-quiz-details"
+  UPDATE_QUIZ_DETAILS:"/quiz/update-quiz-details",
+  GET_SINGLE_QUESTION:'/quiz/get-single-quiz-question',
+  GET_COUNT_OF_QUESTIONS: '/quiz/get-count-of-questions',
+  QUIZ_DETAILS:'/quiz/get-quiz-details?quizLink=',
+  DELETE_QUIZ:'/quiz/delete-quiz?quizLink='
 };
 export const statusEnum={
   "pending": 1,
   "upcoming": 2,
   "active": 3,
   "completed": 4
-};
+}
 
 export const questionTypeEnum={
   1: "MCQ",
   2: "MSQ",
   3: "True-False"
+
+}
+
+export const DIFFICULTIES = {
+  1: "Easy",
+  2: "Medium",
+  3: "Hard"
+}
+
+export const CATEGORIES = {
+  1: "General Knowledge",
+  2: "Entertainment",
+  3: "Education",
+  4: "Sports",
+  5: "Technology"
 }

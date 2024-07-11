@@ -36,7 +36,7 @@ export default function ViewQuizModal({ currentQuizLink }) {
   }, []);
 
   const fetchQuizDetails1 = async () => {
-    const qd = await getQuizDetailsByLink("3DSy7Xk7");
+    const qd = await getQuizDetailsByLink(currentQuizLink);
     setQuizDetail(qd.data);
   };
 
@@ -83,7 +83,7 @@ export default function ViewQuizModal({ currentQuizLink }) {
             </Button>
           </Toolbar>
         </AppBar>
-        <ViewQuizQuestions currentQuizLink={"3DSy7Xk7"} />
+        <ViewQuizQuestions currentQuizLink={currentQuizLink} />
       </Dialog>
     </Fragment>
   );

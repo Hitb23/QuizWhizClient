@@ -23,7 +23,7 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { CREATE_QUIZ_VALIDATIONS } from "../../../validations/createQuizValidation";
 import { Formik, Form, Field } from "formik";
 import { styled } from "@mui/material/styles";
-import { Style } from "@mui/icons-material";
+import { Edit, Style } from "@mui/icons-material";
 import AddQuestions from "../add-questions";
 import Typography from "@mui/material/Typography";
 import classes from "./style.module.css";
@@ -40,9 +40,9 @@ import {
 import Swal from "sweetalert2";
 import ReactDOM from "react-dom";
 import { ToastContainer, toast } from "react-toastify";
-import ViewQuizModal from "../view-quiz/index"
+import ViewQuizModal from "../view-quiz/index";
 
-export default function EditQuizModal({currentQuizLink}) {
+export default function EditQuizModal({ currentQuizLink }) {
   const [open, setOpen] = React.useState(false);
   const [categoryDetails, setCategoryDetails] = useState([]);
   const [difficultyDetails, setDifficultyDetails] = useState([]);
@@ -66,7 +66,7 @@ export default function EditQuizModal({currentQuizLink}) {
     try {
       const difficultyData = await getDifficulties();
       const categoryData = await getCategories();
-      const quizDetailResponse = await getQuizDetailsByLink("3DSy7Xk7");
+      const quizDetailResponse = await getQuizDetailsByLink(currentQuizLink);
       setCategoryDetails(categoryData.data.data);
       setDifficultyDetails(difficultyData.data.data);
       setQuizDetail(quizDetailResponse.data);
@@ -106,14 +106,21 @@ export default function EditQuizModal({currentQuizLink}) {
     }
     handleClose();
   };
+
+  const handleAddQuestion= ()=>{
+    setAddQuestionsOpen(true);
+  }
   return (
     <React.Fragment>
       <ToastContainer />
-      <button
+      {/* <button
         className={`${classes["add-quiz-btn"]}`}
         onClick={handleClickOpen}
       >
         Edit Quiz
+      </button> */}
+      <button onClick={handleClickOpen} className="btn fw-bold" style={{ background: "#a89ee9" }}>
+        <Edit />
       </button>
       <Dialog
         open={open}
@@ -155,7 +162,7 @@ export default function EditQuizModal({currentQuizLink}) {
               <DialogTitle
                 id="alert-dialog-title"
                 className={`${classes["dialog-title"]} text-center`}
-                sx={{backgroundColor:"#fada65",color:"#6F41DB"}}
+                sx={{ backgroundColor: "#fada65", color: "#6F41DB" }}
               >
                 <strong>Edit Quiz</strong>
               </DialogTitle>
@@ -441,13 +448,12 @@ export default function EditQuizModal({currentQuizLink}) {
                 >
                   Save
                 </Button>
-                <ViewQuizModal currentQuizLink={currentQuizLink}/>
+                <ViewQuizModal currentQuizLink={currentQuizLink} />
               </DialogActions>
             </Form>
           )}
         </Formik>
       </Dialog>
-    
     </React.Fragment>
   );
 }

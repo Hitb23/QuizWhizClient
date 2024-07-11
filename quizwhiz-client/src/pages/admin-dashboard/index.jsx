@@ -8,7 +8,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-
+import { SlNote } from "react-icons/sl";
 import CssBaseline from "@mui/material/CssBaseline";
 import classes from "./style.module.css";
 import AuthHeader from "../../components/header/auth-header";
@@ -17,24 +17,18 @@ import AdminSideBar from "../../components/admin-sidebar";
 import CreateQuizModal from "../../components/dialog-boxes/create-quiz";
 import CardComponent from "../../components/admin-cards/quiz-category";
 
-
 import {
   faQuestionCircle,
   faCalendarAlt,
   faPlay,
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { DrawerHeader } from "../../components/admin-components";
 import AdminSlider from "../../components/header/admin-header";
 import QuizCard from "../../components/admin-cards/quiz-card";
 import Pagination from "@mui/material/Pagination";
-import {
-  Search,
-  SearchIconWrapper,
-  StyledInputBase,
-} from "../../components/admin-components";
-import SearchIcon from "@mui/icons-material/Search";
+import { statusEnum } from "../../utils/enum";
 import { getUserDetails } from "../../services/auth.service";
 import {
   changeRecordsSize,
@@ -44,10 +38,12 @@ import {
   getDifficulties,
 } from "../../services/admindashboard.service";
 import jwtDecoder from "../../services/jwtDecoder";
-import NO_DATA_FOUND from "../../assets/Server.gif";
-import { statusEnum } from "../../utils/enum";
+
 import ViewQuizModal from "../../components/dialog-boxes/view-quiz";
 import EditQuizModal from "../../components/dialog-boxes/edit-quiz-details";
+import QuizEditTable from "../../components/admin-quiz-edit";
+import { HashLoader } from "react-spinners";
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -65,7 +61,7 @@ const AdminDashboard = () => {
   const [category, setCategory] = useState(0);
   const [difficultyList, setDifficultyList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
-  const [Records, setRecords] = useState(4);
+  const [Records, setRecords] = useState(5);
   const [PageSize, SetPageSize] = useState(1);
   const [currentPage, SetCurrentPage] = useState(1);
   const [filteredData, SetFilteredData] = useState([]);
@@ -75,7 +71,6 @@ const AdminDashboard = () => {
   const [countOfUpcoming, SetCountOfUpcoming] = useState(null);
   const [countOfActive, SetCountOfActive] = useState(null);
   const [countOfCompleted, SetCountOfCompleted] = useState(null);
-
   const navigate = useNavigate();
   const params = useParams();
   var username = "";
@@ -103,6 +98,7 @@ const AdminDashboard = () => {
         setDifficultyList(difficulties.data.data);
         setCategoryList(categories.data.data);
         SetFilteredData(data);
+        console.log(data);
         const status = await getAllStatusCount();
         SetCountOfPending(status?.data?.data?.PendingCount);
         SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
@@ -118,6 +114,7 @@ const AdminDashboard = () => {
 
     fetchData();
   }, [Records, params]);
+
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
@@ -132,7 +129,7 @@ const AdminDashboard = () => {
     };
     fetchUserDetails();
   }, []);
-  
+
   const navigateToCategory = (id) => {
     navigate(`/admin-dashboard/${id}`);
   };
@@ -181,6 +178,7 @@ const AdminDashboard = () => {
       SetFilteredData([]);
     }
   };
+
   const searchHandler = async (e) => {
     const searchedWord = e.target.value;
     SetSearchedWord(searchedWord);
@@ -197,6 +195,37 @@ const AdminDashboard = () => {
     } catch (error) {
       console.log("error:", error);
       SetFilteredData([]);
+    }
+  };
+
+  const ViewDetailsHandler = (e) => {
+    navigate(`/admin-dashboard/${params.id}/${e}`);
+  };
+  const onDeleteHandler = async () => {
+    try {
+      const result = await filterByCategory({
+        StatusId: statusEnum[params.id],
+        DifficultyId: difficulty,
+        CategoryId: category,
+        CurrentPage: currentPage,
+        SearchValue: searchedWord,
+      });
+      SetFilteredData(result.data.data.GetQuizzes);
+    } catch (error) {
+      console.log("error:", error);
+      SetFilteredData([]);
+    }
+    try{
+        const status = await getAllStatusCount();
+        SetCountOfPending(status?.data?.data?.PendingCount);
+        SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
+        SetCountOfActive(status?.data?.data?.ActiveCount);
+        SetCountOfCompleted(status?.data?.data?.CompletedCount);
+        SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
+        setRecords(allData?.data?.data?.Pagination?.RecordSize);
+    }
+    catch(error){
+       console.log(error)
     }
   };
   const handleCategory = async (e) => {
@@ -216,26 +245,11 @@ const AdminDashboard = () => {
       SetFilteredData([]);
     }
   };
-  var username = "";
-
-  useEffect(() => {
-    const data = jwtDecoder();
-    username = data["Username"];
-    const fetchUserDetails = async () => {
-      try {
-        const response = await getUserDetails(data["Username"]);
-        setFirstName(response.data.data.FirstName);
-        setLastName(response.data.data.LastName);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchUserDetails();
-  }, []);
 
   return (
-    <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>
+    <div
+      className={`${classes["bgimage"]} ${classes["specific-page"]} d-flex m-0 bg-white`}
+    >
       <CssBaseline />
       {/* Admin offcanvas with navbar */}
       <AdminSlider
@@ -245,9 +259,14 @@ const AdminDashboard = () => {
         userName={jwtDecoder().userName}
       />
       {/* Main Content */}
-      <Box className={`container`} component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box
+        className={`container ${classes["h-100vh"]}`}
+        component="main"
+        sx={{ boxSizing: "border-box", p: 3 }}
+        style={{ background: "white" }}
+      >
         <DrawerHeader />
-        <div className="mt-5 row">
+        <div className={`mt-5 row`}>
           <CardComponent
             count={countOfUpcoming}
             text="Upcoming"
@@ -288,58 +307,57 @@ const AdminDashboard = () => {
               autoComplete="off"
               sx={{
                 width: "100%",
-                backgroundColor: "#3d3189",
-                color: "#fada65 !important",
+                backgroundColor: "#fffff",
+                color: "#21201e !important",
                 boxShadow: "none",
                 "& .MuiOutlinedInput-root": {
                   "& fieldset": {
-                    border: "1px solid #fada65",
-                    color: "#fada65",
-                    borderColor: "#fada65",
+                    border: "1px solid #21201e",
+                    color: "#21201e",
+                    borderColor: "#21201e",
                   },
                   "&:hover fieldset": {
-                    border: "1px solid #fada65",
-                    color: "#fada65",
-                    borderColor: "#fada65",
+                    border: "1px solid #21201e",
+                    color: "#21201e",
+                    borderColor: "#21201e",
                   },
                   "&.Mui-focused fieldset": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65",
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e",
                   },
                   "& .MuiInputBase-input": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 },
               }}
               InputLabelProps={{
                 sx: {
-                  color: "#fada65",
+                  color: "#21201e",
                   paddingLeft: "0.2rem",
                   paddingRight: "0.2rem",
                   "&:hover": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                   "&.Mui-focused": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 },
               }}
             />
-           
           </div>
           <div className="col-lg-2 mb-4 col-sm-6 col-12">
             <FormControl sx={{ width: "100%" }}>
               <InputLabel
                 id="demo-multiple-name-label"
                 sx={{
-                  color: "#fada65",
+                  color: "#21201e",
                   paddingLeft: "0.2rem",
                   paddingRight: "0.2rem",
                   "&:hover": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                   "&.Mui-focused": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 }}
               >
@@ -353,23 +371,23 @@ const AdminDashboard = () => {
                 label="Difficulty"
                 MenuProps={MenuProps}
                 sx={{
-                  backgroundColor: "#3d3189",
-                  color: "#fada65",
+                  backgroundColor: "#fffff",
+                  color: "#21201e",
                   boxShadow: "none",
                   "& .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Always set the border color to #fada65
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Always set the border color to #21201e
                   },
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Maintain the border color on focus
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Maintain the border color on focus
                   },
                   "&:hover .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Maintain the border color on hover
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Maintain the border color on hover
                   },
                   "& .MuiSvgIcon-root": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 }}
               >
@@ -390,14 +408,14 @@ const AdminDashboard = () => {
               <InputLabel
                 id="demo-multiple-name-label"
                 sx={{
-                  color: "#fada65",
+                  color: "#21201e",
                   paddingLeft: "0.2rem",
                   paddingRight: "0.2rem",
                   "&:hover": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                   "&.Mui-focused": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 }}
               >
@@ -411,23 +429,23 @@ const AdminDashboard = () => {
                 label="Category"
                 MenuProps={MenuProps}
                 sx={{
-                  backgroundColor: "#3d3189",
-                  color: "#fada65",
+                  backgroundColor: "#fffff",
+                  color: "#21201e",
                   boxShadow: "none",
                   "& .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Always set the border color to #fada65
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Always set the border color to #21201e
                   },
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Maintain the border color on focus
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Maintain the border color on focus
                   },
                   "&:hover .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Maintain the border color on hover
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Maintain the border color on hover
                   },
                   "& .MuiSvgIcon-root": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 }}
               >
@@ -444,35 +462,46 @@ const AdminDashboard = () => {
             </FormControl>
           </div>
           <div className="col-lg-6 mb-4 col-sm-6 col-12 d-flex justify-content-end">
-            {/* <ViewQuizModal/> */}
-            <EditQuizModal/>
-            <CreateQuizModal/>
+            <CreateQuizModal />
           </div>
-          
         </div>
 
-        <h4 className="text-white ms-2">
+        <h4 className="ms-2 text-black my-3">
           {params.id.substring(0, 1).toUpperCase() + params.id.substring(1)}{" "}
           Contest
         </h4>
         <div className="row">
           {filteredData.length > 0 ? (
-            filteredData.map((ele, idx) => (
-              <QuizCard
-                title={ele.Title}
-                description={ele.Description}
-                date={ele.ScheduledDate}
-                categoryName={ele.CategoryName}
-                key={idx}
-              />
-            ))
+            // <QuizCard
+            //   title={ele.Title}
+            //   description={ele.Description}
+            //   date={ele.ScheduledDate}
+            //   categoryName={ele.CategoryName}
+            //   key={idx}
+            //   onClickHandler={ViewDetailsHandler}
+            //   Link={ele.QuizLink}
+            // />
+            <QuizEditTable
+              data={filteredData}
+              Status={params.id}
+              reload={onDeleteHandler}
+            />
           ) : (
             // <img
             //   src={NO_DATA_FOUND}
             //   alt="No Data Available"
             //   style={{height:'500px',width:'500px'}}
             // />
-            <h2 className="text-center text-white">No Data Available</h2>
+            <div className="d-flex justify-content-center align-items-center">
+              {difficultyList.length <= 0 ? (
+                <HashLoader
+                  className="text-center me-2 mt-5"
+                  style={{ color: "#a89ee9" }}
+                />
+              ) : (
+                <h2 style={{ color: "#3d3189" }}>No Data Found</h2>
+              )}
+            </div>
           )}
         </div>
         {filteredData.length > 0 && (
@@ -487,14 +516,14 @@ const AdminDashboard = () => {
               <InputLabel
                 id="demo-simple-select-autowidth-label"
                 sx={{
-                  color: "#fada65",
+                  color: "#21201e",
                   paddingLeft: "0.2rem",
                   paddingRight: "0.2rem",
                   "&:hover": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                   "&.Mui-focused": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 }}
               >
@@ -508,29 +537,29 @@ const AdminDashboard = () => {
                 autoWidth
                 label="Records"
                 sx={{
-                  backgroundColor: "#3d3189",
-                  color: "#fada65",
+                  backgroundColor: "#fffff",
+                  color: "#21201e",
                   boxShadow: "none",
                   "& .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Always set the border color to #fada65
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Always set the border color to #21201e
                   },
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Maintain the border color on focus
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Maintain the border color on focus
                   },
                   "&:hover .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #fada65",
-                    borderColor: "#fada65", // Maintain the border color on hover
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Maintain the border color on hover
                   },
                   "& .MuiSvgIcon-root": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 }}
               >
-                <MenuItem value={4}>4</MenuItem>
-                <MenuItem value={8}>8</MenuItem>
-                <MenuItem value={12}>12</MenuItem>
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={15}>15 </MenuItem>
               </Select>
             </FormControl>
             <Pagination
@@ -541,30 +570,30 @@ const AdminDashboard = () => {
               onChange={handlePageChange}
               sx={{
                 "& .MuiButtonBase-root": {
-                  backgroundColor: "#3d3189",
-                  color: "#fada65",
-                  border: "1px solid #fada65",
+                  backgroundColor: "#fffff",
+                  color: "#21201e",
+                  border: "1px solid #21201e",
                   marginTop: "10px",
                   marginBottom: "10px",
                   "&:hover": {
-                    backgroundColor: "#fada65",
+                    backgroundColor: "#ffe541",
                     color: "#000000",
                   },
                 },
                 "& .MuiPaginationItem-root.Mui-selected": {
-                  backgroundColor: "#fada65",
+                  backgroundColor: "#ffe541",
                   color: "#000000",
-                  border: "1px solid #fada65",
+                  border: "1px solid #21201e",
                   "&:hover": {
-                    backgroundColor: "#fada65",
+                    backgroundColor: "#ffe541",
                     color: "#000000",
                   },
                 },
                 "& .MuiPaginationItem-ellipsis": {
                   fontWeight: "bolder",
-                  color: "#fada65",
+                  color: "#21201e",
                   "&:hover": {
-                    color: "#fada65",
+                    color: "#21201e",
                   },
                 },
                 "@media (max-width: 600px)": {
@@ -576,8 +605,7 @@ const AdminDashboard = () => {
           </div>
         )}
       </Box>
-    </Box>
-    
+    </div>
   );
 };
 export default AdminDashboard;

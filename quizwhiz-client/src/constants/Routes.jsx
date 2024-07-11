@@ -12,9 +12,14 @@ import AdminLogin from "../pages/admin-login";
 import MyProfile from "../pages/my-profile";
 
 import AdminCategory from "../pages/admin-category";
+
 import CreateQuizModal from "../components/dialog-boxes/create-quiz";
 import AddQuestions from "../components/dialog-boxes/add-questions";
 import ViewQuizModal from "../components/dialog-boxes/view-quiz";
+import QuizDescription from "../pages/problem-description";
+import QuizList from "../pages/quiz-list";
+import Quiz from "../pages/QuizHub";
+
 
 export const ROUTES = [
   {
@@ -48,8 +53,8 @@ export const ROUTES = [
     roles: [Role.Admin],
   },
   {
-    path: "/user-dashboard",
-    element: <UserDashboard />,
+    path: "/quizzes",
+    element: <QuizList />,
     roles: [Role.Contestant],
   },
   {
@@ -67,7 +72,6 @@ export const ROUTES = [
     element: <MyProfile />,
     roles: [Role.Admin, Role.Contestant],
   },
-
   {
     path: '/admin/dashboard/:id',
     element: <AdminCategory />,
@@ -78,19 +82,16 @@ export const ROUTES = [
     element:<CreateQuizModal/>,
     roles:[Role.Admin],
   },
-
   {
     path:'/get-quiz-details/:quizLink',
     element:<AddQuestions/>,
-    roles:[Role.Admin]
+    roles: [Role.Admin, Role.Contestant, Role.Public],
   },
-
   {
     path:'/add-quiz-questions/:quizLink',
     element:<AddQuestions/>,
     roles:[Role.Admin]
   },
-
   {
     path:'/get-quiz-questions/:quizLink',
     element:<AddQuestions/>,
@@ -102,4 +103,14 @@ export const ROUTES = [
     element:<ViewQuizModal/>,
     roles:[Role.Admin]
   },
+  {
+    path:'/admin-dashboard/:id/:quizLink',
+    element:<QuizDescription/>,
+    roles:[Role.Admin, Role.Contestant, Role.Public]
+  },
+  {
+    path:'/admin-dashboard/quiz',
+    element:<Quiz/>,
+    roles:[Role.Admin, Role.Contestant, Role.Public]
+  }
 ];

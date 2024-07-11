@@ -16,7 +16,7 @@ const LandingHeader = () => {
   if (userRole === "Admin") {
     dashboard = RoutePaths.AdminDashboard;
   } else if (userRole === "Contestant") {
-    dashboard = RoutePaths.UserDashboard;
+    dashboard = RoutePaths.Quizzes;
   }
 
   const navigate = useNavigate();
@@ -56,12 +56,16 @@ const LandingHeader = () => {
           </div>
         ) : (
           <div className={classes["header-buttons"]}>
-            {isAuthenticated && dashboard != null && (
+            {isAuthenticated && dashboard == RoutePaths.AdminDashboard && (
               <Link to={dashboard}>
                 <button className={classes["sign-up-button"]}>Dashboard</button>
               </Link>
             )}
-
+            {isAuthenticated && dashboard == RoutePaths.Quizzes && (
+              <Link to={dashboard}>
+                <button className={classes["sign-up-button"]}>Play Now</button>
+              </Link>
+            )}
             <button
               className={classes["log-out-button"]}
               onClick={logoutHandler}

@@ -102,6 +102,7 @@ const SignUp = () => {
 
   return (
     <React.Fragment>
+      <div className={`${classes['full-screen']}`}>
       <AuthHeader />
       <main className={`${classes["main-component"]} container-fluid`}>
         <div className={`row justify-content-center`}>
@@ -294,6 +295,7 @@ const SignUp = () => {
         </div>
       </main>
       <ToastContainer />
+      </div>
     </React.Fragment>
   );
 };

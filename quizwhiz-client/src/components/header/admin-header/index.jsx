@@ -52,12 +52,13 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
   const data = jwtDecoder();
   username = data["Username"];
 
+  const storedImageUrl = localStorage.getItem("profilePhotoUrl");
+
   useEffect(() => {
-    setFullImagePath(
-      `${
-        import.meta.env.VITE_PUBLIC_URL
-      }ProfilePhoto/${userName}/${userName}.jpg?${uploadCount}`
-    );
+    const imgPath = `${
+      import.meta.env.VITE_PUBLIC_URL
+    }/ProfilePhoto/${username}/${username}.jpg`;
+    setFullImagePath(imgPath);
   }, [uploadCount]);
 
   const handleDrawerOpen = () => {
@@ -87,16 +88,17 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
         position="fixed"
         open={open}
         sx={{
-          backgroundColor: "#6F41DB",
+          background: "#6F41DB",
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
           padding: "1rem",
         }}
+        className={`${classes["nav-color"]}`}
       >
         <Toolbar>
-          <IconButton
+          {/* <IconButton
             color="black"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
@@ -109,12 +111,12 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             }}
           >
             <MenuIcon />
-          </IconButton>
-          {open ? null : (
-            <Link to="/">
-              <img className={classes["logo-image"]} src={Logo} height={70} />
-            </Link>
-          )}
+          </IconButton> */}
+          {/* {open ? null : ( */}
+          <Link to="/">
+            <img className={classes["logo-image"]} src={Logo} height={70} />
+          </Link>
+          {/* )} */}
         </Toolbar>
         <Box
           sx={{
@@ -129,14 +131,14 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             sx={{
               cursor: "pointer",
               "& .MuiBadge-badge": {
-                backgroundColor: "#3D3189",
+                background: "#3D3189",
                 color: "#fada65", // This sets the text color of the badge
               },
             }}
           >
             <IoNotificationsOutline
               color="#fada65"
-              backgroundColor="#3D3189"
+              background="#3D3189"
               border="2px solid #3D3189"
               size={30}
             />
@@ -217,15 +219,11 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
           </Menu>
         </Box>
       </AppBar>
-      <Drawer
-        variant="permanent"
-        open={open}
-        sx={{ backgroundColor: "#3D3189" }}
-      >
-        <Paper sx={{ backgroundColor: "#3D3189", height: "100vh" }}>
+      {/* <Drawer variant="permanent" open={open} sx={{ background: "#3D3189" }}>
+        <Paper sx={{ background: "#3D3189", height: "100vh" }}>
           <DrawerHeader
             sx={{
-              backgroundColor: "#3D3189",
+              background: "#3D3189",
               paddingY: "2rem",
               display: "flex",
               justifyContent: "space-between",
@@ -235,67 +233,74 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             <Box sx={{ margin: "auto" }}>
               <Link to="/">
                 <img
-                  className={`mx-auto ${classes["logo-image"]}`}
+                  className={`mx-auto ${classes["logo-image"]} `}
                   src={Logo}
                   height={70}
                 />
               </Link>
             </Box>
             <IconButton
-              sx={{ backgroundColor: "#3D3189" }}
+              sx={{ background: "#3D3189" }}
               onClick={handleDrawerClose}
             >
               {theme.direction === "rtl" ? (
-                <ChevronRightIcon sx={{color: "#fada65"}} />
+                <ChevronRightIcon sx={{ color: "#fffff" }} />
               ) : (
-                <ChevronLeftIcon sx={{color: "#fada65"}} />
+                <ChevronLeftIcon sx={{ color: "#fffff" }} />
               )}
             </IconButton>
           </DrawerHeader>
-          <Divider sx={{ backgroundColor: "#3D3189" }} />
-          <List sx={{ backgroundColor: "#3D3189" }}>
+          <Divider sx={{ background: "#3D3189" }} />
+          <List sx={{ background: "#3D3189" }}>
             {adminDashboardSections.map((text, index) => (
               <ListItem
                 key={text.title}
                 disablePadding
-                sx={{ display: "block", color: "fada65" }}
+                sx={{ display: "block", color: "#a89ee9" }}
               >
                 <ListItemButton
                   onClick={() => handleClick(index)}
                   sx={{
                     borderRadius: "10px",
-                    backgroundColor:
+                    background:
                       openIndex === index || text == "Quiz Management"
                         ? "#3D3189"
                         : "inherit",
                     "&:hover": {
-                      backgroundColor:
-                        openIndex === index ? "#000000" : "#f5f5f5",
+                      background: openIndex === index ? "#000000" : "#f5f5f5",
                       color: openIndex === index ? "#000000" : "inherit",
                     },
                   }}
                 >
-                  <ListItemIcon sx={{ display: open ? "none" : "block", color: "#fada65" }}>
+                  <ListItemIcon
+                    sx={{ display: open ? "none" : "block", color: "#fada65" }}
+                  >
                     {text.icon}
                   </ListItemIcon>
-                  <ListItemText variant="h4" primary={text.title} sx={{color: "#fada65"}} />
+                  <ListItemText
+                    variant="h4"
+                    primary={text.title}
+                    sx={{ color: "#fada65" }}
+                  />
                 </ListItemButton>
                 <Collapse in={openIndex === index} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
                     <ListItemButton sx={{ pl: 4 }}>
-                      <ListItemIcon sx={{color: "#fada65"}}>
+                      <ListItemIcon sx={{ color: "#fada65" }}>
                         <StarBorder />
                       </ListItemIcon>
-                      <ListItemText primary="Starred" sx={{color: "#fada65"}}/>
+                      <ListItemText
+                        primary="Starred"
+                        sx={{ color: "#fada65" }}
+                      />
                     </ListItemButton>
                   </List>
                 </Collapse>
-                {/* </ListItemButton> */}
               </ListItem>
             ))}
           </List>
         </Paper>
-      </Drawer>
+      </Drawer> */}
     </>
   );
 };

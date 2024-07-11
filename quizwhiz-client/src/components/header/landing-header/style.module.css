@@ -63,7 +63,8 @@
     height: 70px;
   }
 
-  .sign-up-button {
+  .sign-up-button,
+  .log-out-button {
     padding: 0.7rem 0.8rem 0.7rem 0.8rem;
   }
 
