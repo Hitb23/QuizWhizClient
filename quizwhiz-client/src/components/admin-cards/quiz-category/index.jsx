@@ -4,7 +4,7 @@ import classes from "./style.module.css";
 
 const CardComponent = ({ count, text, icon, active, onClickHandler }) => {
   return (
-    <div className="col-lg-3 mb-4 col-sm-6 col-6">
+    <div className="col-lg-3 mb-4 col-sm-6 col-6 " style={{boxSizing:'border-box'}}>
       <div
         className={`${classes["total-category"]} ${text.toLowerCase() === active ? classes['total-category-active'] : ''} card-body text-center rounded-2 p-3`}
         onClick={() => onClickHandler(text.toLowerCase())}

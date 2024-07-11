@@ -28,7 +28,6 @@ export const getCategories = async () => {
   });
 };
 
-
 export const createNewQuiz = async (data) => {
   debugger;
   try {
@@ -61,7 +60,7 @@ export const getQuizDetailsByLink = async (quizLink) => {
 
 export const addQuizQuestions = async (data) => {
   try {
-    console.log("token",CurrentToken)
+    console.log("token", CurrentToken);
     const response = await axios.post(
       API_URLS.ADD_QUIZ_QUESTIONS,
       JSON.stringify(data),
@@ -98,14 +97,23 @@ export const getAllStatusCount = async () => {
 };
 
 export const getQuizDetails = async (Link) => {
- 
-  return await axios.get(API_URLS.QUIZ_DETAILS+Link, {
+  return await axios.get(API_URLS.QUIZ_DETAILS + Link, {
     headers: {
       "Content-Type": "application/json",
       // token: "Bearer " + localStorage.getItem("token")
     },
   });
 };
-
-
-
+export const DeleteQuiz = async (quizLink) => {
+  // try {
+    const response = await axios.get(API_URLS.DELETE_QUIZ + quizLink, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${CurrentToken}`,
+      },
+    });
+    return response.data;
+  // } catch (error) {
+  //   console.log(error);
+  // }
+};

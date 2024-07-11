@@ -43,7 +43,8 @@ export const API_URLS = {
   QUIZ_STATUS:'/quiz/get-quiz-status-count',
   GET_SINGLE_QUESTION:'/quiz/get-single-quiz-question',
   GET_COUNT_OF_QUESTIONS: '/quiz/get-count-of-questions',
-  QUIZ_DETAILS:'/quiz/get-quiz-details?quizLink='
+  QUIZ_DETAILS:'/quiz/get-quiz-details?quizLink=',
+  DELETE_QUIZ:'/quiz/delete-quiz?quizLink='
 };
 export const statusEnum={
   "pending": 1,
