@@ -1,0 +1,24 @@
+.quiz-card {
+  color: #fada65;
+}
+
+.join-now-button {
+  padding: 0.5rem 2rem 0.5rem 2rem;
+  font-size: 20px;
+  background-color: #bb5cc2;
+  color: #FFFFFF;
+  border-radius: 0.5rem;
+  border: 1px solid #FFFFFF;
+}
+
+.join-now-button:hover {
+  background-color: #3D3189;
+  color: #fada65;
+  border: 1px solid #fada65;
+}
+
+@media (max-width: 500px) {
+  .join-now-button {
+    padding: 0.5rem 1rem;
+  }
+}

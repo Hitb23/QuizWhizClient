@@ -36,13 +36,12 @@ import {
   StarBorder,
 } from "@mui/icons-material";
 import { IoNotificationsOutline } from "react-icons/io5";
-
 import { Link } from "react-router-dom";
 import { DrawerHeader, AppBar, Drawer } from "../../admin-components/index";
 import { RoutePaths } from "../../../utils/enum";
 import jwtDecoder from "../../../services/jwtDecoder";
 
-const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
+const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [fullImagePath, setFullImagePath] = useState("");
@@ -52,13 +51,12 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
   const data = jwtDecoder();
   username = data["Username"];
 
-  const storedImageUrl = localStorage.getItem("profilePhotoUrl");
-
   useEffect(() => {
-    const imgPath = `${
-      import.meta.env.VITE_PUBLIC_URL
-    }/ProfilePhoto/${username}/${username}.jpg`;
-    setFullImagePath(imgPath);
+    setFullImagePath(
+      `${
+        import.meta.env.VITE_PUBLIC_URL
+      }ProfilePhoto/${userName}/${userName}.jpg?${uploadCount}`
+    );
   }, [uploadCount]);
 
   const handleDrawerOpen = () => {
@@ -88,36 +86,18 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
         position="fixed"
         open={open}
         sx={{
-          background: "#6F41DB",
+          className: classes["header"],
+          backgroundColor: "#6F41DB",
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
           padding: "1rem",
         }}
-        className={`${classes["nav-color"]}`}
       >
-        <Toolbar>
-          {/* <IconButton
-            color="black"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginLeft: -3.1,
-              marginRight: 4,
-              ...(open && { display: "none" }),
-              ...(useMediaQuery("(max-width:450px)") && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton> */}
-          {/* {open ? null : ( */}
-          <Link to="/">
-            <img className={classes["logo-image"]} src={Logo} height={70} />
-          </Link>
-          {/* )} */}
-        </Toolbar>
+        <Link to="/">
+              <img className={classes["logo-image"]} src={Logo} height={70} />
+        </Link>
         <Box
           sx={{
             display: "flex",
@@ -126,34 +106,17 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             marginRight: "1rem",
           }}
         >
-          <Badge
-            badgeContent={4}
-            sx={{
-              cursor: "pointer",
-              "& .MuiBadge-badge": {
-                background: "#3D3189",
-                color: "#fada65", // This sets the text color of the badge
-              },
-            }}
-          >
-            <IoNotificationsOutline
-              color="#fada65"
-              background="#3D3189"
-              border="2px solid #3D3189"
-              size={30}
-            />
-          </Badge>
           <IconButton
             className="gap-2 rounded d-flex align-items-center"
             onClick={handleAvatarClick}
           >
+            <p className={`${classes["username"]} fs-5 mt-3 px-3 fw-semibold d-sm-inline d-none`}> 
+              {username}
+            </p>
             <Avatar
-              sx={{ background: "#5f071c", cursor: "pointer" }}
+              sx={{ background: "#3d3189", color: "#fada65", cursor: "pointer" }}
               src={fullImagePath}
             ></Avatar>
-            <p className="fs-5 mt-3 fw-semibold d-sm-inline d-none">
-              {firstName} {lastName}
-            </p>
           </IconButton>
 
           <Menu
@@ -219,90 +182,8 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
           </Menu>
         </Box>
       </AppBar>
-      {/* <Drawer variant="permanent" open={open} sx={{ background: "#3D3189" }}>
-        <Paper sx={{ background: "#3D3189", height: "100vh" }}>
-          <DrawerHeader
-            sx={{
-              background: "#3D3189",
-              paddingY: "2rem",
-              display: "flex",
-              justifyContent: "space-between",
-              marginX: "0.3rem",
-            }}
-          >
-            <Box sx={{ margin: "auto" }}>
-              <Link to="/">
-                <img
-                  className={`mx-auto ${classes["logo-image"]} `}
-                  src={Logo}
-                  height={70}
-                />
-              </Link>
-            </Box>
-            <IconButton
-              sx={{ background: "#3D3189" }}
-              onClick={handleDrawerClose}
-            >
-              {theme.direction === "rtl" ? (
-                <ChevronRightIcon sx={{ color: "#fffff" }} />
-              ) : (
-                <ChevronLeftIcon sx={{ color: "#fffff" }} />
-              )}
-            </IconButton>
-          </DrawerHeader>
-          <Divider sx={{ background: "#3D3189" }} />
-          <List sx={{ background: "#3D3189" }}>
-            {adminDashboardSections.map((text, index) => (
-              <ListItem
-                key={text.title}
-                disablePadding
-                sx={{ display: "block", color: "#a89ee9" }}
-              >
-                <ListItemButton
-                  onClick={() => handleClick(index)}
-                  sx={{
-                    borderRadius: "10px",
-                    background:
-                      openIndex === index || text == "Quiz Management"
-                        ? "#3D3189"
-                        : "inherit",
-                    "&:hover": {
-                      background: openIndex === index ? "#000000" : "#f5f5f5",
-                      color: openIndex === index ? "#000000" : "inherit",
-                    },
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{ display: open ? "none" : "block", color: "#fada65" }}
-                  >
-                    {text.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    variant="h4"
-                    primary={text.title}
-                    sx={{ color: "#fada65" }}
-                  />
-                </ListItemButton>
-                <Collapse in={openIndex === index} timeout="auto" unmountOnExit>
-                  <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4 }}>
-                      <ListItemIcon sx={{ color: "#fada65" }}>
-                        <StarBorder />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary="Starred"
-                        sx={{ color: "#fada65" }}
-                      />
-                    </ListItemButton>
-                  </List>
-                </Collapse>
-              </ListItem>
-            ))}
-          </List>
-        </Paper>
-      </Drawer> */}
     </>
   );
 };
 
-export default AdminSlider;
+export default QuizHeader;

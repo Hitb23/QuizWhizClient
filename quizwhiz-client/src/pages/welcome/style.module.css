@@ -1,3 +1,7 @@
+.full-screen {
+  min-height: 100vh;
+  backdrop-filter: blur(1.8px);
+}
 .main-component {
   display: flex;
   justify-content: space-around;
@@ -113,6 +117,11 @@
   .poster {
     padding: 4rem 1rem 5rem 1rem;
   }
+
+  .poster-img {
+    width: 280px;
+    height: 280px;
+  }
 }
 
 @media (max-width: 381px){
@@ -123,6 +132,7 @@
   .welcome-slogan {
     font-size: 17px;
   }
+
 }
 
 @media (max-width: 350px){

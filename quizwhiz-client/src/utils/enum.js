@@ -7,7 +7,7 @@ export const RoutePaths = {
   ForgotPassword: "/forgot-password",
   ResetPassword: "/reset-password",
   AdminDashboard: "/admin-dashboard/upcoming",
-  UserDashboard: "/user-dashboard",
+  Quizzes: "/quizzes",
   PageNotFound: "/page-not-found",
   MyProfile: "/my-profile",
   AdminLogin: "/admin-login",
@@ -21,6 +21,7 @@ export const Role = {
   Admin: "Admin",
   Contestant: "Contestant",
 };
+
 export const API_URLS = {
   LOGIN_URL: "/auth/login/",
   ADMIN_URL: "/auth/admin-login/",
@@ -40,7 +41,10 @@ export const API_URLS = {
   ADD_QUIZ_QUESTIONS:'/quiz/add-quiz-questions',
   QUIZ_RECORDS:'/auth/change-record-size',
   QUIZ_STATUS:'/quiz/get-quiz-status-count',
-  QUIZ_DETAILS:'/quiz/get-quiz-details?quizLink='
+  GET_SINGLE_QUESTION:'/quiz/get-single-quiz-question',
+  GET_COUNT_OF_QUESTIONS: '/quiz/get-count-of-questions',
+  QUIZ_DETAILS:'/quiz/get-quiz-details?quizLink=',
+  DELETE_QUIZ:'/quiz/delete-quiz?quizLink='
 };
 export const statusEnum={
   "pending": 1,
@@ -48,8 +52,17 @@ export const statusEnum={
   "active": 3,
   "completed": 4
 }
-export const Difficulties={
-   1:'Easy',
-   2:'Medium',
-   3:'Hard',
+
+export const DIFFICULTIES = {
+  1: "Easy",
+  2: "Medium",
+  3: "Hard"
+}
+
+export const CATEGORIES = {
+  1: "General Knowledge",
+  2: "Entertainment",
+  3: "Education",
+  4: "Sports",
+  5: "Technology"
 }

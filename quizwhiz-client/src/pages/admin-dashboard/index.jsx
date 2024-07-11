@@ -17,14 +17,13 @@ import AdminSideBar from "../../components/admin-sidebar";
 import CreateQuizModal from "../../components/dialog-boxes/create-quiz";
 import CardComponent from "../../components/admin-cards/quiz-category";
 
-
 import {
   faQuestionCircle,
   faCalendarAlt,
   faPlay,
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import {  useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { DrawerHeader } from "../../components/admin-components";
 import AdminSlider from "../../components/header/admin-header";
 import QuizCard from "../../components/admin-cards/quiz-card";
@@ -61,7 +60,7 @@ const AdminDashboard = () => {
   const [category, setCategory] = useState(0);
   const [difficultyList, setDifficultyList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
-  const [Records, setRecords] = useState(4);
+  const [Records, setRecords] = useState(5);
   const [PageSize, SetPageSize] = useState(1);
   const [currentPage, SetCurrentPage] = useState(1);
   const [filteredData, SetFilteredData] = useState([]);
@@ -78,7 +77,6 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("In UseEffect: Called");
         setDifficulty(0);
         setCategory(0);
         SetCurrentPage(1);
@@ -100,7 +98,7 @@ const AdminDashboard = () => {
         setDifficultyList(difficulties.data.data);
         setCategoryList(categories.data.data);
         SetFilteredData(data);
-        console.log(data)
+        console.log(data);
         const status = await getAllStatusCount();
         SetCountOfPending(status?.data?.data?.PendingCount);
         SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
@@ -116,6 +114,7 @@ const AdminDashboard = () => {
 
     fetchData();
   }, [Records, params]);
+
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
@@ -130,7 +129,7 @@ const AdminDashboard = () => {
     };
     fetchUserDetails();
   }, []);
-  
+
   const navigateToCategory = (id) => {
     navigate(`/admin-dashboard/${id}`);
   };
@@ -180,6 +179,7 @@ const AdminDashboard = () => {
       SetFilteredData([]);
     }
   };
+
   const searchHandler = async (e) => {
     const searchedWord = e.target.value;
     SetSearchedWord(searchedWord);
@@ -198,10 +198,37 @@ const AdminDashboard = () => {
       SetFilteredData([]);
     }
   };
-  const ViewDetailsHandler=(e)=>{
-       navigate(`/admin-dashboard/${params.id}/${e}`);
-  }
 
+  const ViewDetailsHandler = (e) => {
+    navigate(`/admin-dashboard/${params.id}/${e}`);
+  };
+  const onDeleteHandler = async () => {
+    try {
+      const result = await filterByCategory({
+        StatusId: statusEnum[params.id],
+        DifficultyId: difficulty,
+        CategoryId: category,
+        CurrentPage: currentPage,
+        SearchValue: searchedWord,
+      });
+      SetFilteredData(result.data.data.GetQuizzes);
+    } catch (error) {
+      console.log("error:", error);
+      SetFilteredData([]);
+    }
+    try{
+        const status = await getAllStatusCount();
+        SetCountOfPending(status?.data?.data?.PendingCount);
+        SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
+        SetCountOfActive(status?.data?.data?.ActiveCount);
+        SetCountOfCompleted(status?.data?.data?.CompletedCount);
+        SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
+        setRecords(allData?.data?.data?.Pagination?.RecordSize);
+    }
+    catch(error){
+       console.log(error)
+    }
+  };
   const handleCategory = async (e) => {
     setCategory(e.target.value);
     try {
@@ -219,26 +246,11 @@ const AdminDashboard = () => {
       SetFilteredData([]);
     }
   };
-  var username = "";
-
-  useEffect(() => {
-    const data = jwtDecoder();
-    username = data["Username"];
-    const fetchUserDetails = async () => {
-      try {
-        const response = await getUserDetails(data["Username"]);
-        setFirstName(response.data.data.FirstName);
-        setLastName(response.data.data.LastName);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchUserDetails();
-  }, []);
 
   return (
-    <div  className={`${classes["bgimage"]} d-flex m-0 bg-white`}>
+    <div
+      className={`${classes["bgimage"]} ${classes["specific-page"]} d-flex m-0 bg-white`}
+    >
       <CssBaseline />
       {/* Admin offcanvas with navbar */}
       <AdminSlider
@@ -248,9 +260,14 @@ const AdminDashboard = () => {
         userName={jwtDecoder().userName}
       />
       {/* Main Content */}
-      <Box className='container h-100' component="main" sx={{ boxSizing:'border-box', p: 3}} style={{background:'white'}}>
+      <Box
+        className={`container ${classes["h-100vh"]}`}
+        component="main"
+        sx={{ boxSizing: "border-box", p: 3 }}
+        style={{ background: "white" }}
+      >
         <DrawerHeader />
-        <div className="mt-5 row">
+        <div className={`mt-5 row`}>
           <CardComponent
             count={countOfUpcoming}
             text="Upcoming"
@@ -328,7 +345,6 @@ const AdminDashboard = () => {
                 },
               }}
             />
-           
           </div>
           <div className="col-lg-2 mb-4 col-sm-6 col-12">
             <FormControl sx={{ width: "100%" }}>
@@ -447,29 +463,31 @@ const AdminDashboard = () => {
             </FormControl>
           </div>
           <div className="col-lg-6 mb-4 col-sm-6 col-12 d-flex justify-content-end">
-            <ViewQuizModal/>
-            <CreateQuizModal/>
+            <ViewQuizModal />
+            <CreateQuizModal />
           </div>
-          
         </div>
 
-        <h4 className="ms-2 text-black my-3" >
-          {params.id.substring(0, 1).toUpperCase() + params.id.substring(1)}  Contest 
+        <h4 className="ms-2 text-black my-3">
+          {params.id.substring(0, 1).toUpperCase() + params.id.substring(1)}{" "}
+          Contest
         </h4>
         <div className="row">
-         
           {filteredData.length > 0 ? (
-            
-              // <QuizCard
-              //   title={ele.Title}
-              //   description={ele.Description}
-              //   date={ele.ScheduledDate}
-              //   categoryName={ele.CategoryName}
-              //   key={idx}
-              //   onClickHandler={ViewDetailsHandler}
-              //   Link={ele.QuizLink}
-              // />
-              <QuizEditTable data={filteredData} Status={params.id}/>
+            // <QuizCard
+            //   title={ele.Title}
+            //   description={ele.Description}
+            //   date={ele.ScheduledDate}
+            //   categoryName={ele.CategoryName}
+            //   key={idx}
+            //   onClickHandler={ViewDetailsHandler}
+            //   Link={ele.QuizLink}
+            // />
+            <QuizEditTable
+              data={filteredData}
+              Status={params.id}
+              reload={onDeleteHandler}
+            />
           ) : (
             // <img
             //   src={NO_DATA_FOUND}
@@ -477,7 +495,14 @@ const AdminDashboard = () => {
             //   style={{height:'500px',width:'500px'}}
             // />
             <div className="d-flex justify-content-center align-items-center">
-            <HashLoader className="text-center me-2" style={{color:'#a89ee9'}}/> 
+              {difficultyList.length <= 0 ? (
+                <HashLoader
+                  className="text-center me-2 mt-5"
+                  style={{ color: "#a89ee9" }}
+                />
+              ) : (
+                <h2 style={{ color: "#3d3189" }}>No Data Found</h2>
+              )}
             </div>
           )}
         </div>
@@ -534,9 +559,9 @@ const AdminDashboard = () => {
                   },
                 }}
               >
-                <MenuItem value={4}>4</MenuItem>
-                <MenuItem value={8}>8</MenuItem>
-                <MenuItem value={12}>12</MenuItem>
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={15}>15 </MenuItem>
               </Select>
             </FormControl>
             <Pagination
