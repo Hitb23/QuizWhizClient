@@ -52,7 +52,7 @@ const Welcome =  () => {
         </div>
       </main>
       <LandingFooter />
-      ></div>
+      </div>
     </React.Fragment>
   );
 }

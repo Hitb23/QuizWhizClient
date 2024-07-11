@@ -33,6 +33,8 @@ import {
   getQuizDetailsByLink,
 } from "../../../services/admindashboard.service";
 import Swal from "sweetalert2";
+import { questionTypeEnum } from "../../../utils/enum";
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -55,12 +57,22 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
   const [currentQuizDetails, setCurrentQuizDetails] = useState({});
   const [questionCount, setQuestionCount] = useState(0);
 
+  const filterdOptions = (arr) => {
+    const result = arr.answerOptions.map((option) => ({
+      OptionText: option,
+      isAnswer: arr.correctAnswers.includes(option), 
+    }));
+
+    return result;
+  };
+
   const renameKeys = (obj) => {
     return {
       QuestionText: obj.question,
-      Options: obj.answerOptions,
+      Options:obj.type !== 3 ? filterdOptions(obj):[],
       Answers: obj.correctAnswers,
       QuestionTypeId: obj.type,
+      IsTrue:obj.type ===3 && obj.correctAnswers[0]
     };
   };
 
@@ -78,11 +90,10 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
     console.log(sendData);
     var response = await addQuizQuestions(sendData);
     console.log(response);
-    
+
     try {
-      
+
       if (response && response.statusCode === 200) {
-        debugger;
         Swal.fire({
           title: "Questions Added Successfuly!",
           text: "Your Quiz is Saved in Drafts",
@@ -191,15 +202,15 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
   const handleOptionChange = (qIndex, optIndex, event) => {
     const newQuestions = [...values.questions];
     const optionValue = event.target.value || "";
+    
+    const previousOptionValue = newQuestions[qIndex].answerOptions[optIndex];
+    
     newQuestions[qIndex].answerOptions[optIndex] = optionValue;
-
-    // Ensure only valid options are in correctAnswers
-    newQuestions[qIndex].correctAnswers = newQuestions[
-      qIndex
-    ].correctAnswers.filter((item) =>
-      newQuestions[qIndex].answerOptions.includes(item)
-    );
-
+    
+    newQuestions[qIndex].correctAnswers = newQuestions[qIndex].correctAnswers
+      .map((answer) => (answer === previousOptionValue ? optionValue : answer))
+      .filter((answer) => newQuestions[qIndex].answerOptions.includes(answer));
+  
     setFieldValue("questions", newQuestions);
   };
 
@@ -407,29 +418,6 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
         );
       case 3:
         return (
-          <TextField
-            fullWidth
-            label="Correct Answer"
-            value={thisquestion.correctAnswers || ""}
-            onChange={(event) => handleQuestionChange(qIndex, event)}
-            name={`values.questions.${qIndex}.correctAnswers`}
-            margin="normal"
-            error={Boolean(
-              touched.questions &&
-                errors.questions &&
-                errors.questions[qIndex] &&
-                errors.questions[qIndex].correctAnswers
-            )}
-            helperText={
-              touched.questions &&
-              errors.questions &&
-              errors.questions[qIndex] &&
-              errors.questions[qIndex].correctAnswers
-            }
-          />
-        );
-      case 4:
-        return (
           <FormControl fullWidth margin="normal">
             <InputLabel>Correct Answer</InputLabel>
             <Select
@@ -472,7 +460,7 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: "relative" }}>
+        <AppBar sx={{ position: "relative", backgroundColor: "#6F41DB" }}>
           <Toolbar>
             <IconButton
               edge="start"
@@ -488,9 +476,16 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
               component="div"
               className="d-flex justify-content-between"
             >
-              {currentQuizDetails.Title}
+              {currentQuizDetails.Title} ({currentQuizDetails.CategoryName})
             </Typography>
             <Button
+             sx={{
+              color: "#6F41DB",
+              backgroundColor: "#fada65",
+              "&:hover": {
+                color: "#fada65",
+              },
+            }}
               autoFocus
               color="inherit"
               type="submit"
@@ -561,9 +556,9 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
                 <Card>
                   <CardContent>
                     <Typography variant="h6" component="div">
-                      Question {qIndex + 1} ({values.questions[qIndex].type})
+                      Question {qIndex + 1} ({questionTypeEnum[values.questions[qIndex].type]})
                     </Typography>
-                    <TextField
+                    <TextField 
                       fullWidth
                       label="Question"
                       name={`values.questions.${qIndex}.question`}
@@ -596,6 +591,14 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
               variant="contained"
               onClick={handleAddQuestionTypeDialogOpen}
               disabled={questionCount >= currentQuizDetails.TotalQuestion}
+              sx={{
+                color: "#fada65",
+                backgroundColor: "#6F41DB",
+                "&:hover": {
+                  color: "#6F41DB",
+                  backgroundColor:"#fada65"
+                },
+              }}
             >
               Add Another Question
             </Button>
@@ -620,8 +623,7 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
             >
               <MenuItem value={1}>MCQ</MenuItem>
               <MenuItem value={2}>MSQ</MenuItem>
-              <MenuItem value={3}>TITA</MenuItem>
-              <MenuItem value={4}>True/False</MenuItem>
+              <MenuItem value={3}>True/False</MenuItem>
             </Select>
           </FormControl>
         </DialogContent>

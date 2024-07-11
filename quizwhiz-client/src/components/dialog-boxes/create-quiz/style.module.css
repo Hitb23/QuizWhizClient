@@ -1,25 +1,35 @@
 .add-quiz-btn {
-    padding: 0.9rem 2.1rem;
-    font-size: 20px;
-    height: 58px;
-    background-color: #FADA65;
-    color: #000000;
-    border-radius: 0.5rem;
-    border: 1px solid #fada65;
+  padding: 0.9rem 2.1rem;
+  font-size: 20px;
+  height: 58px;
+  background-color: #fada65;
+  color: #000000;
+  border-radius: 0.5rem;
+  border: 1px solid #fada65;
 }
 
-.add-quiz-btn:hover{
-    background: none;
-    color: #FADA65;
+.add-quiz-btn:hover {
+  background: none;
+  color: #fada65;
+}
+.dialog-title {
+  background-color: #fada65;
+  color: #6f41db;
+  text-align: center;
+}
+
+.save-quiz-btn {
+  color: #6f41db;
+  background-color: #fada65;
 }
 
 @media (max-width: 450px) {
-    .add-quiz-btn{
-        width: 100%;
-    }
+  .add-quiz-btn {
+    width: 100%;
   }
-  @media (max-width: 695px) {
-    .add-quiz-btn{
-        width: 100%;
-    }
+}
+@media (max-width: 695px) {
+  .add-quiz-btn {
+    width: 100%;
   }
+}
