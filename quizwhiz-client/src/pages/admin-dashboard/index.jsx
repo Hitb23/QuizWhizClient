@@ -47,6 +47,7 @@ import jwtDecoder from "../../services/jwtDecoder";
 import NO_DATA_FOUND from "../../assets/Server.gif";
 import { statusEnum } from "../../utils/enum";
 import ViewQuizModal from "../../components/dialog-boxes/view-quiz";
+import EditQuizModal from "../../components/dialog-boxes/edit-quiz-details";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -82,7 +83,6 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("In UseEffect: Called");
         setDifficulty(0);
         setCategory(0);
         SetCurrentPage(1);
@@ -99,7 +99,6 @@ const AdminDashboard = () => {
           CurrentPage: 1,
           SearchValue: "",
         });
-        console.log("All data: ");
         const data = allData.data.data.GetQuizzes;
         setDifficultyList(difficulties.data.data);
         setCategoryList(categories.data.data);
@@ -169,7 +168,6 @@ const AdminDashboard = () => {
 
   const handlePageChange = async (event, value) => {
     SetCurrentPage(currentPage);
-    console.log(searchedWord);
     try {
       const result = await filterByCategory({
         StatusId: statusEnum[params.id],
@@ -446,7 +444,8 @@ const AdminDashboard = () => {
             </FormControl>
           </div>
           <div className="col-lg-6 mb-4 col-sm-6 col-12 d-flex justify-content-end">
-            <ViewQuizModal/>
+            {/* <ViewQuizModal/> */}
+            <EditQuizModal/>
             <CreateQuizModal/>
           </div>
           

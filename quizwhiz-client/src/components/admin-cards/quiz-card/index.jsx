@@ -6,9 +6,7 @@ import Typography from "@mui/material/Typography";
 import { Box, Button } from "@mui/material";
 
 const QuizCard = ({ title, description, date, categoryName, time }) => {
-  console.log(description);
   var name = categoryName.toLowerCase();
-  console.log("Category name : " + name);
   var imageUrl = `${import.meta.env.VITE_PUBLIC_URL}src/assets/${name}.jpg`;
   if(name == "general knowledge"){
     imageUrl = `${import.meta.env.VITE_PUBLIC_URL}src/assets/gk.jpg`;
