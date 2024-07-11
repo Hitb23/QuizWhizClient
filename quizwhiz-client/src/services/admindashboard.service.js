@@ -12,12 +12,14 @@ export const filterByCategory = async (data) => {
   });
 };
 export const getDifficulties = async () => {
-  return await axios.get(API_URLS.QUIZ_DIFFICULTIES, {
+  const response = await axios.get(API_URLS.QUIZ_DIFFICULTIES, {
     headers: {
       "Content-Type": "application/json",
       // token: "Bearer " + localStorage.getItem("token")
     },
   });
+
+  return response;
 };
 export const getCategories = async () => {
   return await axios.get(API_URLS.QUIZ_CATEGORIES, {
@@ -29,7 +31,6 @@ export const getCategories = async () => {
 };
 
 export const createNewQuiz = async (data) => {
-  debugger;
   try {
     const response = await axios.post(
       API_URLS.CREATE_NEW_QUIZ,
@@ -96,6 +97,68 @@ export const getAllStatusCount = async () => {
   });
 };
 
+export const getQuizQuestions = async (quizLink) => {
+  try {
+    const response = await axios.get(API_URLS.GET_QUIZ_QUESTIONS + quizLink);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateQuizQuestions = async (data) => {
+  try {
+    console.log("token", CurrentToken);
+    const response = await axios.post(
+      API_URLS.UPDATE_QUIZ_QUESTION,
+      JSON.stringify(data),
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${CurrentToken}`,
+        },
+      }
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteQuizQuestion = async (questionId) => {
+  try {
+    const response = await axios.get(
+      API_URLS.DELETE_QUIZ_QUESTION + questionId,
+      {
+        headers: {
+          Authorization: `Bearer ${CurrentToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateQuizDetails = async (data) => {
+  try {
+    const response = await axios.post(
+      API_URLS.UPDATE_QUIZ_DETAILS,
+      JSON.stringify(data),
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${CurrentToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const getQuizDetails = async (Link) => {
   return await axios.get(API_URLS.QUIZ_DETAILS + Link, {
     headers: {
@@ -104,6 +167,7 @@ export const getQuizDetails = async (Link) => {
     },
   });
 };
+
 export const DeleteQuiz = async (quizLink) => {
   // try {
     const response = await axios.get(API_URLS.DELETE_QUIZ + quizLink, {

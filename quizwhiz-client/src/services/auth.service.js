@@ -122,4 +122,4 @@ export const createNewQuiz = async (data) =>{
   } catch (error) {
     console.log(error);
   }
-}
+};
