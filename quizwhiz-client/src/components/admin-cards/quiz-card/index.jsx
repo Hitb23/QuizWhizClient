@@ -6,6 +6,7 @@ import { LuFileSpreadsheet } from "react-icons/lu";
 import { FaListCheck } from "react-icons/fa6";
 import classes from "./style.module.css";
 import { DIFFICULTIES, CATEGORIES } from "../../../utils/enum";
+import { useNavigate } from "react-router-dom";
 const QuizCard = ({
   title,
   scheduledDate,
@@ -13,7 +14,13 @@ const QuizCard = ({
   difficultyId,
   totalMarks,
   totalQuestions,
+  quizLink
 }) => {
+  const navigate = useNavigate();
+
+  if(title == "Tech Trivia"){
+    console.log(quizLink);
+  }
   const [minutes, setMinutes] = useState(0);
   
   var quizDate = new Date(scheduledDate);
@@ -24,12 +31,10 @@ const QuizCard = ({
   });
 
   var categoryName = CATEGORIES[categoryId];
-  console.log(categoryName.toLowerCase().replace(/\s+/g, ""));
-  var imageUrl = `${
-    import.meta.env.VITE_PUBLIC_URL
-  }src/assets/${categoryName.toLowerCase()}.jpg`;
+  // console.log(categoryName.toLowerCase().replace(/\s+/g, ""));
+  var imageUrl = `/src/assets/${categoryName.toLowerCase()}.jpg`;
   if (categoryName == "General Knowledge") {
-    imageUrl = `${import.meta.env.VITE_PUBLIC_URL}src/assets/gk.jpg`;
+    imageUrl = `/src/assets/gk.jpg`;
   }
 
   const formattedDate = new Date(scheduledDate).toLocaleDateString("en-US", {
@@ -57,6 +62,10 @@ const QuizCard = ({
       transform: "translateX(5px)",
     },
   });
+
+  const navigateToQuiz = () => {
+    navigate(`/user-dashboard/${quizLink}`);
+  }
 
   return (
     <>
@@ -109,7 +118,7 @@ const QuizCard = ({
         <div className="col-xl-3 text-xl-end d-flex justify-content-center align-items-center flex-wrap">
           {minutes <= 5 && minutes >= 0 ? (
             <div className="d-none d-xl-inline">
-              <button type="submit" className={classes["join-now-button"]}>
+              <button type="submit" className={classes["join-now-button"]} onClick={navigateToQuiz}>
                 Join Now
               </button>
             </div>

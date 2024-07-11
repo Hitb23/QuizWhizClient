@@ -141,7 +141,7 @@ const Quizzes = () => {
 
   const handlePageChange = async (event, value) => {
     SetCurrentPage(value);
-    console.log(searchedWord);
+    // console.log(searchedWord);
     try {
       const result = await filterByCategory({
         StatusId: tabStatus,
@@ -469,7 +469,7 @@ const Quizzes = () => {
                   totalMarks={ele.TotalMarks}
                   totalQuestions={ele.TotalQuestion}
                   onClickHandler={ViewDetailsHandler}
-                  Link={ele.QuizLink}
+                  quizLink={ele.QuizLink}
                 />
               ))
             ) : (
