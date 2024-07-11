@@ -13,7 +13,8 @@ export const RoutePaths = {
   AdminLogin: "/admin-login",
   CreateNewQuiz:"/create-new-quiz",
   GetQuizDetails:"/get-quiz-details",
-  AddQuizQuestions:"/add-quiz-questions"
+  AddQuizQuestions:"/add-quiz-questions",
+  LiveQuiz:"/live-quiz"
 };
 
 export const Role = {

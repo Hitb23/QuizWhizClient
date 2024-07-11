@@ -121,7 +121,7 @@ const AdminLogin = () => {
                         autoComplete="on"
                       />
                       {touched.email && errors.email ? (
-                        <span className="text-danger">{errors.email}</span>
+                        <span className={classes["error-message"]}>{errors.email}</span>
                       ) : null}
                     </div>
                   </div>
@@ -159,7 +159,7 @@ const AdminLogin = () => {
                         )}
                       </Field>
                       {touched.password && errors.password ? (
-                        <span className="text-danger">{errors.password}</span>
+                        <span className={classes["error-message"]}>{errors.password}</span>
                       ) : null}
                     </div>
                   </div>
@@ -192,23 +192,6 @@ const AdminLogin = () => {
                 </Form>
               )}
             </Formik>
-
-            <div className={`d-flex justify-content-center`}>
-              <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
-                <div
-                  className={`d-flex align-items-center ${classes["link-message"]}`}
-                >
-                  Don't you have an account?
-                </div>
-                <Link to={RoutePaths.SignUp}>
-                  <label
-                    className={`form-label fw-bold text-end text-decoration-none m-0 pe-auto ${classes["log-in-label"]}`}
-                  >
-                    Sign Up
-                  </label>
-                </Link>
-              </div>
-            </div>
           </div>
         </div>
       </main>

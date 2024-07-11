@@ -75,7 +75,6 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("In UseEffect: Called");
         setDifficulty(0);
         setCategory(0);
         SetCurrentPage(1);
@@ -92,7 +91,6 @@ const AdminDashboard = () => {
           CurrentPage: 1,
           SearchValue: "",
         });
-        console.log("All data: ");
         const data = allData.data.data.GetQuizzes;
         setDifficultyList(difficulties.data.data);
         setCategoryList(categories.data.data);

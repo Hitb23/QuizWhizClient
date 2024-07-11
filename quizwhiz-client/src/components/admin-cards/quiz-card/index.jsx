@@ -7,6 +7,8 @@ import { FaListCheck } from "react-icons/fa6";
 import classes from "./style.module.css";
 import { DIFFICULTIES, CATEGORIES } from "../../../utils/enum";
 import QuizDescription from "../quiz-description";
+import CountdownTimer from "../../countdown-timer";
+import { useNavigate } from "react-router-dom";
 const QuizCard = ({
   title,
   scheduledDate,
@@ -19,6 +21,7 @@ const QuizCard = ({
   const [minutes, setMinutes] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(0);
   var quizDate = new Date(scheduledDate);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setMinutes(Math.round((quizDate.getTime() - new Date().getTime()) / 60000));
@@ -42,6 +45,7 @@ const QuizCard = ({
     hour: "2-digit",
     minute: "2-digit",
   });
+
   const AnimatedButton = styled(Button)({
     position: "relative",
     overflow: "hidden",
@@ -65,7 +69,12 @@ const QuizCard = ({
 
   const closeModalHandler = () => {
     setIsModalOpen(0);
-  }
+  };
+
+  const joinNowHandler = () => {
+    console.log("H");
+    navigate(`/live-quiz/${quizLink}`);
+  };
 
   return (
     <>
@@ -116,9 +125,13 @@ const QuizCard = ({
           </div>
         </div>
         <div className="col-xl-3 text-xl-end d-flex justify-content-center align-items-center flex-wrap">
-          {minutes <= 5 && minutes >= 0 ? (
+          {minutes <= 60 && minutes >= 0 ? (
             <div className="d-none d-xl-inline">
-              <button type="submit" className={classes["join-now-button"]}>
+              <button
+                type="submit"
+                className={classes["join-now-button"]}
+                onClick={joinNowHandler}
+              >
                 Join Now
               </button>
             </div>
@@ -131,7 +144,11 @@ const QuizCard = ({
             </div>
           ) : null}
           <div className="d-none d-xl-inline">
-            <button type="submit" className={classes["join-now-button"]} onClick={viewDetailsHandler}>
+            <button
+              type="submit"
+              className={classes["join-now-button"]}
+              onClick={viewDetailsHandler}
+            >
               View Details
             </button>
           </div>
@@ -164,9 +181,13 @@ const QuizCard = ({
           </div>
         </div>
         <div className="col-md-12 mt-2 my-auto text-center text-xl-end d-xl-none d-flex justify-content-center align-items-center column-gap-3 row-gap-3 flex-wrap">
-          {minutes <= 5 && minutes >= 0 ? (
+          {minutes <= 60 && minutes >= 0 ? (
             <div>
-              <button type="submit" className={classes["join-now-button"]}>
+              <button
+                type="submit"
+                className={classes["join-now-button"]}
+                onClick={joinNowHandler}
+              >
                 Join Now
               </button>
             </div>
@@ -189,7 +210,9 @@ const QuizCard = ({
           </div>
         </div>
       </div>
-      {isModalOpen == 1 ? <QuizDescription quizLink={quizLink} modalClose={closeModalHandler} /> : null}
+      {isModalOpen == 1 ? (
+        <QuizDescription quizLink={quizLink} modalClose={closeModalHandler} />
+      ) : null}
     </>
   );
 };
