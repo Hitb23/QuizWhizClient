@@ -41,6 +41,9 @@ import { Link } from "react-router-dom";
 import { DrawerHeader, AppBar, Drawer } from "../../admin-components/index";
 import { RoutePaths } from "../../../utils/enum";
 import jwtDecoder from "../../../services/jwtDecoder";
+import { bindActionCreators } from "redux";
+import { userActions } from "../../../redux/action-creators";
+import { useDispatch } from "react-redux";
 
 const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
   const [open, setOpen] = React.useState(false);
@@ -51,7 +54,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
   var username = "";
   const data = jwtDecoder();
   username = data["Username"];
-
+  const dispatch = useDispatch();
   const storedImageUrl = localStorage.getItem("profilePhotoUrl");
 
   useEffect(() => {
@@ -81,6 +84,17 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
   const clickOnProfile = () => {
     navigate(RoutePaths.MyProfile);
     setAnchorEl(null);
+  };
+  const logoutHandler = () => {
+    const actions = bindActionCreators(userActions, dispatch);
+    {
+      actions.changeUserRole("");
+      actions.changeUserName("");
+      actions.changeUserEmail("");
+    }
+
+    localStorage.removeItem("token");
+    navigate(RoutePaths.Login);
   };
   return (
     <>
@@ -116,7 +130,6 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
           <Link to="/">
             <img className={classes["logo-image"]} src={Logo} height={70} />
           </Link>
-          {/* )} */}
         </Toolbar>
         <Box
           sx={{
@@ -210,7 +223,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
               </ListItemIcon>
               Settings
             </MenuItem>
-            <MenuItem onClick={handleAvatarClose}>
+            <MenuItem onClick={logoutHandler}>
               <ListItemIcon>
                 <Logout fontSize="small" />
               </ListItemIcon>
