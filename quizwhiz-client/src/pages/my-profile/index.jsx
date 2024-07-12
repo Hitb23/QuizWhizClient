@@ -241,7 +241,6 @@ const AdminSideBar = () => {
   }, []);
 
   useEffect(() => {
-    debugger;
     console.log("Image state updated: ", image);
     const data = jwtDecoder();
     const Username = data.Username;
@@ -356,8 +355,6 @@ const AdminSideBar = () => {
   //   return `https://flagpedia.net/data/flags-mini/${countryName.toLowerCase()}.png`;
   // };
 
-  
-
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
       <CssBaseline />
@@ -371,7 +368,7 @@ const AdminSideBar = () => {
       <Box
         className={`container-fluid flex-column flex-xl-row ${classes["main-box"]}`}
       >
-        <div
+        <div className={classes["profile-photo-div"]}
           style={{
             display: "flex",
             flexDirection: "column",
@@ -417,7 +414,9 @@ const AdminSideBar = () => {
         </div>
         <div className={classes["vertical-line-centre"]}></div>
         <form onSubmit={formik.handleSubmit}>
-          <div className={`d-flex flex-column me-5 ${classes["form-group"]}`}>
+          <div
+            className={`d-flex align-items-center flex-column m-auto ${classes["form-group"]}`}
+          >
             {/* <Field
               as="input"
               type="text"

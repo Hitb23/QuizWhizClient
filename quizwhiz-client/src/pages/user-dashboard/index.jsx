@@ -49,6 +49,10 @@ const UserDashboard = () => {
       console.log(message);
     });
 
+    connection.on("GetTitleOfQuiz", (data) =>  {
+      console.log("Quiz title : " + data);
+    });
+
     connection.start().catch((error) => {
       console.error(error);
     });

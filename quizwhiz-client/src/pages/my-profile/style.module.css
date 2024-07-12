@@ -66,12 +66,12 @@ div.vertical-line-centre {
 
 .form-group{
   display: grid;
-  grid-template-columns: 1fr;
-  grid-gap: 5px;
-  align-items: start;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1rem;
+  align-items: center;
 }
 
-.form-lavbel{
+.form-label{
   grid-column: 1;
 }
 
@@ -90,10 +90,14 @@ div.vertical-line-centre {
 }
 
 .black-font{
+  align-self: flex-start;
   color: #fada65;
 }
 
 @media (max-width: 1199px) {
+  .profile-photo-div{
+    margin-top: 25rem !important;
+  }
   .edit-button {
     margin: 0.7rem auto !important;
   }
@@ -103,9 +107,9 @@ div.vertical-line-centre {
     margin-top: 9rem;
   }
   
-  .input-field{
+  /* .input-field{
     margin: auto !important;
-  }
+  } */
 }
 
 @media (max-width: 900px) {
