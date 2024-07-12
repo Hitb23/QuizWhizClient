@@ -4,23 +4,37 @@ import { Delete, Edit } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
 import { DIFFICULTIES } from "../../utils/enum";
 import { DeleteQuiz } from "../../services/admindashboard.service";
+import Swal from "sweetalert2";
+// import withReactContent from "@sweetalert2/react-content";
+import withReactContent from "sweetalert2-react-content";
 
-const QuizEditTable = ({ data, Status,reload }) => {
-  const [deleteResponse,setDeleteResponse]=useState('');
-  // useEffect(()=>[
-     
-  // ],[deleteResponse])
-  const OnDeleteHandler=async(QuizLink)=>{
-      try{
-        const response=await DeleteQuiz(QuizLink);
-        setDeleteResponse(response);
-        console.log(response);
+const QuizEditTable = ({ data, Status, reload }) => {
+
+  const MySwal = withReactContent(Swal);
+  const OnDeleteHandler = async (QuizLink) => {
+    const result = await MySwal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete this item?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, keep it",
+    });
+
+    if (result.isConfirmed) {
+      console.log(`Deleting item with id: ${QuizLink}`);
+      try {
+        await DeleteQuiz(QuizLink);
         reload();
-      }
-      catch(error){
+      } catch (error) {
         console.log(error);
       }
-  }
+      MySwal.fire("Deleted!", "Your item has been deleted.", "success");
+    } else if (result.isDismissed) {
+      MySwal.fire("Cancelled", "Your item is safe :)", "error");
+    }
+  };
+ 
 
   const handleFormatDate = (date) => {
     const formattedDate = new Date(date).toLocaleDateString("en-US", {
@@ -136,7 +150,10 @@ const QuizEditTable = ({ data, Status,reload }) => {
                         </button>
                       </Tooltip>
                       <Tooltip title="Delete">
-                        <button className="btn btn-danger fw-bold" onClick={()=> OnDeleteHandler(ele.QuizLink)}>
+                        <button
+                          className="btn btn-danger fw-bold"
+                          onClick={() => OnDeleteHandler(ele.QuizLink)}
+                        >
                           <Delete />
                         </button>
                       </Tooltip>
