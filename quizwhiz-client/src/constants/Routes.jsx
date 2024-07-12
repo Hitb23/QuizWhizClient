@@ -15,6 +15,7 @@ import AdminCategory from "../pages/admin-category";
 
 import CreateQuizModal from "../components/dialog-boxes/create-quiz";
 import AddQuestions from "../components/dialog-boxes/add-questions";
+import ViewQuizModal from "../components/dialog-boxes/view-quiz";
 import QuizDescription from "../pages/problem-description";
 import QuizList from "../pages/quiz-list";
 import Quiz from "../pages/QuizHub";
@@ -87,8 +88,19 @@ export const ROUTES = [
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path:'/add-quiz-questions/:token',
+    path:'/add-quiz-questions/:quizLink',
     element:<AddQuestions/>,
+    roles:[Role.Admin]
+  },
+  {
+    path:'/get-quiz-questions/:quizLink',
+    element:<AddQuestions/>,
+    roles:[Role.Admin]
+  },
+
+  {
+    path:'/update-quiz-questions:token',
+    element:<ViewQuizModal/>,
     roles:[Role.Admin]
   },
   {

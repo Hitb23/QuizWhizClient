@@ -12,8 +12,9 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  backdropClasses,
 } from "@mui/material";
-import { useState, useEffect  } from "react";
+import { useState, useEffect } from "react";
 import * as yup from "yup";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
@@ -22,7 +23,7 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { CREATE_QUIZ_VALIDATIONS } from "../../../validations/createQuizValidation";
 import { Formik, Form, Field } from "formik";
 import { styled } from "@mui/material/styles";
-import { Style } from "@mui/icons-material";
+import { Edit, Style } from "@mui/icons-material";
 import AddQuestions from "../add-questions";
 import Typography from "@mui/material/Typography";
 import classes from "./style.module.css";
@@ -32,99 +33,94 @@ import dayjs from "dayjs";
 import {
   getCategories,
   getDifficulties,
-  createNewQuiz
+  createNewQuiz,
+  getQuizDetailsByLink,
+  updateQuizDetails,
 } from "../../../services/admindashboard.service";
 import Swal from "sweetalert2";
-import ReactDOM from 'react-dom';
+import ReactDOM from "react-dom";
+import { ToastContainer, toast } from "react-toastify";
+import ViewQuizModal from "../view-quiz/index";
 
-export default function CreateQuizModal() {
+export default function EditQuizModal({ currentQuizLink }) {
   const [open, setOpen] = React.useState(false);
   const [categoryDetails, setCategoryDetails] = useState([]);
   const [difficultyDetails, setDifficultyDetails] = useState([]);
   const navigate = useNavigate();
-  const [addQuestionsOpen, setAddQuestionsOpen] = useState(false); 
-  const [quizLink, setQuizLink]= useState("")
+  const [addQuestionsOpen, setAddQuestionsOpen] = useState(false);
+  const [quizLink, setQuizLink] = useState("");
+  const [quizDetail, setQuizDetail] = useState({});
 
   const handleClickOpen = () => {
     setOpen(true);
+    fetchData();
   };
 
   const handleClose = () => {
     setOpen(false);
+    fetchData();
   };
 
   const validationSchema = yup.object().shape(CREATE_QUIZ_VALIDATIONS);
+  const fetchData = async () => {
+    try {
+      const difficultyData = await getDifficulties();
+      const categoryData = await getCategories();
+      const quizDetailResponse = await getQuizDetailsByLink(currentQuizLink);
+      setCategoryDetails(categoryData.data.data);
+      setDifficultyDetails(difficultyData.data.data);
+      setQuizDetail(quizDetailResponse.data);
+    } catch (error) {
+      console.error("Error fetching data", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const difficultyData = await getDifficulties();
-        const categoryData = await getCategories();
-        setCategoryDetails(categoryData.data.data);
-        setDifficultyDetails(difficultyData.data.data);
-      } catch (error) {
-        console.error("Error fetching data", error);
-      }
-    };
-
     fetchData();
   }, []);
 
-  const handleSubmit = async (values, {resetForm}) => {
+  const handleSubmit = async (values, { resetForm }) => {
     const formattedDate = dayjs(values.scheduledDateTime).format(
       "YYYY-MM-DD HH:mm:ss.SSSSSS"
     );
     const sendData = {
+      QuizLink: quizDetail.QuizLink,
       Title: values.quizTitle,
       Description: values.quizDescription,
       CategoryId: values.category,
       DifficultyId: values.difficulty,
-      TotalQuestion: values.totalQuestions,
-      MarksPerQuestion: values.marksPerQuestion,
-      NegativePerQuestion: values.negativeMarksPerQuestion,
-      TotalMarks: values.marksPerQuestion * values.totalQuestions,
-      MinMarks: values.minMarks,
       WinningAmount: values.winningAmount,
       ScheduleDate: formattedDate,
     };
 
+    console.log("send", sendData);
     try {
-      var response = await createNewQuiz(sendData);
+      var response = await updateQuizDetails(sendData);
       if (response && response.statusCode === 200) {
-        Swal.fire({
-          title: 'Quiz Created Successfully',
-          text: 'You can either go to the dashboard or add questions.',
-          icon: 'success',
-          showCancelButton: true,
-          confirmButtonText: 'Add Questions',
-          cancelButtonText: 'Go to Dashboard'
-        }).then((result) => {
-          
-          if (result.isConfirmed) {
-            setAddQuestionsOpen(true);
-            console.log(response.data);
-            setQuizLink(response.data);
-          } else {
-            navigate(`/admin-dashboard/pending`);
-          }
-        });
-        resetForm();
-        handleClose();
+        toast.success("edited succesfully");
+        console.log("success edit");
       }
     } catch (error) {
-      alert("error in submitting quiz")
+      toast.error("Error While Editing");
       console.error("Error creating quiz", error);
     }
-
-
+    handleClose();
   };
+
+  const handleAddQuestion= ()=>{
+    setAddQuestionsOpen(true);
+  }
   return (
     <React.Fragment>
-      <button
+      <ToastContainer />
+      {/* <button
         className={`${classes["add-quiz-btn"]}`}
         onClick={handleClickOpen}
       >
-        Add Quiz
+        Edit Quiz
+      </button> */}
+      <button onClick={handleClickOpen} className="btn fw-bold" style={{ background: "#a89ee9" }}>
+        <Edit />
       </button>
       <Dialog
         open={open}
@@ -136,17 +132,17 @@ export default function CreateQuizModal() {
       >
         <Formik
           initialValues={{
-            category: "",
-            marksPerQuestion: null,
-            negativeMarksPerQuestion: null,
-            winningAmount: null,
-            quizTitle: "",
-            quizDescription: "",
-            totalQuestions: null,
-            minMarks: null,
-            difficulty: "",
-            scheduledDateTime: null,
-            totalMarks: null,
+            category: quizDetail.CategoryId,
+            marksPerQuestion: quizDetail.MarksPerQuestion,
+            negativeMarksPerQuestion: quizDetail.NegativePerQuestion,
+            winningAmount: quizDetail.WinningAmount,
+            quizTitle: quizDetail.Title,
+            quizDescription: quizDetail.Description,
+            totalQuestions: quizDetail.TotalQuestion,
+            minMarks: quizDetail.MinMarks,
+            difficulty: quizDetail.DifficultyId,
+            scheduledDateTime: dayjs(quizDetail.ScheduledDate),
+            totalMarks: quizDetail.TotalMarks,
           }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
@@ -163,8 +159,12 @@ export default function CreateQuizModal() {
             setFieldValue,
           }) => (
             <Form>
-              <DialogTitle id="alert-dialog-title" className={`${classes["dialog-title"]}`}>
-                <strong>Create New Quiz</strong>
+              <DialogTitle
+                id="alert-dialog-title"
+                className={`${classes["dialog-title"]} text-center`}
+                sx={{ backgroundColor: "#fada65", color: "#6F41DB" }}
+              >
+                <strong>Edit Quiz</strong>
               </DialogTitle>
               <DialogContent>
                 <Field
@@ -229,7 +229,6 @@ export default function CreateQuizModal() {
                               {ele.CategoryName}
                             </MenuItem>
                           ))}
-
                       </Field>
                       {touched.category && errors.category && (
                         <span
@@ -283,6 +282,7 @@ export default function CreateQuizModal() {
                   <Grid item sm={4} xs={12}>
                     <Field
                       as={TextField}
+                      disabled
                       fullWidth
                       margin="normal"
                       label="Total Questions"
@@ -305,6 +305,7 @@ export default function CreateQuizModal() {
                       fullWidth
                       margin="normal"
                       label="Marks per Question"
+                      disabled
                       value={values.marksPerQuestion}
                       type="number"
                       name="marksPerQuestion"
@@ -325,6 +326,7 @@ export default function CreateQuizModal() {
                       fullWidth
                       margin="normal"
                       label="Negative Marks per Question"
+                      disabled
                       type="number"
                       value={values.negativeMarksPerQuestion}
                       name="negativeMarksPerQuestion"
@@ -367,6 +369,7 @@ export default function CreateQuizModal() {
                       margin="normal"
                       label="Minimum Marks For Qualify"
                       name="minMarks"
+                      disabled
                       type="number"
                       value={values.minMarks}
                       onChange={handleChange}
@@ -406,7 +409,7 @@ export default function CreateQuizModal() {
                       setFieldValue("scheduledDateTime", value)
                     }
                     onBlur={handleBlur}
-                    minDateTime={dayjs().add(1, 'hour')}
+                    minDateTime={dayjs().add(1, "hour")}
                     slots={{
                       textField: (props) => (
                         <TextField
@@ -430,24 +433,27 @@ export default function CreateQuizModal() {
                 </LocalizationProvider>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose} variant="outlined" sx={{color:"#6f41db",borderColor:"#6f41db"}} >
+                <Button
+                  onClick={handleClose}
+                  variant="outlined"
+                  sx={{ color: "#6f41db", borderColor: "#6f41db" }}
+                >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleSubmit}
                   variant="contained"
                   type="submit"
-                  sx={{backgroundColor:"#6f41db"}}
+                  sx={{ backgroundColor: "#6f41db" }}
                 >
-                  Create
+                  Save
                 </Button>
-             
+                <ViewQuizModal currentQuizLink={currentQuizLink} />
               </DialogActions>
             </Form>
           )}
         </Formik>
       </Dialog>
-      {addQuestionsOpen && quizLink !== "" && <AddQuestions openDialog={true} currentQuizLink={quizLink} />}
     </React.Fragment>
   );
 }

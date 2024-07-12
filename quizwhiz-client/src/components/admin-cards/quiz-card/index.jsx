@@ -19,7 +19,6 @@ const QuizCard = ({
   const [minutes, setMinutes] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(0);
   var quizDate = new Date(scheduledDate);
-
   useEffect(() => {
     setMinutes(Math.round((quizDate.getTime() - new Date().getTime()) / 60000));
   });

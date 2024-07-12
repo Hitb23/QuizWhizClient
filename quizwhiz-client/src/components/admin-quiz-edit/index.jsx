@@ -4,12 +4,18 @@ import { Delete, Edit } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
 import { DIFFICULTIES } from "../../utils/enum";
 import { DeleteQuiz } from "../../services/admindashboard.service";
-import Swal from "sweetalert2";
-// import withReactContent from "@sweetalert2/react-content";
+import EditQuizModal from "../dialog-boxes/edit-quiz-details";
 import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
+
+
+// import withReactContent from "@sweetalert2/react-content";
+
 
 const QuizEditTable = ({ data, Status, reload }) => {
 
+    const [deleteResponse,setDeleteResponse]=useState('');
+  const [isEditOpen,setIsEditOpen]=useState(false);
   const MySwal = withReactContent(Swal);
   const OnDeleteHandler = async (QuizLink) => {
     const result = await MySwal.fire({
@@ -142,13 +148,9 @@ const QuizEditTable = ({ data, Status, reload }) => {
                   <td className="text-black text-center">
                     <div className="d-flex justify-content-between align-items-center w-100 h-100 gap-2">
                       <Tooltip title="Edit">
-                        <button
-                          className="btn fw-bold"
-                          style={{ background: "#a89ee9" }}
-                        >
-                          <Edit />
-                        </button>
+                       <EditQuizModal currentQuizLink={ele.QuizLink}  />
                       </Tooltip>
+                      {/* {isEditOpen == true ? :null} */}
                       <Tooltip title="Delete">
                         <button
                           className="btn btn-danger fw-bold"
@@ -165,6 +167,7 @@ const QuizEditTable = ({ data, Status, reload }) => {
           </tbody>
         </table>
       </div>
+      
     </>
   );
 };
