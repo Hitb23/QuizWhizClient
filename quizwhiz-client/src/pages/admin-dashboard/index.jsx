@@ -53,6 +53,7 @@ const MenuProps = {
       width: 99,
     },
   },
+  
 };
 const AdminDashboard = () => {
   const [firstName, setFirstName] = useState("");
@@ -162,7 +163,7 @@ const AdminDashboard = () => {
       SetFilteredData([]);
     }
   };
-
+  
   const handlePageChange = async (event, value) => {
     SetCurrentPage(currentPage);
     try {
@@ -245,7 +246,16 @@ const AdminDashboard = () => {
       SetFilteredData([]);
     }
   };
-
+  const menuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: 200,
+        overflow: 'auto',
+      },
+    },
+    disablePortal: true,
+  };
+  
   return (
     <div
       className={`${classes["bgimage"]} ${classes["specific-page"]} d-flex m-0 bg-white`}
@@ -308,38 +318,38 @@ const AdminDashboard = () => {
               sx={{
                 width: "100%",
                 backgroundColor: "#fffff",
-                color: "#21201e !important",
+                color: "#3d3189 !important",
                 boxShadow: "none",
                 "& .MuiOutlinedInput-root": {
                   "& fieldset": {
-                    border: "1px solid #21201e",
-                    color: "#21201e",
-                    borderColor: "#21201e",
+                    border: "1px solid #3d3189",
+                    color: "#3d3189",
+                    borderColor: "#3d3189",
                   },
                   "&:hover fieldset": {
-                    border: "1px solid #21201e",
-                    color: "#21201e",
-                    borderColor: "#21201e",
+                    border: "1px solid #3d3189",
+                    color: "#3d3189",
+                    borderColor: "#3d3189",
                   },
                   "&.Mui-focused fieldset": {
-                    border: "1px solid #21201e",
-                    borderColor: "#21201e",
+                    border: "1px solid #3d3189",
+                    borderColor: "#3d3189",
                   },
                   "& .MuiInputBase-input": {
-                    color: "#21201e",
+                    color: "#3d3189",
                   },
                 },
               }}
               InputLabelProps={{
                 sx: {
-                  color: "#21201e",
+                  color: "#3d3189", // Set initial label color
                   paddingLeft: "0.2rem",
                   paddingRight: "0.2rem",
                   "&:hover": {
-                    color: "#21201e",
+                    color: "#3d3189", // Set hover label color
                   },
                   "&.Mui-focused": {
-                    color: "#21201e",
+                    color: "#3d3189", // Set focused label color
                   },
                 },
               }}
@@ -375,19 +385,19 @@ const AdminDashboard = () => {
                   color: "#21201e",
                   boxShadow: "none",
                   "& .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #21201e",
-                    borderColor: "#21201e", // Always set the border color to #21201e
+                    border: "1px solid #3d3189",
+                    borderColor: "#3d3189", // Always set the border color to #21201e
                   },
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #21201e",
-                    borderColor: "#21201e", // Maintain the border color on focus
+                    border: "1px solid #3d3189",
+                    borderColor: "#3d3189", // Maintain the border color on focus
                   },
                   "&:hover .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #21201e",
-                    borderColor: "#21201e", // Maintain the border color on hover
+                    border: "1px solid #3d3189",
+                    borderColor: "#3d3189", // Maintain the border color on hover
                   },
                   "& .MuiSvgIcon-root": {
-                    color: "#21201e",
+                    color: "#3d3189",
                   },
                 }}
               >
@@ -433,19 +443,19 @@ const AdminDashboard = () => {
                   color: "#21201e",
                   boxShadow: "none",
                   "& .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #21201e",
-                    borderColor: "#21201e", // Always set the border color to #21201e
+                    border: "1px solid #3d3189",
+                    borderColor: "#3d3189", // Always set the border color to #21201e
                   },
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #21201e",
-                    borderColor: "#21201e", // Maintain the border color on focus
+                    border: "1px solid #3d3189",
+                    borderColor: "#3d3189", // Maintain the border color on focus
                   },
                   "&:hover .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #21201e",
-                    borderColor: "#21201e", // Maintain the border color on hover
+                    border: "1px solid #3d3189",
+                    borderColor: "#3d3189", // Maintain the border color on hover
                   },
                   "& .MuiSvgIcon-root": {
-                    color: "#21201e",
+                    color: "#3d3189",
                   },
                 }}
               >
@@ -536,6 +546,7 @@ const AdminDashboard = () => {
                 onChange={handlePageSize}
                 autoWidth
                 label="Records"
+                MenuProps={menuProps}
                 sx={{
                   backgroundColor: "#fffff",
                   color: "#21201e",
@@ -562,6 +573,30 @@ const AdminDashboard = () => {
                 <MenuItem value={15}>15 </MenuItem>
               </Select>
             </FormControl>
+            {/* <select class="form-select form-select-lg mb-3"  aria-label=".form-select-lg example"  value={Records}
+                onChange={handlePageSize}>
+          <option value={5}>5</option>
+          <option value={10}>10</option>
+          <option value={15}>15</option>
+        </select> */}
+        {/* <FormControl sx={{ m: 1, minWidth: 80 }}>
+        <InputLabel id="demo-simple-select-autowidth-label">Records</InputLabel>
+        <Select
+          labelId="demo-simple-select-autowidth-label"
+          id="demo-simple-select-autowidth"
+          value={Records}
+                onChange={handlePageSize}
+          autoWidth
+          label="Records"
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          <MenuItem value={5}>5</MenuItem>
+          <MenuItem value={10}>10</MenuItem>
+          <MenuItem value={15}>15</MenuItem>
+        </Select>
+      </FormControl> */}
             <Pagination
               defaultPage={1}
               siblingCount={1}
@@ -576,16 +611,17 @@ const AdminDashboard = () => {
                   marginTop: "10px",
                   marginBottom: "10px",
                   "&:hover": {
-                    backgroundColor: "#ffe541",
-                    color: "#000000",
+                    backgroundColor: "#3d3189",
+                    color: "white",
                   },
                 },
                 "& .MuiPaginationItem-root.Mui-selected": {
-                  backgroundColor: "#ffe541",
-                  color: "#000000",
+                  
+                  backgroundColor: "#3d3189",
+                  color: "white",
                   border: "1px solid #21201e",
                   "&:hover": {
-                    backgroundColor: "#ffe541",
+                    backgroundColor: "#a89ee9",
                     color: "#000000",
                   },
                 },
