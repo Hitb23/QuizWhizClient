@@ -87,6 +87,7 @@ const ResetPassword = () => {
 
   return (
     <React.Fragment>
+      <div className={classes['full-screen']}>
       <AuthHeader />
       <main className={`${classes["main-component"]} container-fluid`}>
         <div className={`row justify-content-center`}>
@@ -202,6 +203,7 @@ const ResetPassword = () => {
           </div>
         </div>
       </main>
+      </div>
     </React.Fragment>
   );
 };

@@ -21,24 +21,34 @@ background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/s
     backdrop-filter: blur(10px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
-    border: 1px solid #fada65;
+    border: 1px solid rgb(110, 110, 228);
   }
   
   .total-category:hover{
     transform: scale(1.05);
-    background-color: #3d3189;
+    background-color: #a89ee9;
+    color: white;
   }
   
   .total-category-active {
-    background-color: #3d3189;
+    background-color: #a89ee9;
+    
+  }
+  .total-category-active {
+    color: white;
   }
 
-  .card-icon {
-    color: #f47d0a;
+  .card-icon{
+      color: #3d3189;
   }
-  
-  .title, .count {
-    color: #333;
+  .title{
+      /* font-size: 1rem; */
+      color:#3d3189;
+      font-weight: 800;
+  }
+  .count{
+      color:#3d3189;
+      font-weight: 800;
   }
   
   .glass-effect {
@@ -78,18 +88,6 @@ background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/s
     }
   }
   
-.card-icon{
-    color: #fada65;
-}
-.title{
-    /* font-size: 1rem; */
-    color:#fada65;
-    font-weight: 800;
-}
-.count{
-    color:#fada65;
-    font-weight: 800;
-}
 @media (max-width: 450px) {
     .logo-image{
         height: 3rem;

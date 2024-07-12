@@ -7,14 +7,14 @@ export const ADD_QUESTIONS_VALIDATIONS ={
             .required("Question is required")
             .max(700, "Question must be at most 700 characters"),
           answerOptions: Yup.array().when("type", {
-            is: (type) => type === "MCQ" || type === "MSQ",
+            is: (type) => type === 1 || type === 2,
             then: () =>
               Yup.array()
                 .of(Yup.string().required("Answer option is required"))
                 .length(4, "Must have exactly 4 options"),
           }),
           correctAnswers : Yup.array().when("type", {
-            is:(type) =>  type === "TITA" ||type === "TF"||type ==="MCQ" ,
+            is:(type) =>  type === 3||type ===1 ,
             then: ()=>
             Yup.array() .of( Yup.string()  .required('Correct answer is required') .max(100, 'Correct answer cannot be longer than 100 characters') )
             .length(1, 'One correct answer is required'),

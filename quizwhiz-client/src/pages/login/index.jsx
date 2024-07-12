@@ -84,132 +84,138 @@ const Login = () => {
 
   return (
     <Fragment>
-      <AuthHeader />
-      <main className={`${classes["main-component"]} container-fluid`}>
-        <div className={`row justify-content-center`}>
-          <div
-            className={`${classes["log-in-title"]} col-md-6 col-sm-8 col-10 text-center fw-bold`}
-          >
-            Log In
-          </div>
-          <div>
-            <Formik
-              initialValues={{ email: "", password: "" }}
-              validationSchema={validationSchema}
-              onSubmit={handleSubmit}
+      <div className={`${classes["full-screen"]}`}>
+        <AuthHeader />
+        <main className={`${classes["main-component"]} container-fluid `}>
+          <div className={`row justify-content-center`}>
+            <div
+              className={`${classes["log-in-title"]} col-md-6 col-sm-8 col-10 text-center fw-bold`}
             >
-              {({ values, errors, touched, isValid, isSubmitting }) => (
-                <Form>
-                  <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                      <label
-                        htmlFor="email"
-                        className={`form-label fw-bold ${classes["black-font"]}`}
-                      >
-                        Email
-                      </label>
-                      <Field
-                        as="input"
-                        type="email"
-                        className={`${classes["form-input"]} form-control form-control-md p-3`}
-                        id="email"
-                        name="email"
-                        placeholder="name@example.com"
-                        autoComplete="on"
-                      />
-                      {touched.email && errors.email ? (
-                        <span className={classes["error-message"]}>{errors.email}</span>
-                      ) : null}
-                    </div>
-                  </div>
-                  <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                      <label
-                        htmlFor="password"
-                        className={`form-label fw-bold ${classes["black-font"]}`}
-                      >
-                        Password
-                      </label>
-                      <Field as="input" name="password">
-                        {({ field, form }) => (
-                          <div className={classes["password-field"]}>
-                            <input
-                              {...field}
-                              type={showPassword ? "text" : "password"}
-                              className={`${classes["form-input"]} form-control form-control-md p-3`}
-                              placeholder="Password"
-                              id="password"
-                              autoComplete="off"
-                            />
-                            <button
-                              type="button"
-                              onClick={handleTogglePasswordVisibility}
-                              className={classes["visibility-toggle"]}
-                            >
-                              {showPassword ? (
-                                <MdVisibilityOff size={20} />
-                              ) : (
-                                <MdVisibility size={20} />
-                              )}
-                            </button>
-                          </div>
-                        )}
-                      </Field>
-                      {touched.password && errors.password ? (
-                        <span className={classes["error-message"]}>{errors.password}</span>
-                      ) : null}
-                    </div>
-                  </div>
-                  <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex flex-row-reverse">
-                      <Link to={RoutePaths.ForgotPassword}>
+              Log In
+            </div>
+            <div>
+              <Formik
+                initialValues={{ email: "", password: "" }}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+              >
+                {({ values, errors, touched, isValid, isSubmitting }) => (
+                  <Form>
+                    <div className={`d-flex justify-content-center`}>
+                      <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
                         <label
-                          className={`form-label fw-bold text-end text-decoration-none pe-auto ${classes["forgot-password-label"]}`}
+                          htmlFor="email"
+                          className={`form-label fw-bold ${classes["black-font"]}`}
                         >
-                          Forgot Password?
+                          Email
                         </label>
-                      </Link>
+                        <Field
+                          as="input"
+                          type="email"
+                          className={`${classes["form-input"]} form-control form-control-md p-3`}
+                          id="email"
+                          name="email"
+                          placeholder="name@example.com"
+                          autoComplete="on"
+                        />
+                        {touched.email && errors.email ? (
+                          <span className={classes["error-message"]}>
+                            {errors.email}
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
-                  <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
-                      <button
-                        type="submit"
-                        className={`${classes["log-in-button"]} ${
-                          !isValid || isSubmitting
-                            ? classes["disabled-button"]
-                            : ""
-                        }`}
-                        disabled={!isValid || isSubmitting}
-                      >
-                        Log In
-                      </button>
+                    <div className={`d-flex justify-content-center`}>
+                      <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                        <label
+                          htmlFor="password"
+                          className={`form-label fw-bold ${classes["black-font"]}`}
+                        >
+                          Password
+                        </label>
+                        <Field as="input" name="password">
+                          {({ field, form }) => (
+                            <div className={classes["password-field"]}>
+                              <input
+                                {...field}
+                                type={showPassword ? "text" : "password"}
+                                className={`${classes["form-input"]} form-control form-control-md p-3`}
+                                placeholder="Password"
+                                id="password"
+                                autoComplete="off"
+                              />
+                              <button
+                                type="button"
+                                onClick={handleTogglePasswordVisibility}
+                                className={classes["visibility-toggle"]}
+                              >
+                                {showPassword ? (
+                                  <MdVisibilityOff size={20} />
+                                ) : (
+                                  <MdVisibility size={20} />
+                                )}
+                              </button>
+                            </div>
+                          )}
+                        </Field>
+                        {touched.password && errors.password ? (
+                          <span className={classes["error-message"]}>
+                            {errors.password}
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
-                </Form>
-              )}
-            </Formik>
+                    <div className={`d-flex justify-content-center`}>
+                      <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex flex-row-reverse">
+                        <Link to={RoutePaths.ForgotPassword}>
+                          <label
+                            className={`form-label fw-bold text-end text-decoration-none pe-auto ${classes["forgot-password-label"]}`}
+                          >
+                            Forgot Password?
+                          </label>
+                        </Link>
+                      </div>
+                    </div>
+                    <div className={`d-flex justify-content-center`}>
+                      <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
+                        <button
+                          type="submit"
+                          className={`${classes["log-in-button"]} ${
+                            !isValid || isSubmitting
+                              ? classes["disabled-button"]
+                              : ""
+                          }`}
+                          disabled={!isValid || isSubmitting}
+                        >
+                          Log In
+                        </button>
+                      </div>
+                    </div>
+                  </Form>
+                )}
+              </Formik>
 
-            <div className={`d-flex justify-content-center`}>
-              <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
-                <div
-                  className={`d-flex align-items-center ${classes["link-message"]}`}
-                >
-                  Don't you have an account?
-                </div>
-                <Link to={RoutePaths.SignUp}>
-                  <label
-                    className={`form-label fw-bold text-end text-decoration-none m-0 pe-auto ${classes["log-in-label"]}`}
+              <div className={`d-flex justify-content-center`}>
+                <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
+                  <div
+                    className={`d-flex align-items-center ${classes["link-message"]}`}
                   >
-                    Sign Up
-                  </label>
-                </Link>
+                    Don't you have an account?
+                  </div>
+                  <Link to={RoutePaths.SignUp}>
+                    <label
+                      className={`form-label fw-bold text-end text-decoration-none m-0 pe-auto ${classes["log-in-label"]}`}
+                    >
+                      Sign Up
+                    </label>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </main>
-      <ToastContainer />
+        </main>
+        <ToastContainer />
+      </div>
     </Fragment>
   );
 };
