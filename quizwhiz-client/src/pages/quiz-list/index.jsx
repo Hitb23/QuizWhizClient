@@ -140,7 +140,7 @@ const Quizzes = () => {
 
   const handlePageChange = async (event, value) => {
     SetCurrentPage(value);
-    console.log(searchedWord);
+    // console.log(searchedWord);
     try {
       const result = await filterByCategory({
         StatusId: tabStatus,

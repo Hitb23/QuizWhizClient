@@ -10,9 +10,7 @@ import { Role } from "../utils/enum";
 import NotFoundPage from "../pages/page-not-found";
 import AdminLogin from "../pages/admin-login";
 import MyProfile from "../pages/my-profile";
-
 import AdminCategory from "../pages/admin-category";
-
 import CreateQuizModal from "../components/dialog-boxes/create-quiz";
 import AddQuestions from "../components/dialog-boxes/add-questions";
 import ViewQuizModal from "../components/dialog-boxes/view-quiz";
@@ -109,6 +107,9 @@ export const ROUTES = [
     roles:[Role.Admin, Role.Contestant, Role.Public]
   },
   {
+    path:'/user-dashboard/:quizLink',
+    element:<UserDashboard/>,
+    roles:[Role.Contestant]
     path:'/admin-dashboard/quiz',
     element:<Quiz/>,
     roles:[Role.Admin, Role.Contestant, Role.Public]
