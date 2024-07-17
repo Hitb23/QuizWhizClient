@@ -122,7 +122,7 @@ const AdminLogin = () => {
                         autoComplete="on"
                       />
                       {touched.email && errors.email ? (
-                        <span className="text-danger">{errors.email}</span>
+                        <span className={classes["error-message"]}>{errors.email}</span>
                       ) : null}
                     </div>
                   </div>
@@ -160,7 +160,7 @@ const AdminLogin = () => {
                         )}
                       </Field>
                       {touched.password && errors.password ? (
-                        <span className="text-danger">{errors.password}</span>
+                        <span className={classes["error-message"]}>{errors.password}</span>
                       ) : null}
                     </div>
                   </div>

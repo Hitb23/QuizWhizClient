@@ -165,7 +165,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
               src={fullImagePath}
             ></Avatar>
             <p className="fs-5 mt-3 fw-semibold d-sm-inline d-none">
-              {firstName} {lastName}
+              {userName}
             </p>
           </IconButton>
 
@@ -207,22 +207,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             <MenuItem onClick={clickOnProfile}>
               <Avatar /> Profile
             </MenuItem>
-            <MenuItem onClick={handleAvatarClose}>
-              <Avatar /> My account
-            </MenuItem>
             <Divider />
-            <MenuItem onClick={handleAvatarClose}>
-              <ListItemIcon>
-                <PersonAdd fontSize="small" />
-              </ListItemIcon>
-              Add another account
-            </MenuItem>
-            <MenuItem onClick={handleAvatarClose}>
-              <ListItemIcon>
-                <Settings fontSize="small" />
-              </ListItemIcon>
-              Settings
-            </MenuItem>
             <MenuItem onClick={logoutHandler}>
               <ListItemIcon>
                 <Logout fontSize="small" />
