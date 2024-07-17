@@ -50,25 +50,25 @@ const UserDashboard = () => {
     });
 
     connection.on("GetTitleOfQuiz", (data) =>  {
-      console.log("Quiz title : " + data);
+      console.log(data);
     });
 
     connection.start().catch((error) => {
       console.error(error);
     });
 
-    fetchQuestion(0);
+    // fetchQuestion(0);
   }, []);
 
-  const fetchQuestion = async (updatedQuestionCount) => {
-    if (questionCount <= totalQuestions) {
-      await connection
-        .invoke("GetNewQuestion", quizLink, updatedQuestionCount)
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  };
+  // const fetchQuestion = async (updatedQuestionCount) => {
+  //   if (questionCount <= totalQuestions) {
+  //     await connection
+  //       .invoke("GetNewQuestion", quizLink, updatedQuestionCount)
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   }
+  // };
 
   const getCorrectAnswer = async (quizLink, questionCount) => {
     console.log("Quizlink and its type: " + quizLink + typeof(quizLink));
@@ -83,8 +83,8 @@ const UserDashboard = () => {
 
   useEffect(() => {
     if (questionCount <= totalQuestions) {
-      fetchQuestion(questionCount);
-      getCorrectAnswer(quizLink, questionCount);
+      // fetchQuestion(questionCount);
+      // getCorrectAnswer(quizLink, questionCount);
     }
   }, [questionCount, totalQuestions]);
 

@@ -49,6 +49,7 @@ import { userActions } from "../../redux/action-creators";
 import AdminSlider from "../../components/header/admin-header";
 import countries from "../../components/list-of-countries/listOfCountries";
 import Select from "@mui/material/Select";
+import { ToastContainer, toast } from "react-toastify";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Flag from "react-world-flags";
 import axios from "axios";
@@ -65,70 +66,6 @@ const MenuProps = {
     },
   },
 };
-
-const openedMixin = (theme) => ({
-  width: drawerWidth,
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: "hidden",
-});
-
-const closedMixin = (theme) => ({
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
-});
-
-// const DrawerHeader = styled("div")(({ theme }) => ({
-//   display: "flex",
-//   alignItems: "center",
-//   justifyContent: "flex-end",
-//   padding: theme.spacing(0, 1),
-//   ...theme.mixins.toolbar,
-// }));
-
-// const AppBar = styled(MuiAppBar, {
-//   shouldForwardProp: (prop) => prop !== "open",
-// })(({ theme, open }) => ({
-//   zIndex: theme.zIndex.drawer + 1,
-//   transition: theme.transitions.create(["width", "margin"], {
-//     easing: theme.transitions.easing.sharp,
-//     duration: theme.transitions.duration.leavingScreen,
-//   }),
-//   ...(open && {
-//     marginLeft: drawerWidth,
-//     width: `calc(100% - ${drawerWidth}px)`,
-//     transition: theme.transitions.create(["width", "margin"], {
-//       easing: theme.transitions.easing.sharp,
-//       duration: theme.transitions.duration.enteringScreen,
-//     }),
-//   }),
-// }));
-
-// const Drawer = styled(MuiDrawer, {
-//   shouldForwardProp: (prop) => prop !== "open",
-// })(({ theme, open }) => ({
-//   width: drawerWidth,
-//   flexShrink: 0,
-//   whiteSpace: "nowrap",
-//   boxSizing: "border-box",
-//   ...(open && {
-//     ...openedMixin(theme),
-//     "& .MuiDrawer-paper": openedMixin(theme),
-//   }),
-//   ...(!open && {
-//     ...closedMixin(theme),
-//     "& .MuiDrawer-paper": closedMixin(theme),
-//   }),
-// }));
 
 const validationSchema = yup.object().shape({
   firstName: yup
@@ -151,7 +88,7 @@ const validationSchema = yup.object().shape({
   country: yup.string().required("Select a country"),
 });
 
-const AdminSideBar = () => {
+const MyProfile = () => {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [openIndex, setOpenIndex] = useState(null);
@@ -170,6 +107,7 @@ const AdminSideBar = () => {
   const [countryName, setCountryName] = useState([]);
   const [uploadKey, setUploadKey] = useState(Date.now());
   const [url, setUrl] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(null);
 
@@ -197,8 +135,17 @@ const AdminSideBar = () => {
             PhoneNumber,
             Country,
           });
+          if(clickOnSave){
+            toast.success("Details changed successfully", {
+              position: "top-right",
+              autoClose: 5000,
+            });
+          }
           setIsEditable(false);
         } catch (error) {
+          if(!clickOnSave){
+            toast.error("Unable to edit the details");
+          }
           console.log(error);
         }
       }
@@ -210,6 +157,10 @@ const AdminSideBar = () => {
   useEffect(() => {
     const data = jwtDecoder();
     const username = data.Username;
+    const roleName = data.Role;
+    if(roleName == 'Admin'){
+      setIsAdmin(true);
+    }
     console.log("Username in dashboard: " + username);
     setUserName(username);
     setEmail(data.Email);
@@ -297,6 +248,12 @@ const AdminSideBar = () => {
 
   const handleSaveClick = () => {
     setClickOnSave(true);
+    if(clickOnSave){
+      toast.success("Details changed successfully", {
+        position: "top-right",
+        autoClose: 5000,
+      });
+    }
   };
 
   const handleCancelClick = () => {
@@ -342,21 +299,17 @@ const AdminSideBar = () => {
     formik.setFieldValue("country", value);
   };
 
-  // function getStyles(name, personName, theme) {
-  //   return {
-  //     fontWeight:
-  //       personName.indexOf(name) === -1
-  //         ? theme.typography.fontWeightRegular
-  //         : theme.typography.fontWeightMedium,
-  //   };
-  // }
-
-  // const getCountryFlagUrl = (countryName) => {
-  //   return `https://flagpedia.net/data/flags-mini/${countryName.toLowerCase()}.png`;
-  // };
-
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
+    <Box
+    className={`${isAdmin ? classes["admin-profile"] : ""}`}
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <ToastContainer />
       <CssBaseline />
       <AdminSlider
         key={uploadKey}
@@ -365,39 +318,17 @@ const AdminSideBar = () => {
         uploadCount={uploadCount}
         userName={jwtDecoder().Username}
       />
-      <Box
-        className={`container-fluid flex-column flex-xl-row ${classes["main-box"]}`}
-      >
-        <div className={classes["profile-photo-div"]}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: "0px",
-            marginRight: "3rem",
-            marginLeft: "1rem",
-          }}
+      <div className={`row container ${classes["main-box"]}`}>
+        <div
+          className={`col-lg-6 col-12 d-flex flex-column align-items-center ${classes["profile-photo-div"]}`}
         >
-          {/* <Avatar src={profilePhotoUrl} className={`${classes["profile-photo"]}`}>
-            {image ? (
-              <img
-                src={profilePhotoUrl}
-                alt="Uploaded"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-            ) : (
-              <span className="h2 mt-1">BR</span>
-            )}
-          </Avatar> */}
-
           <Avatar
-            className={classes["profile-photo"]}
+            className={`${classes["profile-photo"]}`}
             src={image || fullImagePath}
           ></Avatar>
 
           <FileUploadButton
-            className={`mt-4 mb-4 ${classes["upload-btn"]}`}
+            className={`mt-4 mb-4 ${isAdmin ? classes["admin-upload-btn"] : classes["upload-btn"]}`}
             component="label"
             role={undefined}
             variant="contained"
@@ -412,11 +343,9 @@ const AdminSideBar = () => {
             />
           </FileUploadButton>
         </div>
-        <div className={classes["vertical-line-centre"]}></div>
-        <form onSubmit={formik.handleSubmit}>
-          <div
-            className={`d-flex align-items-center flex-column m-auto ${classes["form-group"]}`}
-          >
+        {/* <div className={`col-md-6 ${classes["vertical-line-centre"]}`}></div> */}
+        <div className={`col-lg-6 col-12 ${classes["form-group"]}`}>
+          <form onSubmit={formik.handleSubmit}>
             {/* <Field
               as="input"
               type="text"
@@ -425,130 +354,152 @@ const AdminSideBar = () => {
               id="username"
               inputProps={{readOnly: !isEditable}}
             /> */}
-            <label
-              htmlFor="userName"
-              className={`form-label fw-bold ${classes["black-font"]}`}
-            >
-              Username
-            </label>
-            <TextField
-              className={`${classes["input-field"]} form-control`}
-              name="userName"
-              value={userName}
-              variant="outlined"
-              inputProps={{ readOnly: !isEditable }}
-              sx={{ "& fieldset": { border: "none" } }}
-            />
+            <div className={`col-md-12`}>
+              <label
+                htmlFor="userName"
+                className={`form-label fw-bold ${isAdmin ? classes["admin-label-font"] : classes["black-font"]}`}
+              >
+                Username
+              </label>
+              <TextField
+                className={`${isAdmin ? classes["admin-input-field"] : classes["input-field"]} form-control`}
+                name="userName"
+                value={userName}
+                variant="outlined"
+                inputProps={{ readOnly: !isEditable }}
+                sx={{ "& fieldset": { border: "none" } }}
+              />
+            </div>
 
-            <label
-              htmlFor="email"
-              className={`mt-3 form-label fw-bold ${classes["black-font"]}`}
-            >
-              Email
-            </label>
-            <TextField
-              className={`${classes["input-field"]} form-control`}
-              name="email"
-              value={email}
-              variant="outlined"
-              inputProps={{ readOnly: !isEditable }}
-              sx={{ "& fieldset": { border: "none" } }}
-            />
+            <div className={`col-md-12`}>
+              <label
+                htmlFor="firstName"
+                className={`mt-3 form-label w-100 fw-bold ${isAdmin ? classes["admin-label-font"] : classes["black-font"]}`}
+              >
+                Email
+              </label>
+              <TextField
+                className={`${isAdmin ? classes["admin-input-field"] : classes["input-field"]} form-control`}
+                name="firstName"
+                variant="outlined"
+                value={email}
+                onChange={formik.handleChange}
+                inputProps={{ readOnly: !isEditable }}
+                sx={{ "& fieldset": { border: "none" } }}
+              />
+              {formik.touched.firstName && formik.errors.firstName ? (
+                <span className={`mt-2 ${classes["error-message"]}`}>
+                  {formik.errors.firstName}
+                </span>
+              ) : null}
+            </div>
 
-            <label
-              htmlFor="firstName"
-              className={`mt-3 form-label fw-bold ${classes["black-font"]}`}
-            >
-              First Name
-            </label>
-            <TextField
-              className={`${classes["input-field"]} form-control`}
-              name="firstName"
-              variant="outlined"
-              value={formik.values.firstName}
-              onChange={formik.handleChange}
-              inputProps={{ readOnly: !isEditable }}
-              sx={{ "& fieldset": { border: "none" } }}
-            />
-            {formik.touched.firstName && formik.errors.firstName ? (
-              <span className={`mt-2 ${classes["error-message"]}`}>
-                {formik.errors.firstName}
-              </span>
-            ) : null}
+            <div className={`col-md-12`}>
+              <label
+                htmlFor="firstName"
+                className={`mt-3 form-label fw-bold ${isAdmin ? classes["admin-label-font"] : classes["black-font"]}`}
+              >
+                First Name
+              </label>
+              <TextField
+                className={`${isAdmin ? classes["admin-input-field"] : classes["input-field"]} form-control`}
+                name="firstName"
+                variant="outlined"
+                value={formik.values.firstName}
+                onChange={formik.handleChange}
+                inputProps={{ readOnly: !isEditable }}
+                sx={{ "& fieldset": { border: "none" } }}
+              />
+              {formik.touched.firstName && formik.errors.firstName ? (
+                <span className={`mt-2 ${classes["error-message"]}`}>
+                  {formik.errors.firstName}
+                </span>
+              ) : null}
+            </div>
 
-            <label
-              htmlFor="lastName"
-              className={`mt-3 form-label fw-bold ${classes["black-font"]}`}
-            >
-              Last Name
-            </label>
-            <TextField
-              className={`${classes["input-field"]} form-control`}
-              name="lastName"
-              variant="outlined"
-              value={formik.values.lastName}
-              onChange={formik.handleChange}
-              inputProps={{ readOnly: !isEditable }}
-              sx={{ "& fieldset": { border: "none" } }}
-            />
-            {formik.touched.lastName && formik.errors.lastName ? (
-              <span className={`mt-2 ${classes["error-message"]}`}>
-                {formik.errors.lastName}
-              </span>
-            ) : null}
+            <div className={`col-md-12`}>
+              <label
+                htmlFor="lastName"
+                className={`mt-3 form-label fw-bold ${isAdmin ? classes["admin-label-font"] : classes["black-font"]}`}
+              >
+                Last Name
+              </label>
+              <TextField
+                className={`${isAdmin ? classes["admin-input-field"] : classes["input-field"]} form-control`}
+                name="lastName"
+                variant="outlined"
+                value={formik.values.lastName}
+                onChange={formik.handleChange}
+                inputProps={{ readOnly: !isEditable }}
+                sx={{ "& fieldset": { border: "none" } }}
+              />
+              {formik.touched.lastName && formik.errors.lastName ? (
+                <span className={`mt-2 ${classes["error-message"]}`}>
+                  {formik.errors.lastName}
+                </span>
+              ) : null}
+            </div>
 
-            <label
-              htmlFor="phoneNumber"
-              className={`mt-3 form-label fw-bold ${classes["black-font"]}`}
-            >
-              Phone Number
-            </label>
-            <TextField
-              className={`${classes["input-field"]} form-control`}
-              name="phoneNumber"
-              variant="outlined"
-              value={formik.values.phoneNumber}
-              onChange={formik.handleChange}
-              inputProps={{ readOnly: !isEditable }}
-              sx={{ "& fieldset": { border: "none" } }}
-            />
-            {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
-              <span className={`mt-2 ${classes["error-message"]}`}>
-                {formik.errors.phoneNumber}
-              </span>
-            ) : null}
+            <div className={`col-md-12`}>
+              <label
+                htmlFor="phoneNumber"
+                className={`mt-3 form-label fw-bold ${isAdmin ? classes["admin-label-font"] : classes["black-font"]}`}
+              >
+                Phone Number
+              </label>
+              <TextField
+                className={`${isAdmin ? classes["admin-input-field"] : classes["input-field"]} form-control`}
+                name="phoneNumber"
+                variant="outlined"
+                value={formik.values.phoneNumber}
+                onChange={formik.handleChange}
+                inputProps={{ readOnly: !isEditable }}
+                sx={{ "& fieldset": { border: "none" } }}
+              />
+              {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
+                <span className={`mt-2 ${classes["error-message"]}`}>
+                  {formik.errors.phoneNumber}
+                </span>
+              ) : null}
+            </div>
 
-            <label
-              htmlFor="country"
-              className={`mt-3 form-label fw-bold ${classes["black-font"]}`}
-            >
-              Choose Country
-            </label>
-            <Select
-              className={`${classes["input-field"]}`}
-              name="country"
-              onChange={handleCountryChange}
-              value={formik.values.country}
-              input={<OutlinedInput />}
-              readOnly={!isEditable}
-              MenuProps={MenuProps}
-              sx={{ "& fieldset": { border: "none" }, borderRadius: "0.4rem" }}
-            >
-              {countries.map((country) => (
-                <MenuItem key={country.code} value={country.name}>
-                  <Flag
-                    code={country.code}
-                    style={{ width: "1.5em", marginRight: "8px" }}
-                  />
-                  {country.name}
-                </MenuItem>
-              ))}
-            </Select>
-            {formik.touched.country && formik.errors.country ? (
-              <span className={`mt-2 ${classes["error-message"]}`}>
-                {formik.errors.country}
-              </span>
-            ) : null}
+            <div className={`col-md-12`}>
+              <label
+                htmlFor="country"
+                className={`mt-3 form-label fw-bold ${isAdmin ? classes["admin-label-font"] : classes["black-font"]}`}
+              >
+                Choose Country
+              </label>
+              <Select
+                className={`${isAdmin ? classes["admin-input-field"] : classes["input-field"]}`}
+                name="country"
+                onChange={handleCountryChange}
+                value={formik.values.country}
+                input={<OutlinedInput />}
+                readOnly={!isEditable}
+                MenuProps={MenuProps}
+                sx={{
+                  "& fieldset": { border: "none" },
+                  borderRadius: "0.4rem",
+                  height: "59px"
+                }}
+              >
+                {countries.map((country) => (
+                  <MenuItem key={country.code} value={country.name}>
+                    <Flag
+                      code={country.code}
+                      style={{ width: "1.5em", marginRight: "8px" }}
+                    />
+                    {country.name}
+                  </MenuItem>
+                ))}
+              </Select>
+              {formik.touched.country && formik.errors.country ? (
+                <span className={`mt-2 ${classes["error-message"]}`}>
+                  {formik.errors.country}
+                </span>
+              ) : null}
+            </div>
 
             <div className="d-flex flex-row">
               {isEditable ? (
@@ -556,7 +507,7 @@ const AdminSideBar = () => {
                   <Button
                     type="submit"
                     variant="contained"
-                    className={`mt-4 me-2 ${classes["edit-button"]}`}
+                    className={`mt-4 me-2 ${isAdmin ? classes["admin-edit-button"] : classes["edit-button"]}`}
                     id="save-button"
                     onClick={handleSaveClick}
                     sx={{
@@ -570,7 +521,7 @@ const AdminSideBar = () => {
                   <Button
                     type="button"
                     variant="outlined"
-                    className={`mt-4 ms-1 ${classes["edit-button"]}`}
+                    className={`mt-4 ms-1 ${isAdmin ? classes["admin-edit-button"] : classes["edit-button"]}`}
                     sx={{
                       minWidth: 75,
                       maxWidth: 50,
@@ -584,7 +535,7 @@ const AdminSideBar = () => {
               ) : (
                 <Button
                   variant="contained"
-                  className={`mt-4 ${classes["edit-button"]}`}
+                  className={`mt-4 ${isAdmin ? classes["admin-edit-button"] : classes["edit-button"]}`}
                   sx={{ minWidth: 10, maxWidth: 50 }}
                   onClick={handleEditClick}
                 >
@@ -592,11 +543,11 @@ const AdminSideBar = () => {
                 </Button>
               )}
             </div>
-          </div>
-        </form>
-      </Box>
+          </form>
+        </div>
+      </div>
     </Box>
   );
 };
 
-export default AdminSideBar;
+export default MyProfile;

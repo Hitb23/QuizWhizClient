@@ -123,7 +123,7 @@ const QuizCard = ({
           </div>
         </div>
         <div className="col-xl-3 text-xl-end d-flex justify-content-center align-items-center flex-wrap">
-          {minutes <= 5 && minutes >= 0 ? (
+          {minutes <= 60 && minutes >= 0 ? (
             <div className="d-none d-xl-inline">
               <button type="submit" className={classes["join-now-button"]} onClick={navigateToQuiz}>
                 Join Now
@@ -171,7 +171,7 @@ const QuizCard = ({
           </div>
         </div>
         <div className="col-md-12 mt-2 my-auto text-center text-xl-end d-xl-none d-flex justify-content-center align-items-center column-gap-3 row-gap-3 flex-wrap">
-          {minutes <= 5 && minutes >= 0 ? (
+          {minutes <= 60 && minutes >= 0 ? (
             <div>
               <button type="submit" className={classes["join-now-button"]}>
                 Join Now
