@@ -15,7 +15,8 @@ export const RoutePaths = {
   CreateNewQuiz:"/create-new-quiz",
   GetQuizDetails:"/get-quiz-details",
   AddQuizQuestions:"/add-quiz-questions",
-  UpdateQuizQuestions:"/update-quiz-question"
+  UpdateQuizQuestions:"/update-quiz-question",
+  ViewQuizResult:"/admin-dashboard/view-quiz-result"
 };
 
 export const Role = {
@@ -50,7 +51,8 @@ export const API_URLS = {
   GET_SINGLE_QUESTION:'/quiz/get-single-quiz-question',
   GET_COUNT_OF_QUESTIONS: '/quiz/get-count-of-questions',
   QUIZ_DETAILS:'/quiz/get-quiz-details?quizLink=',
-  DELETE_QUIZ:'/quiz/delete-quiz?quizLink='
+  DELETE_QUIZ:'/quiz/delete-quiz?quizLink=',
+  PUBLISH_QUIZ:'/quiz/publish-quiz?quizLink='
 };
 export const statusEnum={
   "pending": 1,

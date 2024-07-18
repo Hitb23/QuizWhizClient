@@ -84,7 +84,7 @@ const UserDashboard = () => {
     <React.Fragment>
       <LandingHeader />
         <h1>User Dashboard</h1>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <button onClick={attendQuiz}>Attend Quiz</button>
       <h1 className="text-white">Current Question:</h1>
       <p className="text-white">

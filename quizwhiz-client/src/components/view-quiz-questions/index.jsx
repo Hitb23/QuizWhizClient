@@ -15,6 +15,7 @@ import {
   Checkbox,
   FormHelperText,
   Button, // Added Button import
+  Radio, RadioGroup, FormControlLabel
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
@@ -32,7 +33,7 @@ import Swal from "sweetalert2";
 import { questionTypeEnum } from "../../utils/enum";
 import { ToastContainer, toast } from "react-toastify";
 
-const ViewQuizQuestions = ({ currentQuizLink }) => {
+const ViewQuizQuestions = ({ currentQuizLink ,closeEditDialog}) => {
   const [questions, setQuestions] = useState([]);
   const [editMode, setEditMode] = useState(null);
   const [editing, setEditing] = useState(false);
@@ -45,12 +46,18 @@ const ViewQuizQuestions = ({ currentQuizLink }) => {
     Questions: Yup.array().of(
       Yup.object().shape({
         question: Yup.string().required("Question is required"),
-        Options: Yup.array().of(
-          Yup.object().shape({
-            OptionText: Yup.string().required("Option is required"),
-            IsAnswer: Yup.boolean(),
-          })
-        ),
+        Options: Yup.array()
+          .of(
+            Yup.object().shape({
+              OptionText: Yup.string().required("Option is required"),
+              IsAnswer: Yup.boolean(),
+            })
+          )
+          .test(
+            "at-least-one-checked",
+            "At least one option must be marked as correct",
+            (options) => options.some((option) => option.IsAnswer)
+          ),
         Answers: Yup.string().when("Options", {
           is: (options) => !options.some((option) => option.IsAnswer === true),
           then: () => Yup.string().required("Correct answer is required"),
@@ -58,7 +65,13 @@ const ViewQuizQuestions = ({ currentQuizLink }) => {
       })
     ),
   });
-
+  const getUpdatedOptions = (OptionArr, Ans) => {
+    const UpdatedOptions = OptionArr.map((option) => ({
+      ...option,
+      IsAnswer: option.OptionText === Ans,
+    }));
+    return UpdatedOptions;
+  };
   const formik = useFormik({
     initialValues,
     validationSchema,
@@ -70,7 +83,12 @@ const ViewQuizQuestions = ({ currentQuizLink }) => {
     const sentData = {
       QuestionId: questionData.questionId,
       QuestionText: questionData.question,
-      Options: questionData.questionTypeId !== 3 ? questionData.Options : [],
+      Options:
+        questionData.questionTypeId === 1
+          ? getUpdatedOptions(questionData.Options, questionData.Answers)
+          : questionData.questionTypeId === 2
+          ? questionData.Options
+          : [],
       IsTrue:
         questionData.questionTypeId === 3 && questionData.Answers
           ? questionData.Answers
@@ -86,6 +104,7 @@ const ViewQuizQuestions = ({ currentQuizLink }) => {
 
     setEditMode(null);
     setEditing(false);
+    closeEditDialog();
   }
 
   useEffect(() => {
@@ -162,7 +181,7 @@ const ViewQuizQuestions = ({ currentQuizLink }) => {
   const handleOptionChange = (index, optIndex, event) => {
     const { name, value } = event.target;
     const updatedQuestions = [...formik.values.Questions];
-    updatedQuestions[index].Options[optIndex][name.split('.').pop()] = value;
+    updatedQuestions[index].Options[optIndex][name.split(".").pop()] = value;
     if (updatedQuestions[index].Options[optIndex].IsAnswer) {
       updatedQuestions[index].Answers = value;
     }
@@ -173,17 +192,19 @@ const ViewQuizQuestions = ({ currentQuizLink }) => {
     switch (question.QuestionTypeId) {
       case 1:
         return (
-          <>
+          <RadioGroup
+            name={`Questions[${index}].Answers`}
+            value={formik.values.Questions[index]?.Answers || ""}
+            onChange={(event) => handleRadioChange(index, event)}
+          >
             {formik.values.Questions[index]?.Options.map((option, optIndex) => (
-              <React.Fragment key={optIndex}>
+              <Box key={optIndex} display="flex" alignItems="center">
                 <TextField
                   fullWidth
                   label={`Option ${optIndex + 1}`}
                   name={`Questions[${index}].Options[${optIndex}].OptionText`}
                   value={option?.OptionText || ""}
-                  onChange={(event) =>
-                    handleOptionChange(index, optIndex, event)
-                  }
+                  onChange={(event) => handleOptionChange(index, optIndex, event)}
                   disabled={editMode !== index}
                   margin="normal"
                   error={
@@ -192,45 +213,28 @@ const ViewQuizQuestions = ({ currentQuizLink }) => {
                     formik.errors.Questions &&
                     formik.errors.Questions[index]?.Options &&
                     Boolean(
-                      formik.errors.Questions[index]?.Options[optIndex]
-                        ?.OptionText
+                      formik.errors.Questions[index]?.Options[optIndex]?.OptionText
                     )
                   }
                   helperText={
                     formik.touched.Questions &&
                     formik.touched.Questions[index]?.Options &&
                     formik.errors.Questions &&
-                    formik.errors.Questions[index]?.Options &&
-                    formik.errors.Questions[index]?.Options[optIndex]
-                      ?.OptionText
+                    formik.errors.Questions[index]?.Options[optIndex]?.OptionText
                   }
                 />
-              </React.Fragment>
+                <FormControlLabel
+                  value={option?.OptionText || ""}
+                  control={<Radio />}
+                  label=""
+                  disabled={editMode !== index}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  style={{margin:"1px"}}
+                />
+              </Box>
             ))}
-            <FormControl fullWidth margin="normal">
-              <InputLabel>Correct Answer</InputLabel>
-              <Select
-                label="Correct Answer"
-                name={`Questions[${index}].Answers`}
-                value={formik.values.Questions[index]?.Answers || ""}
-                onChange={formik.handleChange}
-                disabled={editMode !== index}
-              >
-                {formik.values.Questions[index]?.Options.map(
-                  (option, optIndex) => (
-                    <MenuItem key={optIndex} value={option?.OptionText || ""}>
-                      {option?.OptionText || ""}
-                    </MenuItem>
-                  )
-                )}
-              </Select>
-              <FormHelperText>
-                {formik.touched.Questions &&
-                  formik.errors.Questions &&
-                  formik.errors.Questions[index]?.Answers}
-              </FormHelperText>
-            </FormControl>
-          </>
+          </RadioGroup>
         );
       case 2:
         return (
@@ -275,6 +279,7 @@ const ViewQuizQuestions = ({ currentQuizLink }) => {
                       checked={option?.IsAnswer || false}
                       onChange={formik.handleChange} // Ensure handleChange is used for checkboxes
                       disabled={editMode !== index}
+                      onBlur={formik.handleBlur}
                     />
                   </Box>
                 )
@@ -317,7 +322,7 @@ const ViewQuizQuestions = ({ currentQuizLink }) => {
   };
 
   return (
-    <Container>
+    <Container className="mt-5">
       <Grid container spacing={2} sx={{ mt: 2 }}>
         {questions && questions.length > 0 ? (
           questions.map((question, index) => (
@@ -388,7 +393,7 @@ const ViewQuizQuestions = ({ currentQuizLink }) => {
           <Typography variant="h6">No questions available.</Typography>
         )}
       </Grid>
-      <ToastContainer />
+     
     </Container>
   );
 };
