@@ -90,8 +90,10 @@ const UserDashboard = () => {
 
   return (
     <React.Fragment>
-      <h1>User Dashboard</h1>
-      <ToastContainer />
+      <LandingHeader />
+        <h1>User Dashboard</h1>
+      {/* <ToastContainer /> */}
+      <button onClick={attendQuiz}>Attend Quiz</button>
       <h1 className="text-white">Current Question:</h1>
       <div className="d-flex justify-content-center">
         <div className="text-white">

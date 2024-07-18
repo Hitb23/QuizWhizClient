@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Delete, Edit } from "@mui/icons-material";
-import { Tooltip } from "@mui/material";
+import { Delete, Edit, Label } from "@mui/icons-material";
+import { Switch, Tooltip } from "@mui/material";
 import { DIFFICULTIES } from "../../utils/enum";
-import { DeleteQuiz } from "../../services/admindashboard.service";
+import { DeleteQuiz, PublishQuiz } from "../../services/admindashboard.service";
 import EditQuizModal from "../dialog-boxes/edit-quiz-details";
+import PublishIcon from '@mui/icons-material/Publish';
+import LeaderboardIcon from '@mui/icons-material/Leaderboard';
+import { useNavigate } from "react-router-dom";
+import { RoutePaths } from "../../utils/enum";
+import { toast } from "react-toastify";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
-
-
-// import withReactContent from "@sweetalert2/react-content";
-
 
 const QuizEditTable = ({ data, Status, reload }) => {
 
     const [deleteResponse,setDeleteResponse]=useState('');
   const [isEditOpen,setIsEditOpen]=useState(false);
+  const navigate = useNavigate();
   const MySwal = withReactContent(Swal);
   const OnDeleteHandler = async (QuizLink) => {
     const result = await MySwal.fire({
@@ -42,6 +44,24 @@ const QuizEditTable = ({ data, Status, reload }) => {
   };
  
 
+ const OnPublishHandler = async (QuizLink)=>{
+  try{
+    debugger;
+    const result = await PublishQuiz(QuizLink);
+    console.log(result)
+    if(result.statusCode === 200){
+      navigate(RoutePaths.AdminDashboard)
+      toast.success("Quiz Published Successfully")
+    }
+    else{
+      toast.error("Failed To Publish Quiz")
+    }
+
+  }
+  catch{
+    toast.error("Error While Publishing The Quiz")
+  }
+ }
   const handleFormatDate = (date) => {
     const formattedDate = new Date(date).toLocaleDateString("en-US", {
       year: "numeric",
@@ -50,7 +70,9 @@ const QuizEditTable = ({ data, Status, reload }) => {
     });
     return formattedDate;
   };
-
+  const handleViewQuizResult = (quizLink)=>{
+      navigate(`${RoutePaths.ViewQuizResult}/${quizLink}`);
+  }
   const formatTime = (timestamp) => {
     const date = new Date(timestamp);
     let hours = date.getHours();
@@ -118,7 +140,7 @@ const QuizEditTable = ({ data, Status, reload }) => {
                 Winning Amount
               </th>
 
-              {(Status === "pending" || Status === "upcoming") && (
+              {(Status === "pending" || Status === "completed" ) && (
                 <th
                   scope="col"
                   style={{ background: "#a89ee9" }}
@@ -144,11 +166,11 @@ const QuizEditTable = ({ data, Status, reload }) => {
                   {DIFFICULTIES[ele.DifficultyId]}
                 </td>
                 <td className="text-black text-center">{ele.WinningAmount}</td>
-                {(Status === "pending" || Status === "upcoming") && (
+                {(Status === "pending" ) && (
                   <td className="text-black text-center">
                     <div className="d-flex justify-content-between align-items-center w-100 h-100 gap-2">
                       <Tooltip title="Edit">
-                       <EditQuizModal currentQuizLink={ele.QuizLink}  />
+                       <EditQuizModal currentQuizLink={ele.QuizLink}   />
                       </Tooltip>
                       {/* {isEditOpen == true ? :null} */}
                       <Tooltip title="Delete">
@@ -159,9 +181,25 @@ const QuizEditTable = ({ data, Status, reload }) => {
                           <Delete />
                         </button>
                       </Tooltip>
+                      <Tooltip  title="Publish">
+                      <button className="btn btn-primary fw-bold" onClick={()=> OnPublishHandler(ele.QuizLink)}>
+                          <PublishIcon />
+                        </button>
+                      </Tooltip>
                     </div>
                   </td>
                 )}
+                {
+                  (Status === "completed") && (
+                  <td className="text-black text-center"> 
+                    <Tooltip  title="Result">
+                      <button className="btn btn-primary fw-bold" onClick={()=> handleViewQuizResult(ele.QuizLink)}>
+                          <LeaderboardIcon />
+                        </button>
+                      </Tooltip>
+                  </td>  
+                  )
+                }
               </tr>
             ))}
           </tbody>

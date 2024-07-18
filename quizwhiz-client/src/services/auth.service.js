@@ -111,7 +111,7 @@ export const createNewQuiz = async (data) =>{
   try {
     const CurrentToken = localStorage.getItem("token");
     console.log('CurrentToken:', CurrentToken);
-    const response = await axios.post(API_URLS.CREATE_NEW_QUIZ, JSON.stringify(data), {
+    const response = await axios.get(API_URLS.CREATE_NEW_QUIZ, JSON.stringify(data), {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${CurrentToken}`
