@@ -19,6 +19,7 @@ import ViewQuizModal from "../components/dialog-boxes/view-quiz";
 import QuizDescription from "../pages/problem-description";
 import QuizList from "../pages/quiz-list";
 import Quiz from "../pages/QuizHub";
+import UserLeaderBoard from "../pages/user-leaderboard";
 
 
 export const ROUTES = [
@@ -111,6 +112,11 @@ export const ROUTES = [
   {
     path:'/admin-dashboard/quiz',
     element:<Quiz/>,
+    roles:[Role.Admin, Role.Contestant, Role.Public]
+  },
+  {
+    path:'/user-dashboard/leaderboard',
+    element:<UserLeaderBoard/>,
     roles:[Role.Admin, Role.Contestant, Role.Public]
   }
 ];

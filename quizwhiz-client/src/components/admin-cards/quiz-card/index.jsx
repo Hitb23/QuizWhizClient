@@ -65,7 +65,9 @@ const QuizCard = ({
   const closeModalHandler = () => {
     setIsModalOpen(0);
   }
+  const onJoinHandler=()=>{
 
+  }
   return (
     <>
       <div
@@ -117,7 +119,7 @@ const QuizCard = ({
         <div className="col-xl-3 text-xl-end d-flex justify-content-center align-items-center flex-wrap">
           {minutes <= 5 && minutes >= 0 ? (
             <div className="d-none d-xl-inline">
-              <button type="submit" className={classes["join-now-button"]}>
+              <button type="submit" className={classes["join-now-button"]} onClick={()=> onJoinHandler(quizLink)}>
                 Join Now
               </button>
             </div>

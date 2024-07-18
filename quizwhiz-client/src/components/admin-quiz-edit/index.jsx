@@ -7,6 +7,7 @@ import { DeleteQuiz } from "../../services/admindashboard.service";
 import EditQuizModal from "../dialog-boxes/edit-quiz-details";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
+import { MdLeaderboard } from "react-icons/md";
 
 
 // import withReactContent from "@sweetalert2/react-content";
@@ -118,13 +119,13 @@ const QuizEditTable = ({ data, Status, reload }) => {
                 Winning Amount
               </th>
 
-              {(Status === "pending" || Status === "upcoming") && (
+              {(Status === "pending" || Status === "completed") && (
                 <th
                   scope="col"
                   style={{ background: "#a89ee9" }}
                   className="text-black text-center py-3"
                 >
-                  Action
+                  Leaderboard
                 </th>
               )}
             </tr>
@@ -144,7 +145,7 @@ const QuizEditTable = ({ data, Status, reload }) => {
                   {DIFFICULTIES[ele.DifficultyId]}
                 </td>
                 <td className="text-black text-center">{ele.WinningAmount}</td>
-                {(Status === "pending" || Status === "upcoming") && (
+                {(Status === "pending") && (
                   <td className="text-black text-center">
                     <div className="d-flex justify-content-between align-items-center w-100 h-100 gap-2">
                       <Tooltip title="Edit">
@@ -160,6 +161,19 @@ const QuizEditTable = ({ data, Status, reload }) => {
                         </button>
                       </Tooltip>
                     </div>
+                  </td>
+                )}
+                {(Status === "completed") && (
+                  <td className="text-black text-center">
+                      <Tooltip title="Leaderboard">
+                        <button
+                          className="btn btn-danger fw-bold"
+                          onClick={() => OnDeleteHandler(ele.QuizLink)}
+                        >
+                          <MdLeaderboard />
+                        </button>
+                      </Tooltip>
+                    
                   </td>
                 )}
               </tr>

@@ -112,21 +112,6 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
         className={`${classes["nav-color"]}`}
       >
         <Toolbar>
-          {/* <IconButton
-            color="black"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginLeft: -3.1,
-              marginRight: 4,
-              ...(open && { display: "none" }),
-              ...(useMediaQuery("(max-width:450px)") && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton> */}
-          {/* {open ? null : ( */}
           <Link to="/">
             <img className={classes["logo-image"]} src={Logo} height={70} />
           </Link>
@@ -139,34 +124,18 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             marginRight: "1rem",
           }}
         >
-          <Badge
-            badgeContent={4}
-            sx={{
-              cursor: "pointer",
-              "& .MuiBadge-badge": {
-                background: "#3D3189",
-                color: "#fada65", // This sets the text color of the badge
-              },
-            }}
-          >
-            <IoNotificationsOutline
-              color="#fada65"
-              background="#3D3189"
-              border="2px solid #3D3189"
-              size={30}
-            />
-          </Badge>
-          <IconButton
-            className="gap-2 rounded d-flex align-items-center"
-            onClick={handleAvatarClick}
-          >
+          
+            <p className="fs-5 mt-3 fw-semibold d-sm-inline d-none text-white">
+              {username} 
+            </p>
+            <IconButton
+              className="gap-2 rounded d-flex align-items-center"
+              onClick={handleAvatarClick}
+            >
             <Avatar
               sx={{ background: "#5f071c", cursor: "pointer" }}
               src={fullImagePath}
             ></Avatar>
-            <p className="fs-5 mt-3 fw-semibold d-sm-inline d-none">
-              {firstName} {lastName}
-            </p>
           </IconButton>
 
           <Menu
