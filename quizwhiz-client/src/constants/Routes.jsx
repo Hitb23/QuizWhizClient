@@ -19,6 +19,7 @@ import QuizList from "../pages/quiz-list";
 import Quiz from "../pages/QuizHub";
 import ViewQuizResult from "../pages/view-quiz-result";
 
+
 export const ROUTES = [
   {
     path: "/",

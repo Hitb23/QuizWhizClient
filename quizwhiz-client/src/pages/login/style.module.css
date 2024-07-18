@@ -1,6 +1,6 @@
 .full-screen {
   min-height: 100vh;
-  backdrop-filter: blur(1.8px);
+  /* backdrop-filter: blur(1.8px); */
 }
 
 .main-component {

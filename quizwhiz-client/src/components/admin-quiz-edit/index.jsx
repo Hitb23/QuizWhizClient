@@ -12,6 +12,7 @@ import { RoutePaths } from "../../utils/enum";
 import { toast } from "react-toastify";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
+import { MdLeaderboard } from "react-icons/md";
 
 const QuizEditTable = ({ data, Status, reload }) => {
 
@@ -140,13 +141,15 @@ const QuizEditTable = ({ data, Status, reload }) => {
                 Winning Amount
               </th>
 
+
               {(Status === "pending" || Status === "completed" ) && (
+
                 <th
                   scope="col"
                   style={{ background: "#a89ee9" }}
                   className="text-black text-center py-3"
                 >
-                  Action
+                  Leaderboard
                 </th>
               )}
             </tr>
@@ -166,7 +169,9 @@ const QuizEditTable = ({ data, Status, reload }) => {
                   {DIFFICULTIES[ele.DifficultyId]}
                 </td>
                 <td className="text-black text-center">{ele.WinningAmount}</td>
+
                 {(Status === "pending" ) && (
+
                   <td className="text-black text-center">
                     <div className="d-flex justify-content-between align-items-center w-100 h-100 gap-2">
                       <Tooltip title="Edit">
@@ -189,6 +194,7 @@ const QuizEditTable = ({ data, Status, reload }) => {
                     </div>
                   </td>
                 )}
+
                 {
                   (Status === "completed") && (
                   <td className="text-black text-center"> 

@@ -1,23 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import jwtDecoder from "../../services/jwtDecoder";
-
+import useWindowSize from 'react-use/lib/useWindowSize'
+import Confetti from 'react-confetti'
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 const Quiz = () => {
-  // const [minutes, SetMinutes] = useState(0);
-  // const [Seconds, SetSeconds] = useState(0);
-  // const [newMessage, setNewMessage] = useState("");
-  // const [Question,SetQuestion]=useState({});
+  const [minutes, SetMinutes] = useState(0);
+  const [Seconds, SetSeconds] = useState(0);
+  const [newMessage, setNewMessage] = useState("");
+  const [Question,SetQuestion]=useState("");
   const [connection, setConnection] = useState(null);
-  // const [isContestActive, setIsContestActive] = useState(false);
-  // const [remainingTime, setRemainingTime] = useState(null);
-  // const [showJoinButton, setShowJoinButton] = useState(false);
+  const [isContestActive, setIsContestActive] = useState(false);
+  const [remainingTime, setRemainingTime] = useState(null);
+  const [showJoinButton, setShowJoinButton] = useState(false);
+  const [questiontext,SetQuestiontext]=useState('');
+  const formatTime = (time) => {
+    const seconds = String(time.seconds).padStart(2, "0");
+    const minutes = String(time.minutes).padStart(2, "0");
+    const hours = String(time.hours).padStart(2, "0");
+    return `${hours}:${minutes}:${seconds}`;
+  };
 
-  // const formatTime = (time) => {
-  //   const seconds = String(time.seconds).padStart(2, "0");
-  //   const minutes = String(time.minutes).padStart(2, "0");
-  //   const hours = String(time.hours).padStart(2, "0");
-  //   return `${hours}:${minutes}:${seconds}`;
-  // };
 
    useEffect(() => {
     const connection = new HubConnectionBuilder()
@@ -65,26 +69,36 @@ const Quiz = () => {
     // var user = jwtDecoder();
     // console.log(user);
     // console.log(connection);
-
       connection
         .start()
         .catch((error) => console.error("Connection failed: ", error));
-     
-  }, []);
+
+      return () => {
+          connection.stop();
+      }
+  }, [Seconds,Question]);
+
 
   const fun=async()=>{
     console.log(connection)
     if(connection){
       await connection
-        .invoke("SendAnswer","Harsh",4)
+
+        .invoke("SendAnswer",'WJqpRNMN',59,'ishanbhatt',[1])
+
         .catch((error) => console.error("SendMessage failed: ", error));
     }
   }
 
   return (
     <div>
+       <Confetti
+       className="h-100 w-100"
+    
+    />
       <h1>Quiz Whiz</h1>
       <button onClick={fun}>Send Message</button>
+
       {/* <ul>
         {messages.map((message, index) => (
           <li key={index}>
