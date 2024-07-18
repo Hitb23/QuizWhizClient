@@ -106,7 +106,7 @@ export default function AddQuestions({ openDialog, currentQuizLink, closeEditDia
       toast.error("Error while Add Question");
     }
     resetForm();
-    handleClose();
+    setOpen(false);
     closeEditDialog();
     navigate(`/admin-dashboard/pending`);
   };

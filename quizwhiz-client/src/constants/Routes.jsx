@@ -10,9 +10,7 @@ import { Role } from "../utils/enum";
 import NotFoundPage from "../pages/page-not-found";
 import AdminLogin from "../pages/admin-login";
 import MyProfile from "../pages/my-profile";
-
 import AdminCategory from "../pages/admin-category";
-
 import CreateQuizModal from "../components/dialog-boxes/create-quiz";
 import AddQuestions from "../components/dialog-boxes/add-questions";
 import ViewQuizModal from "../components/dialog-boxes/view-quiz";
@@ -20,7 +18,6 @@ import QuizDescription from "../pages/problem-description";
 import QuizList from "../pages/quiz-list";
 import Quiz from "../pages/QuizHub";
 import ViewQuizResult from "../pages/view-quiz-result";
-
 
 export const ROUTES = [
   {
@@ -74,49 +71,54 @@ export const ROUTES = [
     roles: [Role.Admin, Role.Contestant],
   },
   {
-    path: '/admin/dashboard/:id',
+    path: "/admin/dashboard/:id",
     element: <AdminCategory />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path:'/create-new-quiz/:token',
-    element:<CreateQuizModal/>,
-    roles:[Role.Admin],
+    path: "/create-new-quiz/:token",
+    element: <CreateQuizModal />,
+    roles: [Role.Admin],
   },
   {
-    path:'/get-quiz-details/:quizLink',
-    element:<AddQuestions/>,
+    path: "/get-quiz-details/:quizLink",
+    element: <AddQuestions />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path:'/add-quiz-questions/:quizLink',
-    element:<AddQuestions/>,
-    roles:[Role.Admin]
+    path: "/add-quiz-questions/:quizLink",
+    element: <AddQuestions />,
+    roles: [Role.Admin],
   },
   {
-    path:'/get-quiz-questions/:quizLink',
-    element:<AddQuestions/>,
-    roles:[Role.Admin]
+    path: "/get-quiz-questions/:quizLink",
+    element: <AddQuestions />,
+    roles: [Role.Admin],
   },
 
   {
-    path:'/update-quiz-questions:token',
-    element:<ViewQuizModal/>,
-    roles:[Role.Admin]
+    path: "/update-quiz-questions:token",
+    element: <ViewQuizModal />,
+    roles: [Role.Admin],
   },
   {
-    path:'/admin-dashboard/:id/:quizLink',
-    element:<QuizDescription/>,
-    roles:[Role.Admin, Role.Contestant, Role.Public]
+    path: "/admin-dashboard/:id/:quizLink",
+    element: <QuizDescription />,
+    roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path:'/admin-dashboard/quiz',
-    element:<Quiz/>,
-    roles:[Role.Admin, Role.Contestant, Role.Public]
+    path: "/admin-dashboard/view-quiz-result/:quizLink",
+    element: <ViewQuizResult />,
+    roles: [Role.Admin],
   },
   {
-    path:'/admin-dashboard/view-quiz-result/:quizLink',
-    element:<ViewQuizResult/>,
-    roles:[Role.Admin]
-  }
+    path: "/user-dashboard/:quizLink",
+    element: <UserDashboard />,
+    roles: [Role.Admin, Role.Contestant, Role.Public],
+  },
+  {
+    path: "/admin-dashboard/quiz",
+    element: <Quiz />,
+    roles: [Role.Admin, Role.Contestant, Role.Public],
+  },
 ];

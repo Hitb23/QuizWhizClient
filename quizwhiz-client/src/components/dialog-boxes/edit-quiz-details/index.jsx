@@ -63,6 +63,7 @@ export default function EditQuizModal({ currentQuizLink }) {
   const handleClose = () => {
     setOpen(false);
     fetchData();
+    setAddQuestionsOpen1(false);
   };
 
   const validationSchema = yup.object().shape(CREATE_QUIZ_VALIDATIONS);
@@ -453,10 +454,7 @@ export default function EditQuizModal({ currentQuizLink }) {
                   type="button"
                   onClick={() => {
                     console.log("add clicked");
-                    setAddQuestionsOpen1(true);
-                   
-                    
-                    
+                    setAddQuestionsOpen1(true);                                                        
                   }}
                   sx={{ backgroundColor: "#6f41db" }}
                   variant="contained"

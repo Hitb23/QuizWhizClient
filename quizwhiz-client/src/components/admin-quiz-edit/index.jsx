@@ -10,31 +10,48 @@ import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import { useNavigate } from "react-router-dom";
 import { RoutePaths } from "../../utils/enum";
 import { toast } from "react-toastify";
-const QuizEditTable = ({ data, Status,reload }) => {
-  const [deleteResponse,setDeleteResponse]=useState('');
-  const [isEditOpen,setIsEditOpen]=useState(false);
-  const label = { inputProps: { 'aria-label': 'Switch demo' } };
-  const navigate = useNavigate();
+import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
 
-  const OnDeleteHandler=async(QuizLink)=>{
-      try{
-        const response=await DeleteQuiz(QuizLink);
-        setDeleteResponse(response);
-        console.log(response);
+const QuizEditTable = ({ data, Status, reload }) => {
+
+    const [deleteResponse,setDeleteResponse]=useState('');
+  const [isEditOpen,setIsEditOpen]=useState(false);
+  const navigate = useNavigate();
+  const MySwal = withReactContent(Swal);
+  const OnDeleteHandler = async (QuizLink) => {
+    const result = await MySwal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete this item?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, keep it",
+    });
+
+    if (result.isConfirmed) {
+      console.log(`Deleting item with id: ${QuizLink}`);
+      try {
+        await DeleteQuiz(QuizLink);
         reload();
-      }
-      catch(error){
+      } catch (error) {
         console.log(error);
       }
-  }
+      MySwal.fire("Deleted!", "Your item has been deleted.", "success");
+    } else if (result.isDismissed) {
+      MySwal.fire("Cancelled", "Your item is safe :)", "error");
+    }
+  };
+ 
 
  const OnPublishHandler = async (QuizLink)=>{
   try{
+    debugger;
     const result = await PublishQuiz(QuizLink);
+    console.log(result)
     if(result.statusCode === 200){
       navigate(RoutePaths.AdminDashboard)
       toast.success("Quiz Published Successfully")
-
     }
     else{
       toast.error("Failed To Publish Quiz")
@@ -157,7 +174,10 @@ const QuizEditTable = ({ data, Status,reload }) => {
                       </Tooltip>
                       {/* {isEditOpen == true ? :null} */}
                       <Tooltip title="Delete">
-                        <button className="btn btn-danger fw-bold" onClick={()=> OnDeleteHandler(ele.QuizLink)}>
+                        <button
+                          className="btn btn-danger fw-bold"
+                          onClick={() => OnDeleteHandler(ele.QuizLink)}
+                        >
                           <Delete />
                         </button>
                       </Tooltip>
