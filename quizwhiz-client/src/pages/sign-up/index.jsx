@@ -294,7 +294,7 @@ const SignUp = () => {
           </div>
         </div>
       </main>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       </div>
     </React.Fragment>
   );

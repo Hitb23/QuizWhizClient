@@ -140,7 +140,7 @@ const Quizzes = () => {
 
   const handlePageChange = async (event, value) => {
     SetCurrentPage(value);
-    console.log(searchedWord);
+    // console.log(searchedWord);
     try {
       const result = await filterByCategory({
         StatusId: tabStatus,
@@ -258,7 +258,7 @@ const Quizzes = () => {
         >
           <DrawerHeader />
           <div className="row mt-5 p-0">
-            <ul class={`nav nav-tabs mb-3 ${classes["tabs"]}`}>
+            <ul className={`nav nav-tabs mb-3 ${classes["tabs"]}`}>
               <li className={`nav-item`}>
                 <button
                   className={`nav-link ${

@@ -22,58 +22,70 @@ const Quiz = () => {
     return `${hours}:${minutes}:${seconds}`;
   };
 
-  useEffect(() => {
+
+   useEffect(() => {
     const connection = new HubConnectionBuilder()
       .withUrl("https://localhost:44361/quizhub")
       .withAutomaticReconnect()
       .build();
-
     setConnection(connection);
 
-    
+    // connection.on("ReceiveMessage", (user, message) => {
+    //   setMessages((prevMessages) => [...prevMessages, { user, message }]);
+    // });
 
-    connection.on("ReceiveRemainingTime_WJqpRNMN", (minutes, seconds) => {
-      console.log(minutes + "-" + seconds);
-      SetMinutes(minutes);
-      SetSeconds(seconds);
-    });
-    connection.on("ReceiveQuestion_WJqpRNMN", async(questionNo,Question,seconds) => {
-      const data=await Question;
-      console.log(data)
-      console.log("QuestionNo : "+ questionNo +" : " + Question)
-      SetQuestion(Question.question.questionText);
-      // SetSeconds(seconds)
-    });
-    connection.on("ReceiveTimerSeconds_WJqpRNMN", async(TimerSeconds) => {
-      console.log("TimerSeconds : "+ TimerSeconds)
-      SetSeconds(TimerSeconds);
-      // SetSeconds(seconds)
-    });
-    connection.on("ReceiveAnswer_WJqpRNMN", async(ans,seconds) => {
-      try{
-        const data=await ans;
-        console.log("Answer : "+ data.message)
-        SetSeconds(seconds)
-      }
-      catch(error){
-        console.log(error);
-      }
-    });
-  
-
+    // connection.on("ReceiveQuestion", (message) => {
+    //   setMessages((prevMessages) => [
+    //     ...prevMessages,
+    //     { user: "System", message },
+    //   ]);
+    // });
+    // connection.on("ContestActivated", (message) => {
+    //   console.log(message);
+    //   setIsContestActive(true);
+    // });
+    // connection.on("ReceiveRemainingTime_PEPa86wz", (minutes, seconds) => {
+    //   connection
+    //   .invoke("SendAnswer", user,4)
+    //   .catch((error) => console.error("SendMessage failed: ", error));
+    //   console.log(minutes + "-" + seconds);
+    //   SetMinutes(minutes);
+    //   SetSeconds(seconds)
+    // });
+    // connection.on("ReceiveQuestion_PEPa86wz", (questionNo,Question,seconds) => {
+    //   console.log("QuestionNo : "+ questionNo +" : " + Question)
+    //   SetQuestion(Question);
+    //   // SetSeconds(seconds)
+    // });
+    // connection.on("ReceiveTimerSeconds_PEPa86wz", (seconds) => {
+    //   console.log("TimerSeconds : "+ seconds)
+    //   // SetSeconds(seconds)
+    // });
+    // connection.on("ReceiveAnswer_PEPa86wz", (questionNo,ans,seconds) => {
+    //   console.log("questionNo : "+questionNo +" : "+"Answer : "+ans)
+    //   // console.log(ans);
+    //   // SetSeconds(seconds)
+    // });
+    // var user = jwtDecoder();
+    // console.log(user);
+    // console.log(connection);
       connection
         .start()
         .catch((error) => console.error("Connection failed: ", error));
+
       return () => {
           connection.stop();
       }
   }, [Seconds,Question]);
 
+
   const fun=async()=>{
     console.log(connection)
     if(connection){
       await connection
+
         .invoke("SendAnswer",'WJqpRNMN',59,'ishanbhatt',[1])
+
         .catch((error) => console.error("SendMessage failed: ", error));
     }
   }
@@ -86,8 +98,6 @@ const Quiz = () => {
     />
       <h1>Quiz Whiz</h1>
       <button onClick={fun}>Send Message</button>
-      <h1 className="text-white">{Question}</h1>
-      <h1 className="text-white">{Seconds}</h1>
 
       {/* <ul>
         {messages.map((message, index) => (

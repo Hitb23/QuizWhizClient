@@ -21,6 +21,9 @@ import {
   DialogActions,
   DialogContent,
   Checkbox,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import CloseIcon from "@mui/icons-material/Close";
@@ -31,10 +34,13 @@ import { Category, ContactSupportOutlined } from "@mui/icons-material";
 import {
   addQuizQuestions,
   getQuizDetailsByLink,
+  getQuizQuestions,
 } from "../../../services/admindashboard.service";
 import Swal from "sweetalert2";
 import { questionTypeEnum } from "../../../utils/enum";
-
+import { ToastContainer, toast } from "react-toastify";
+import { style } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -48,7 +54,7 @@ const initialQuestionState = {
   type: 1,
 };
 
-export default function AddQuestions({ openDialog, currentQuizLink }) {
+export default function AddQuestions({ openDialog, currentQuizLink, closeEditDialog }) {
   const [open, setOpen] = useState(false);
   // const [questions, setQuestions] = useState([]);
   const [questionTypeDialogOpen, setQuestionTypeDialogOpen] = useState(false);
@@ -56,11 +62,11 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
   const [isCurrentScreenValid, setIsCurrentScreenValid] = useState(true);
   const [currentQuizDetails, setCurrentQuizDetails] = useState({});
   const [questionCount, setQuestionCount] = useState(0);
-
+  const navigate = useNavigate();
   const filterdOptions = (arr) => {
     const result = arr.answerOptions.map((option) => ({
       OptionText: option,
-      isAnswer: arr.correctAnswers.includes(option), 
+      isAnswer: arr.correctAnswers.includes(option),
     }));
 
     return result;
@@ -69,17 +75,17 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
   const renameKeys = (obj) => {
     return {
       QuestionText: obj.question,
-      Options:obj.type !== 3 ? filterdOptions(obj):[],
+      Options: obj.type !== 3 ? filterdOptions(obj) : [],
       Answers: obj.correctAnswers,
       QuestionTypeId: obj.type,
-      IsTrue:obj.type ===3 && obj.correctAnswers[0]
+      IsTrue: obj.type === 3 && obj.correctAnswers[0],
     };
   };
 
   const handleSaveQuiz = async (values, { resetForm }) => {
     console.log(values.questions);
-    const QuestionsArray = values.questions;
-    const RenamedQuestionsArray = QuestionsArray.map((question) =>
+    const newQuestions = values.questions.filter((q) => !q.isSaved);
+    const RenamedQuestionsArray = newQuestions.map((question) =>
       renameKeys(question)
     );
     const sendData = {
@@ -87,51 +93,61 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
       QuestionDTOs: RenamedQuestionsArray,
     };
 
-    console.log(sendData);
+    console.log("senddata", sendData);
     var response = await addQuizQuestions(sendData);
     console.log(response);
-
     try {
-
       if (response && response.statusCode === 200) {
-        Swal.fire({
-          title: "Questions Added Successfuly!",
-          text: "Your Quiz is Saved in Drafts",
-          icon: "success",
-          confirmButtonText: "Go to Dashboard",
-        });
+        toast.success("Question Added Successfully");
       } else {
-        Swal.fire({
-          title: "Error!",
-          text: "Error in Add Question",
-          icon: "error",
-          confirmButtonText: "OK",
-        });
+        toast.error("Failed To Add Question");
       }
-
     } catch (error) {
-      Swal.fire({
-        title: "Error!",
-        text: "An error occurred while Adding the Questions !",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
+      toast.error("Error while Add Question");
     }
     resetForm();
-    handleClose();
+    setOpen(false);
+    closeEditDialog();
+    navigate(`/admin-dashboard/pending`);
+  };
+  // state stage
+  const transformFetchedQuestions = (fetchedQuestions) => {
+    return fetchedQuestions.map((question) => ({
+      question: question.QuestionText,
+      answerOptions: question.Options.map((opt) => opt.OptionText),
+      correctAnswers: question.Options.filter((opt) => opt.IsAnswer).map(
+        (opt) => opt.OptionText
+      ),
+      type: question.QuestionTypeId,
+      isSaved: true,
+    }));
+  };
+
+  const getQuizDetail = async () => {
+    if (currentQuizLink != "") {
+      const response = await getQuizDetailsByLink(currentQuizLink);
+      setCurrentQuizDetails(response.data);
+      console.log("quizdetail", response);
+
+      if (response) {
+        const questions = await getQuizQuestions(currentQuizLink);
+        console.log(questions.data);
+        if (questions.data !== null) {
+          setQuestionTypeDialogOpen(false);
+        }
+        const transformedQuestions = transformFetchedQuestions(questions.data);
+        setFieldValue("questions", transformedQuestions);
+        setQuestionCount(transformedQuestions.length);
+      }
+      // if (response.data && response.data.questions) {
+      //   ;
+      //   ;
+      // }
+    }
   };
 
   useEffect(() => {
     handleClickOpen();
-
-    const getQuizDetail = async () => {
-      if (currentQuizLink != "") {
-        const response = await getQuizDetailsByLink(currentQuizLink);
-        setCurrentQuizDetails(response.data);
-        console.log(response.data);
-      }
-    };
-
     getQuizDetail();
   }, [currentQuizLink]);
   const formik = useFormik({
@@ -202,15 +218,15 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
   const handleOptionChange = (qIndex, optIndex, event) => {
     const newQuestions = [...values.questions];
     const optionValue = event.target.value || "";
-    
+
     const previousOptionValue = newQuestions[qIndex].answerOptions[optIndex];
-    
+
     newQuestions[qIndex].answerOptions[optIndex] = optionValue;
-    
+
     newQuestions[qIndex].correctAnswers = newQuestions[qIndex].correctAnswers
       .map((answer) => (answer === previousOptionValue ? optionValue : answer))
       .filter((answer) => newQuestions[qIndex].answerOptions.includes(answer));
-  
+
     setFieldValue("questions", newQuestions);
   };
 
@@ -292,71 +308,60 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
   };
 
   const renderQuestionFields = (thisquestion, qIndex) => {
+    const isDisabled = thisquestion.isSaved;
     switch (thisquestion.type) {
       case 1:
         return (
           <>
             {thisquestion.answerOptions.map((option, optIndex) => (
-              <TextField
+              <Box
                 key={optIndex}
-                fullWidth
-                label={`Option ${optIndex + 1}`}
-                value={option || ""}
-                name={`values.questions.${qIndex}.answerOptions`[optIndex]}
-                onBlur={handleBlur}
-                onChange={(event) =>
-                  handleOptionChange(qIndex, optIndex, event)
-                }
-                error={
-                  touched.questions &&
-                  Boolean(
-                    errors.questions &&
-                      errors.questions[qIndex] &&
-                      errors.questions[qIndex].answerOptions &&
-                      errors.questions[qIndex].answerOptions[optIndex]
-                  )
-                }
-                helperText={
-                  touched.questions &&
-                  errors.questions &&
-                  errors.questions[qIndex] &&
-                  errors.questions[qIndex].answerOptions &&
-                  errors.questions[qIndex].answerOptions[optIndex]
-                }
-                margin="normal"
-              />
-            ))}
-
-            <FormControl fullWidth margin="normal">
-              <InputLabel>Correct Answer</InputLabel>
-              <Select
-                value={values.questions[qIndex].correctAnswers || ""}
-                onChange={(event) => handleQuestionChange(qIndex, event)}
-                name={`values.questions.${qIndex}.correctAnswers`}
-                onBlur={handleBlur}
-                label="Correct Answer"
-                error={Boolean(
-                  touched.questions &&
-                    errors.questions &&
-                    errors.questions[qIndex] &&
-                    errors.questions[qIndex].correctAnswers
-                )}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "8px",
+                }}
               >
-                {thisquestion.answerOptions.map((option, optIndex) => (
-                  <MenuItem key={optIndex} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </Select>
-              {touched.questions &&
-                errors.questions &&
-                errors.questions[qIndex] &&
-                errors.questions[qIndex].correctAnswers && (
-                  <Typography variant="caption" color="error">
+                <TextField
+                  sx={{ mt: 2 }}
+                  fullWidth
+                  name={`values.questions.${qIndex}.answerOptions.${optIndex}`}
+                  label={`Option ${optIndex + 1}`}
+                  disabled={isDisabled}
+                  value={option}
+                  onChange={(e) => handleOptionChange(qIndex, optIndex, e)}
+                  error={
+                    touched.questions?.[qIndex]?.answerOptions?.[optIndex] &&
+                    Boolean(
+                      errors.questions?.[qIndex]?.answerOptions?.[optIndex]
+                    )
+                  }
+                  helperText={
+                    touched.questions?.[qIndex]?.answerOptions?.[optIndex] &&
+                    errors.questions?.[qIndex]?.answerOptions?.[optIndex]
+                  }
+                />
+                <Radio
+                  sx={{ mt: 2 }}
+                  disabled={isDisabled}
+                  checked={thisquestion.correctAnswers.includes(option)}
+                  onChange={(e) => handleQuestionChange(qIndex, e)}
+                  value={option}
+                  name={`values.questions.${qIndex}.correctAnswers`}
+                />
+                  <Typography variant="body2" sx={{ mt: 2 }}>
+                  Correct
+                </Typography>
+              </Box>
+            ))}
+            {touched.questions?.[qIndex]?.correctAnswers &&
+              errors.questions?.[qIndex]?.correctAnswers && (
+                <Grid item xs={12}>
+                  <Typography color="error" variant="body2">
                     {errors.questions[qIndex].correctAnswers}
                   </Typography>
-                )}
-            </FormControl>
+                </Grid>
+              )}
           </>
         );
       case 2:
@@ -376,6 +381,7 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
                   label={`Option ${optIndex + 1}`}
                   value={thisquestion.answerOptions[optIndex] || ""}
                   onBlur={handleBlur}
+                  disabled={isDisabled}
                   onChange={(event) =>
                     handleOptionChange(qIndex, optIndex, event)
                   }
@@ -398,6 +404,7 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
                 <Checkbox
                   onBlur={handleBlur}
                   checked={thisquestion.correctAnswers.includes(option)}
+                  disabled={isDisabled}
                   onChange={() => toggleCorrectAnswer(qIndex, optIndex)}
                   sx={{ marginLeft: "8px" }}
                 />
@@ -423,6 +430,7 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
             <Select
               value={thisquestion.correctAnswers}
               onChange={(event) => handleQuestionChange(qIndex, event)}
+              disabled={isDisabled}
               name={`values.questions.${qIndex}.correctAnswers`}
               error={Boolean(
                 touched.questions &&
@@ -460,7 +468,7 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: "relative", backgroundColor: "#6F41DB" }}>
+        <AppBar sx={{ position: "fixed", backgroundColor: "#6F41DB" }}>
           <Toolbar>
             <IconButton
               edge="start"
@@ -479,13 +487,13 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
               {currentQuizDetails.Title} ({currentQuizDetails.CategoryName})
             </Typography>
             <Button
-             sx={{
-              color: "#6F41DB",
-              backgroundColor: "#fada65",
-              "&:hover": {
-                color: "#fada65",
-              },
-            }}
+              sx={{
+                color: "#6F41DB",
+                backgroundColor: "#fada65",
+                "&:hover": {
+                  color: "#fada65",
+                },
+              }}
               autoFocus
               color="inherit"
               type="submit"
@@ -496,7 +504,7 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
           </Toolbar>
         </AppBar>
 
-        <Container sx={{ mt: 2 }}>
+        <Container sx={{ mt: 11 }}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6} md={3}>
               <Card>
@@ -556,15 +564,17 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
                 <Card>
                   <CardContent>
                     <Typography variant="h6" component="div">
-                      Question {qIndex + 1} ({questionTypeEnum[values.questions[qIndex].type]})
+                      Question {qIndex + 1} (
+                      {questionTypeEnum[values.questions[qIndex].type]})
                     </Typography>
-                    <TextField 
+                    <TextField
                       fullWidth
                       label="Question"
                       name={`values.questions.${qIndex}.question`}
                       value={q.question || ""}
                       onBlur={handleBlur}
                       onChange={(event) => handleQuestionChange(qIndex, event)}
+                      disabled={q.isSaved}
                       error={Boolean(
                         touched.questions &&
                           errors.questions &&
@@ -596,7 +606,7 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
                 backgroundColor: "#6F41DB",
                 "&:hover": {
                   color: "#6F41DB",
-                  backgroundColor:"#fada65"
+                  backgroundColor: "#fada65",
                 },
               }}
             >
@@ -636,6 +646,7 @@ export default function AddQuestions({ openDialog, currentQuizLink }) {
           </Button>
         </DialogActions>
       </Dialog>
+      {/* <ToastContainer/> */}
     </React.Fragment>
   );
 }
