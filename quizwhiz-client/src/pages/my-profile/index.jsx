@@ -47,6 +47,7 @@ import { RoutePaths } from "../../utils/enum";
 import { bindActionCreators } from "redux";
 import { userActions } from "../../redux/action-creators";
 import AdminSlider from "../../components/header/admin-header";
+import QuizHeader from "../../components/header/quizzes-header";
 import countries from "../../components/list-of-countries/listOfCountries";
 import Select from "@mui/material/Select";
 import { ToastContainer, toast } from "react-toastify";
@@ -81,7 +82,7 @@ const validationSchema = yup.object().shape({
   phoneNumber: yup
     .string()
     .matches(
-      /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$|^\d{10}$/,
+      /^(?:\+\d{1,3}|0\d{1,3}|00\d{1,2})?(?:\s?\(\d+\))?(?:[-\/\s.]|\d){7,15}$/,
       "Phone number is invalid"
     )
     .required("Phone number is required"),
@@ -135,7 +136,7 @@ const MyProfile = () => {
             PhoneNumber,
             Country,
           });
-          if(clickOnSave){
+          if (clickOnSave) {
             toast.success("Details changed successfully", {
               position: "top-right",
               autoClose: 5000,
@@ -143,7 +144,7 @@ const MyProfile = () => {
           }
           setIsEditable(false);
         } catch (error) {
-          if(!clickOnSave){
+          if (!clickOnSave) {
             toast.error("Unable to edit the details");
           }
           console.log(error);
@@ -158,7 +159,7 @@ const MyProfile = () => {
     const data = jwtDecoder();
     const username = data.Username;
     const roleName = data.Role;
-    if(roleName == 'Admin'){
+    if (roleName == "Admin") {
       setIsAdmin(true);
     }
     console.log("Username in dashboard: " + username);
@@ -248,7 +249,7 @@ const MyProfile = () => {
 
   const handleSaveClick = () => {
     setClickOnSave(true);
-    if(clickOnSave){
+    if (clickOnSave) {
       toast.success("Details changed successfully", {
         position: "top-right",
         autoClose: 5000,
@@ -301,7 +302,7 @@ const MyProfile = () => {
 
   return (
     <Box
-    className={`${isAdmin ? classes["admin-profile"] : ""}`}
+      className={`${isAdmin ? classes["admin-profile"] : ""}`}
       sx={{
         display: "flex",
         justifyContent: "center",
@@ -311,16 +312,25 @@ const MyProfile = () => {
     >
       <ToastContainer />
       <CssBaseline />
-      <AdminSlider
-        key={uploadKey}
-        firstName={firstName}
-        lastName={lastName}
-        uploadCount={uploadCount}
-        userName={jwtDecoder().Username}
-      />
+      {isAdmin ? (
+        <AdminSlider
+          key={uploadKey}
+          firstName={firstName}
+          lastName={lastName}
+          uploadCount={uploadCount}
+          userName={jwtDecoder().Username}
+        />
+      ) : (
+        <QuizHeader
+          firstName={firstName}
+          lastName={lastName}
+          uploadCount={uploadCount}
+          userName={jwtDecoder().userName}
+        />
+      )}
       <div className={`row container ${classes["main-box"]}`}>
         <div
-          className={`col-lg-6 col-12 d-flex flex-column align-items-center ${classes["profile-photo-div"]}`}
+          className={`col-lg-6 col-12 d-flex flex-column align-items-start ${classes["profile-photo-div"]}`}
         >
           <Avatar
             className={`${classes["profile-photo"]}`}
@@ -328,7 +338,9 @@ const MyProfile = () => {
           ></Avatar>
 
           <FileUploadButton
-            className={`mt-4 mb-4 ${isAdmin ? classes["admin-upload-btn"] : classes["upload-btn"]}`}
+            className={`my-4 mx-5 ${
+              isAdmin ? classes["admin-upload-btn"] : classes["upload-btn"]
+            }`}
             component="label"
             role={undefined}
             variant="contained"
@@ -357,61 +369,85 @@ const MyProfile = () => {
             <div className={`col-md-12`}>
               <label
                 htmlFor="userName"
-                className={`form-label fw-bold ${isAdmin ? classes["admin-label-font"] : classes["black-font"]}`}
+                className={`form-label fw-bold ${
+                  isAdmin ? classes["admin-label-font"] : classes["black-font"]
+                }`}
               >
                 Username
               </label>
               <TextField
-                className={`${isAdmin ? classes["admin-input-field"] : classes["input-field"]} form-control`}
+                className={`${
+                  isAdmin
+                    ? classes["admin-input-field"]
+                    : classes["input-field"]
+                } form-control`}
                 name="userName"
                 value={userName}
                 variant="outlined"
-                inputProps={{ readOnly: !isEditable }}
-                sx={{ "& fieldset": { border: "none" } }}
+                inputProps={{ readOnly: true }}
+                sx={{
+                  "& fieldset": { border: "none" },
+                  backgroundColor: "#ded9fc"
+                }}
               />
             </div>
 
             <div className={`col-md-12`}>
               <label
                 htmlFor="firstName"
-                className={`mt-3 form-label w-100 fw-bold ${isAdmin ? classes["admin-label-font"] : classes["black-font"]}`}
+                className={`mt-3 form-label w-100 fw-bold ${
+                  isAdmin ? classes["admin-label-font"] : classes["black-font"]
+                }`}
               >
                 Email
               </label>
               <TextField
-                className={`${isAdmin ? classes["admin-input-field"] : classes["input-field"]} form-control`}
+                className={`${
+                  isAdmin
+                    ? classes["admin-input-field"]
+                    : classes["input-field"]
+                } form-control`}
                 name="firstName"
                 variant="outlined"
                 value={email}
                 onChange={formik.handleChange}
-                inputProps={{ readOnly: !isEditable }}
-                sx={{ "& fieldset": { border: "none" } }}
+                inputProps={{ readOnly: true }}
+                sx={{
+                  "& fieldset": { border: "none" },
+                  backgroundColor: "#ded9fc"
+                }}
               />
-              {formik.touched.firstName && formik.errors.firstName ? (
-                <span className={`mt-2 ${classes["error-message"]}`}>
-                  {formik.errors.firstName}
-                </span>
-              ) : null}
             </div>
 
             <div className={`col-md-12`}>
               <label
                 htmlFor="firstName"
-                className={`mt-3 form-label fw-bold ${isAdmin ? classes["admin-label-font"] : classes["black-font"]}`}
+                className={`mt-3 form-label fw-bold ${
+                  isAdmin ? classes["admin-label-font"] : classes["black-font"]
+                }`}
               >
                 First Name
               </label>
               <TextField
-                className={`${isAdmin ? classes["admin-input-field"] : classes["input-field"]} form-control`}
+                className={`${
+                  isAdmin
+                    ? classes["admin-input-field"]
+                    : classes["input-field"]
+                } form-control`}
                 name="firstName"
                 variant="outlined"
                 value={formik.values.firstName}
                 onChange={formik.handleChange}
                 inputProps={{ readOnly: !isEditable }}
-                sx={{ "& fieldset": { border: "none" } }}
+                sx={{
+                  "& fieldset": { border: "none" },
+                  backgroundColor: `${
+                    isEditable && isAdmin ? "#FFFFFF" : "#ded9fc"
+                  }`,
+                }}
               />
               {formik.touched.firstName && formik.errors.firstName ? (
-                <span className={`mt-2 ${classes["error-message"]}`}>
+                <span className={`mt-2 ${isAdmin ? classes["admin-error-message"]: classes["error-message"]}`}>
                   {formik.errors.firstName}
                 </span>
               ) : null}
@@ -420,21 +456,32 @@ const MyProfile = () => {
             <div className={`col-md-12`}>
               <label
                 htmlFor="lastName"
-                className={`mt-3 form-label fw-bold ${isAdmin ? classes["admin-label-font"] : classes["black-font"]}`}
+                className={`mt-3 form-label fw-bold ${
+                  isAdmin ? classes["admin-label-font"] : classes["black-font"]
+                }`}
               >
                 Last Name
               </label>
               <TextField
-                className={`${isAdmin ? classes["admin-input-field"] : classes["input-field"]} form-control`}
+                className={`${
+                  isAdmin
+                    ? classes["admin-input-field"]
+                    : classes["input-field"]
+                } form-control`}
                 name="lastName"
                 variant="outlined"
                 value={formik.values.lastName}
                 onChange={formik.handleChange}
                 inputProps={{ readOnly: !isEditable }}
-                sx={{ "& fieldset": { border: "none" } }}
+                sx={{
+                  "& fieldset": { border: "none" },
+                  backgroundColor: `${
+                    isEditable && isAdmin ? "#FFFFFF" : "#ded9fc"
+                  }`,
+                }}
               />
               {formik.touched.lastName && formik.errors.lastName ? (
-                <span className={`mt-2 ${classes["error-message"]}`}>
+                <span className={`mt-2 ${isAdmin ? classes["admin-error-message"]: classes["error-message"]}`}>
                   {formik.errors.lastName}
                 </span>
               ) : null}
@@ -443,21 +490,32 @@ const MyProfile = () => {
             <div className={`col-md-12`}>
               <label
                 htmlFor="phoneNumber"
-                className={`mt-3 form-label fw-bold ${isAdmin ? classes["admin-label-font"] : classes["black-font"]}`}
+                className={`mt-3 form-label fw-bold ${
+                  isAdmin ? classes["admin-label-font"] : classes["black-font"]
+                }`}
               >
                 Phone Number
               </label>
               <TextField
-                className={`${isAdmin ? classes["admin-input-field"] : classes["input-field"]} form-control`}
+                className={`${
+                  isAdmin
+                    ? classes["admin-input-field"]
+                    : classes["input-field"]
+                } form-control`}
                 name="phoneNumber"
                 variant="outlined"
                 value={formik.values.phoneNumber}
                 onChange={formik.handleChange}
                 inputProps={{ readOnly: !isEditable }}
-                sx={{ "& fieldset": { border: "none" } }}
+                sx={{
+                  "& fieldset": { border: "none" },
+                  backgroundColor: `${
+                    isEditable && isAdmin ? "#FFFFFF" : "#ded9fc"
+                  }`,
+                }}
               />
               {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
-                <span className={`mt-2 ${classes["error-message"]}`}>
+                <span className={`mt-2 ${isAdmin ? classes["admin-error-message"]: classes["error-message"]}`}>
                   {formik.errors.phoneNumber}
                 </span>
               ) : null}
@@ -466,12 +524,18 @@ const MyProfile = () => {
             <div className={`col-md-12`}>
               <label
                 htmlFor="country"
-                className={`mt-3 form-label fw-bold ${isAdmin ? classes["admin-label-font"] : classes["black-font"]}`}
+                className={`mt-3 form-label fw-bold ${
+                  isAdmin ? classes["admin-label-font"] : classes["black-font"]
+                }`}
               >
                 Choose Country
               </label>
               <Select
-                className={`${isAdmin ? classes["admin-input-field"] : classes["input-field"]}`}
+                className={`${
+                  isAdmin
+                    ? classes["admin-input-field"]
+                    : classes["input-field"]
+                }`}
                 name="country"
                 onChange={handleCountryChange}
                 value={formik.values.country}
@@ -481,7 +545,10 @@ const MyProfile = () => {
                 sx={{
                   "& fieldset": { border: "none" },
                   borderRadius: "0.4rem",
-                  height: "59px"
+                  height: "59px",
+                  backgroundColor: `${
+                    isEditable && isAdmin ? "#FFFFFF" : "#ded9fc"
+                  }`,
                 }}
               >
                 {countries.map((country) => (
@@ -495,7 +562,7 @@ const MyProfile = () => {
                 ))}
               </Select>
               {formik.touched.country && formik.errors.country ? (
-                <span className={`mt-2 ${classes["error-message"]}`}>
+                <span className={`mt-2 ${isAdmin ? classes["admin-error-message"]: classes["error-message"]}`}>
                   {formik.errors.country}
                 </span>
               ) : null}
@@ -507,7 +574,11 @@ const MyProfile = () => {
                   <Button
                     type="submit"
                     variant="contained"
-                    className={`mt-4 me-2 ${isAdmin ? classes["admin-edit-button"] : classes["edit-button"]}`}
+                    className={`mt-4 me-2 ${
+                      isAdmin
+                        ? classes["admin-edit-button"]
+                        : classes["edit-button"]
+                    }`}
                     id="save-button"
                     onClick={handleSaveClick}
                     sx={{
@@ -521,7 +592,11 @@ const MyProfile = () => {
                   <Button
                     type="button"
                     variant="outlined"
-                    className={`mt-4 ms-1 ${isAdmin ? classes["admin-edit-button"] : classes["edit-button"]}`}
+                    className={`mt-4 ms-1 ${
+                      isAdmin
+                        ? classes["admin-edit-button"]
+                        : classes["edit-button"]
+                    }`}
                     sx={{
                       minWidth: 75,
                       maxWidth: 50,
@@ -535,7 +610,11 @@ const MyProfile = () => {
               ) : (
                 <Button
                   variant="contained"
-                  className={`mt-4 ${isAdmin ? classes["admin-edit-button"] : classes["edit-button"]}`}
+                  className={`mt-4 ${
+                    isAdmin
+                      ? classes["admin-edit-button"]
+                      : classes["edit-button"]
+                  }`}
                   sx={{ minWidth: 10, maxWidth: 50 }}
                   onClick={handleEditClick}
                 >

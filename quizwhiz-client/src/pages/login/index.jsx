@@ -19,32 +19,33 @@ const Login = () => {
   const dispatch = useDispatch();
   const actions = bindActionCreators(userActions, dispatch);
   const [showPassword, setShowPassword] = useState(false);
+  const [isCapsLockOn, setIsCapsLockOn] = useState(false);
   const [actionsList, setActionsList] = useState([]);
 
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        setActionsList((prevActions) => [...prevActions, "hide"]);
-        alert("You are trying to leave the page!");
-        event.preventDefault();
-      } else {
-        setActionsList((prevActions) => [...prevActions, "show"]);
-      }
-    };
+  // useEffect(() => {
+  //   const handleVisibilityChange = () => {
+  //     if (document.hidden) {
+  //       setActionsList((prevActions) => [...prevActions, "hide"]);
+  //       alert("You are trying to leave the page!");
+  //       event.preventDefault();
+  //     } else {
+  //       setActionsList((prevActions) => [...prevActions, "show"]);
+  //     }
+  //   };
 
-    const handleBeforeUnload = (event) => {
-      event.preventDefault();
-      event.returnValue = "";
-    };
+  //   const handleBeforeUnload = (event) => {
+  //     event.preventDefault();
+  //     event.returnValue = "";
+  //   };
 
-    document.addEventListener("visibilitychange", handleVisibilityChange, false);
-    window.addEventListener("beforeunload", handleBeforeUnload);
+  //   document.addEventListener("visibilitychange", handleVisibilityChange, false);
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
 
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
+  //   return () => {
+  //     document.removeEventListener("visibilitychange", handleVisibilityChange);
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, []);
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -104,6 +105,14 @@ const Login = () => {
       });
     }
   };
+
+  const checkCapsLock = (event) => {
+    if (event.getModifierState && event.getModifierState('CapsLock')) {
+      setIsCapsLockOn(true);
+    } else {
+      setIsCapsLockOn(false);
+    }
+  }
 
   return (
     <Fragment>
@@ -165,6 +174,7 @@ const Login = () => {
                                 className={`${classes["form-input"]} form-control form-control-md p-3`}
                                 placeholder="Password"
                                 id="password"
+                                onKeyDown={checkCapsLock}
                                 autoComplete="off"
                               />
                               <button
@@ -185,6 +195,9 @@ const Login = () => {
                           <span className={classes["error-message"]}>
                             {errors.password}
                           </span>
+                        ) : null}
+                        {isCapsLockOn ? (
+                          <span className={classes["error-message"]}>Caps Lock is on</span>
                         ) : null}
                       </div>
                     </div>

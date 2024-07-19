@@ -29,11 +29,11 @@
   color: #fada65;
 }
 
-.error-message {
+/* .error-message {
   color: red;
   font-size: 0.875rem;
   margin-top: 0.5rem;
-}
+} */
 
 .log-in-title {
   color: #fada65;
@@ -208,6 +208,11 @@
   color:#3d3189 !important;
 }
 
+.admin-error-message {
+  font-size: 17px;
+  color: #3d3189;
+}
+
 .admin-upload-btn {
   padding: 0.5rem 2.1rem;
   background-color: #a89ee9 !important;
@@ -227,7 +232,7 @@
   color: #000000 !important;
   border-radius: 0.5rem !important;
   border: 1px solid #a89ee9 !important;
-  padding: 0.6rem 2.5rem 0.6rem 2.5rem !important;
+  padding: 0.6rem 3rem 0.6rem 3rem !important;
 }
 
 .admin-edit-button:hover {
@@ -237,7 +242,7 @@
 }
 
 .admin-input-field {
-  background-color: #ded9fc !important;
+  background-color: #ded9fc;
   border: 1px solid #a89ee9 !important;
   width: 100% !important;
   max-width: 80vw !important;

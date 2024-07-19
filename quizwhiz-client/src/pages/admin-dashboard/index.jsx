@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useRef, useState } from "react";
 import {
   Box,
   FormControl,
@@ -53,7 +53,6 @@ const MenuProps = {
       width: 99,
     },
   },
-  
 };
 const AdminDashboard = () => {
   const [firstName, setFirstName] = useState("");
@@ -74,6 +73,7 @@ const AdminDashboard = () => {
   const [countOfCompleted, SetCountOfCompleted] = useState(null);
   const navigate = useNavigate();
   const params = useParams();
+  const childRef = useRef(null);
   var username = "";
 
   useEffect(() => {
@@ -163,7 +163,7 @@ const AdminDashboard = () => {
       SetFilteredData([]);
     }
   };
-  
+
   const handlePageChange = async (event, value) => {
     SetCurrentPage(currentPage);
     try {
@@ -173,6 +173,23 @@ const AdminDashboard = () => {
         CategoryId: category,
         CurrentPage: value,
         SearchValue: searchedWord,
+      });
+      SetFilteredData(result.data.data.GetQuizzes);
+    } catch (error) {
+      SetFilteredData([]);
+    }
+  };
+
+  const changeOrderOnClick = async (name, isDataAscending) => {
+    try {
+      const result = await filterByCategory({
+        StatusId: statusEnum[params.id],
+        DifficultyId: difficulty,
+        CategoryId: category,
+        CurrentPage: currentPage,
+        SearchValue: searchedWord,
+        IsAscending: isDataAscending,
+        FilterBy: name,
       });
       SetFilteredData(result.data.data.GetQuizzes);
     } catch (error) {
@@ -210,23 +227,24 @@ const AdminDashboard = () => {
         CategoryId: category,
         CurrentPage: currentPage,
         SearchValue: searchedWord,
+        IsAscending: true,
+        FilterBy: "",
       });
       SetFilteredData(result.data.data.GetQuizzes);
     } catch (error) {
       console.log("error:", error);
       SetFilteredData([]);
     }
-    try{
-        const status = await getAllStatusCount();
-        SetCountOfPending(status?.data?.data?.PendingCount);
-        SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
-        SetCountOfActive(status?.data?.data?.ActiveCount);
-        SetCountOfCompleted(status?.data?.data?.CompletedCount);
-        SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
-        setRecords(allData?.data?.data?.Pagination?.RecordSize);
-    }
-    catch(error){
-       console.log(error)
+    try {
+      const status = await getAllStatusCount();
+      SetCountOfPending(status?.data?.data?.PendingCount);
+      SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
+      SetCountOfActive(status?.data?.data?.ActiveCount);
+      SetCountOfCompleted(status?.data?.data?.CompletedCount);
+      SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
+      setRecords(allData?.data?.data?.Pagination?.RecordSize);
+    } catch (error) {
+      console.log(error);
     }
   };
   const handleCategory = async (e) => {
@@ -250,12 +268,12 @@ const AdminDashboard = () => {
     PaperProps: {
       style: {
         maxHeight: 200,
-        overflow: 'auto',
+        overflow: "auto",
       },
     },
     disablePortal: true,
   };
-  
+
   return (
     <div
       className={`${classes["bgimage"]} ${classes["specific-page"]} d-flex m-0 bg-white`}
@@ -492,6 +510,7 @@ const AdminDashboard = () => {
             //   Link={ele.QuizLink}
             // />
             <QuizEditTable
+              parentFunction={changeOrderOnClick}
               data={filteredData}
               Status={params.id}
               reload={onDeleteHandler}
@@ -579,7 +598,7 @@ const AdminDashboard = () => {
           <option value={10}>10</option>
           <option value={15}>15</option>
         </select> */}
-        {/* <FormControl sx={{ m: 1, minWidth: 80 }}>
+            {/* <FormControl sx={{ m: 1, minWidth: 80 }}>
         <InputLabel id="demo-simple-select-autowidth-label">Records</InputLabel>
         <Select
           labelId="demo-simple-select-autowidth-label"
@@ -616,7 +635,6 @@ const AdminDashboard = () => {
                   },
                 },
                 "& .MuiPaginationItem-root.Mui-selected": {
-                  
                   backgroundColor: "#3d3189",
                   color: "white",
                   border: "1px solid #21201e",

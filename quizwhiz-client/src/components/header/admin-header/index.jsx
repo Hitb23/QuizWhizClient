@@ -160,13 +160,14 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             className="gap-2 rounded d-flex align-items-center"
             onClick={handleAvatarClick}
           >
+            <p className={`${classes["username"]} fs-5 mt-3 px-3 fw-semibold d-sm-inline d-none`}> 
+              {username}
+            </p>
             <Avatar
               sx={{ background: "#5f071c", cursor: "pointer" }}
               src={fullImagePath}
             ></Avatar>
-            <p className="fs-5 mt-3 fw-semibold d-sm-inline d-none">
-              {userName}
-            </p>
+            
           </IconButton>
 
           <Menu
