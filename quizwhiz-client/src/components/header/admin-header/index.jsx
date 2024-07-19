@@ -124,20 +124,36 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             marginRight: "1rem",
           }}
         >
-          
-            <p className="fs-5 mt-3 fw-semibold d-sm-inline d-none text-white">
-              {username} 
-            </p>
-            <IconButton
-              className="gap-2 rounded d-flex align-items-center"
-              onClick={handleAvatarClick}
+          <Badge
+            badgeContent={4}
+            sx={{
+              cursor: "pointer",
+              "& .MuiBadge-badge": {
+                background: "#3D3189",
+                color: "#fada65", // This sets the text color of the badge
+              },
+            }}
+          >
+            <IoNotificationsOutline
+              color="#fada65"
+              background="#3D3189"
+              border="2px solid #3D3189"
+              size={30}
+            />
+          </Badge>
+          <IconButton
+            className="gap-2 rounded d-flex align-items-center"
+            onClick={handleAvatarClick}
+          >
+            <p
+              className={`${classes["username"]} fs-5 mt-3 px-3 fw-semibold d-sm-inline d-none`}
             >
+              {username}
+            </p>
             <Avatar
               sx={{ background: "#5f071c", cursor: "pointer" }}
               src={fullImagePath}
             ></Avatar>
-
-
           </IconButton>
 
           <Menu
@@ -188,7 +204,6 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
           </Menu>
         </Box>
       </AppBar>
-      
     </>
   );
 };

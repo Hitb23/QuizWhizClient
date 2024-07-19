@@ -29,11 +29,11 @@
   color: #fada65;
 }
 
-.error-message {
+/* .error-message {
   color: red;
   font-size: 0.875rem;
   margin-top: 0.5rem;
-}
+} */
 
 .log-in-title {
   color: #fada65;
@@ -205,6 +205,11 @@
 
 .admin-label-font {
   color:#3d3189 !important;
+}
+
+.admin-error-message {
+  font-size: 17px;
+  color: #3d3189;
 }
 
 .admin-upload-btn {

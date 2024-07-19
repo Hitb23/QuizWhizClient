@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useImperativeHandle, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Delete, Edit, Label } from "@mui/icons-material";
 import { Switch, Tooltip } from "@mui/material";
@@ -11,15 +11,34 @@ import { useNavigate } from "react-router-dom";
 import { RoutePaths } from "../../utils/enum";
 import { toast } from "react-toastify";
 import withReactContent from "sweetalert2-react-content";
-import Swal from "sweetalert2";
 import { MdLeaderboard } from "react-icons/md";
+import Swal from "sweetalert2";
+import { TbTriangle } from "react-icons/tb";
+import { TbTriangleInverted } from "react-icons/tb";
 
-const QuizEditTable = ({ data, Status, reload }) => {
+// import withReactContent from "@sweetalert2/react-content";
 
-    const [deleteResponse,setDeleteResponse]=useState('');
-  const [isEditOpen,setIsEditOpen]=useState(false);
+const QuizEditTable = ({ data, Status, reload, parentFunction }) => {
+  const [deleteResponse, setDeleteResponse] = useState("");
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDataAscending, setIsDataAscending] = useState(true);
+
+  useEffect(() => {
+    getOrderedData("");
+  }, []);
   const navigate = useNavigate();
   const MySwal = withReactContent(Swal);
+
+  // useImperativeHandle(ref, () => ({
+  //   callParentFunction: getOrderedData
+  // }));
+
+  const getOrderedData = async (name) => {
+    data = [];
+    parentFunction(name, isDataAscending);
+    setIsDataAscending(!isDataAscending);
+  };
+
   const OnDeleteHandler = async (QuizLink) => {
     const result = await MySwal.fire({
       title: "Are you sure?",
@@ -43,7 +62,6 @@ const QuizEditTable = ({ data, Status, reload }) => {
       MySwal.fire("Cancelled", "Your item is safe :)", "error");
     }
   };
- 
 
  const OnPublishHandler = async (QuizLink)=>{
   try{
@@ -93,17 +111,19 @@ const QuizEditTable = ({ data, Status, reload }) => {
             <tr>
               <th
                 scope="col"
-                style={{ background: "#a89ee9" }}
+                style={{ background: "#a89ee9", cursor: "pointer" }}
                 className="text-black text-center py-3"
+                onClick={(e) => getOrderedData("title")}
               >
-                Title
+                Title {isDataAscending ? <TbTriangle className="ms-2 mb-1"/> : <TbTriangleInverted className="ms-2 mb-1"/>}  
               </th>
               <th
                 scope="col"
-                style={{ background: "#a89ee9" }}
-                className="text-black text-center py-3"
+                style={{ background: "#a89ee9", cursor: "pointer" }}
+                className="text-black py-3"
+                onClick={(e) => getOrderedData("totalquestions")}
               >
-                Total Questions
+                Total Questions {isDataAscending ? <TbTriangle className="ms-2 mb-1"/> : <TbTriangleInverted className="ms-2 mb-1"/>}
               </th>
               <th
                 scope="col"
@@ -121,17 +141,19 @@ const QuizEditTable = ({ data, Status, reload }) => {
               </th>
               <th
                 scope="col"
-                style={{ background: "#a89ee9" }}
-                className="text-black text-center py-3"
+                style={{ background: "#a89ee9", cursor: "pointer" }}
+                className="text-black py-3"
+                onClick={(e) => getOrderedData("totalmarks")}
               >
-                Total Marks
+                Total Marks {isDataAscending ? <TbTriangle className="ms-2 mb-1"/> : <TbTriangleInverted className="ms-2 mb-1"/>}
               </th>
               <th
                 scope="col"
-                style={{ background: "#a89ee9" }}
-                className="text-black text-center py-3"
+                style={{ background: "#a89ee9", cursor: "pointer" }}
+                className="text-black py-3"
+                onClick={(e) => getOrderedData("difficulty")}
               >
-                Difficulty
+                Difficulty {isDataAscending ? <TbTriangle className="ms-2 mb-1"/> : <TbTriangleInverted className="ms-2 mb-1"/>}
               </th>
               <th
                 scope="col"
@@ -211,7 +233,6 @@ const QuizEditTable = ({ data, Status, reload }) => {
           </tbody>
         </table>
       </div>
-      
     </>
   );
 };

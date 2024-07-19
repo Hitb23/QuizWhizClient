@@ -82,7 +82,7 @@ const validationSchema = yup.object().shape({
   phoneNumber: yup
     .string()
     .matches(
-      /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$|^\d{10}$/,
+      /^(?:\+\d{1,3}|0\d{1,3}|00\d{1,2})?(?:\s?\(\d+\))?(?:[-\/\s.]|\d){7,15}$/,
       "Phone number is invalid"
     )
     .required("Phone number is required"),
@@ -416,11 +416,6 @@ const MyProfile = () => {
                   backgroundColor: "#ded9fc"
                 }}
               />
-              {formik.touched.firstName && formik.errors.firstName ? (
-                <span className={`mt-2 ${classes["error-message"]}`}>
-                  {formik.errors.firstName}
-                </span>
-              ) : null}
             </div>
 
             <div className={`col-md-12`}>
@@ -451,7 +446,7 @@ const MyProfile = () => {
                 }}
               />
               {formik.touched.firstName && formik.errors.firstName ? (
-                <span className={`mt-2 ${classes["error-message"]}`}>
+                <span className={`mt-2 ${isAdmin ? classes["admin-error-message"]: classes["error-message"]}`}>
                   {formik.errors.firstName}
                 </span>
               ) : null}
@@ -485,7 +480,7 @@ const MyProfile = () => {
                 }}
               />
               {formik.touched.lastName && formik.errors.lastName ? (
-                <span className={`mt-2 ${classes["error-message"]}`}>
+                <span className={`mt-2 ${isAdmin ? classes["admin-error-message"]: classes["error-message"]}`}>
                   {formik.errors.lastName}
                 </span>
               ) : null}
@@ -519,7 +514,7 @@ const MyProfile = () => {
                 }}
               />
               {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
-                <span className={`mt-2 ${classes["error-message"]}`}>
+                <span className={`mt-2 ${isAdmin ? classes["admin-error-message"]: classes["error-message"]}`}>
                   {formik.errors.phoneNumber}
                 </span>
               ) : null}
@@ -566,7 +561,7 @@ const MyProfile = () => {
                 ))}
               </Select>
               {formik.touched.country && formik.errors.country ? (
-                <span className={`mt-2 ${classes["error-message"]}`}>
+                <span className={`mt-2 ${isAdmin ? classes["admin-error-message"]: classes["error-message"]}`}>
                   {formik.errors.country}
                 </span>
               ) : null}

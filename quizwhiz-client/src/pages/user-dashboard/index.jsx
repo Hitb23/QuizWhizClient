@@ -6,6 +6,8 @@ import { getSingleQuestion } from "../../services/quizSocket.service";
 import { getQuizDetailsByLink } from "../../services/admindashboard.service";
 import { useParams } from "react-router-dom";
 import { HubConnectionBuilder } from "@microsoft/signalr";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 
 const UserDashboard = () => {
   const { quizLink } = useParams();
@@ -69,6 +71,7 @@ const UserDashboard = () => {
   //       });
   //   }
   // };
+
 
   const getCorrectAnswer = async (quizLink, questionCount) => {
     console.log("Quizlink and its type: " + quizLink + typeof(quizLink));

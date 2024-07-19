@@ -24,6 +24,8 @@ import {
 } from "../../services/admindashboard.service";
 import jwtDecoder from "../../services/jwtDecoder";
 import QuizHeader from "../../components/header/quizzes-header";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -105,7 +107,50 @@ const Quizzes = () => {
       }
     };
     fetchUserDetails();
+
+    // const steps = [
+    //   {
+    //     element: '#completedQuizzes',
+    //     popover: {
+    //       title: 'Quizzes completed',
+    //       description: 'This displays the information about the completed quizzes',
+    //       position: 'left',
+    //       className: 'info-popover'
+    //     }
+    //   },
+    //   {
+    //     element: '#participatedQuizzes',
+    //     popover: {
+    //       title: 'Quizzes participated',
+    //       description: 'This displays the information about the participated quizzes',
+    //       position: 'right',
+    //       className: 'info-popover'
+    //     }
+    //   },
+    //   {
+    //     element: '#demo-theme',
+    //     popover: {
+    //       title: 'Style However You Want',
+    //       description: 'You can use the default class names and override the styles or you can pass a custom class name to the popoverClass option either globally or per step.',
+    //       position: 'bottom',
+    //       className: 'info-popover'
+    //     }
+    //   }
+    // ];
+    
+    // const driverInstance = driver({
+    //   popoverClass: 'driverjs-theme',
+    //   animate: false,
+    //   showProgress: false,
+    //   showButtons: ["next", "previous", "close"],
+    //   steps: steps
+    // });
+    
+    // driverInstance.drive();
+    
   }, []);
+
+  
 
   const handlePageSize = async (event) => {
     SetCurrentPage(1);
@@ -271,6 +316,7 @@ const Quizzes = () => {
               </li>
               <li className="nav-item">
                 <button
+                  id="completedQuizzes"
                   className={`nav-link ${
                     toggleTabs === 2 ? classes["tab-active"] : classes["tab"]
                   }`}
@@ -281,6 +327,7 @@ const Quizzes = () => {
               </li>
               <li className="nav-item">
                 <button
+                  id="participatedQuizzes"
                   className={`nav-link ${
                     toggleTabs === 3 ? classes["tab-active"] : classes["tab"]
                   }`}

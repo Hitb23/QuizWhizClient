@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useRef, useState } from "react";
 import {
   Box,
   FormControl,
@@ -71,6 +71,7 @@ const AdminDashboard = () => {
   const [countOfCompleted, SetCountOfCompleted] = useState(null);
   const navigate = useNavigate();
   const params = useParams();
+  const childRef = useRef(null);
   var username = "";
 
   useEffect(() => {
@@ -178,6 +179,23 @@ const AdminDashboard = () => {
     }
   };
 
+  const changeOrderOnClick = async (name, isDataAscending) => {
+    try {
+      const result = await filterByCategory({
+        StatusId: statusEnum[params.id],
+        DifficultyId: difficulty,
+        CategoryId: category,
+        CurrentPage: currentPage,
+        SearchValue: searchedWord,
+        IsAscending: isDataAscending,
+        FilterBy: name,
+      });
+      SetFilteredData(result.data.data.GetQuizzes);
+    } catch (error) {
+      SetFilteredData([]);
+    }
+  };
+
   const searchHandler = async (e) => {
     const searchedWord = e.target.value;
     SetSearchedWord(searchedWord);
@@ -208,6 +226,8 @@ const AdminDashboard = () => {
         CategoryId: category,
         CurrentPage: currentPage,
         SearchValue: searchedWord,
+        IsAscending: true,
+        FilterBy: "",
       });
       SetFilteredData(result.data.data.GetQuizzes);
     } catch (error) {
@@ -513,6 +533,7 @@ const AdminDashboard = () => {
             //   Link={ele.QuizLink}
             // />
             <QuizEditTable
+              parentFunction={changeOrderOnClick}
               data={filteredData}
               Status={params.id}
               reload={onDeleteHandler}
