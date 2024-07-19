@@ -112,21 +112,6 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
         className={`${classes["nav-color"]}`}
       >
         <Toolbar>
-          {/* <IconButton
-            color="black"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginLeft: -3.1,
-              marginRight: 4,
-              ...(open && { display: "none" }),
-              ...(useMediaQuery("(max-width:450px)") && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton> */}
-          {/* {open ? null : ( */}
           <Link to="/">
             <img className={classes["logo-image"]} src={Logo} height={70} />
           </Link>
@@ -160,14 +145,15 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             className="gap-2 rounded d-flex align-items-center"
             onClick={handleAvatarClick}
           >
-            <p className={`${classes["username"]} fs-5 mt-3 px-3 fw-semibold d-sm-inline d-none`}> 
+            <p
+              className={`${classes["username"]} fs-5 mt-3 px-3 fw-semibold d-sm-inline d-none`}
+            >
               {username}
             </p>
             <Avatar
               sx={{ background: "#5f071c", cursor: "pointer" }}
               src={fullImagePath}
             ></Avatar>
-            
           </IconButton>
 
           <Menu
@@ -218,88 +204,6 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
           </Menu>
         </Box>
       </AppBar>
-      {/* <Drawer variant="permanent" open={open} sx={{ background: "#3D3189" }}>
-        <Paper sx={{ background: "#3D3189", height: "100vh" }}>
-          <DrawerHeader
-            sx={{
-              background: "#3D3189",
-              paddingY: "2rem",
-              display: "flex",
-              justifyContent: "space-between",
-              marginX: "0.3rem",
-            }}
-          >
-            <Box sx={{ margin: "auto" }}>
-              <Link to="/">
-                <img
-                  className={`mx-auto ${classes["logo-image"]} `}
-                  src={Logo}
-                  height={70}
-                />
-              </Link>
-            </Box>
-            <IconButton
-              sx={{ background: "#3D3189" }}
-              onClick={handleDrawerClose}
-            >
-              {theme.direction === "rtl" ? (
-                <ChevronRightIcon sx={{ color: "#fffff" }} />
-              ) : (
-                <ChevronLeftIcon sx={{ color: "#fffff" }} />
-              )}
-            </IconButton>
-          </DrawerHeader>
-          <Divider sx={{ background: "#3D3189" }} />
-          <List sx={{ background: "#3D3189" }}>
-            {adminDashboardSections.map((text, index) => (
-              <ListItem
-                key={text.title}
-                disablePadding
-                sx={{ display: "block", color: "#a89ee9" }}
-              >
-                <ListItemButton
-                  onClick={() => handleClick(index)}
-                  sx={{
-                    borderRadius: "10px",
-                    background:
-                      openIndex === index || text == "Quiz Management"
-                        ? "#3D3189"
-                        : "inherit",
-                    "&:hover": {
-                      background: openIndex === index ? "#000000" : "#f5f5f5",
-                      color: openIndex === index ? "#000000" : "inherit",
-                    },
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{ display: open ? "none" : "block", color: "#fada65" }}
-                  >
-                    {text.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    variant="h4"
-                    primary={text.title}
-                    sx={{ color: "#fada65" }}
-                  />
-                </ListItemButton>
-                <Collapse in={openIndex === index} timeout="auto" unmountOnExit>
-                  <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4 }}>
-                      <ListItemIcon sx={{ color: "#fada65" }}>
-                        <StarBorder />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary="Starred"
-                        sx={{ color: "#fada65" }}
-                      />
-                    </ListItemButton>
-                  </List>
-                </Collapse>
-              </ListItem>
-            ))}
-          </List>
-        </Paper>
-      </Drawer> */}
     </>
   );
 };

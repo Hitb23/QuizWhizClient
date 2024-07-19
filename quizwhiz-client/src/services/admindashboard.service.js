@@ -1,5 +1,6 @@
 import axios from "./axios";
 import { API_URLS } from "../utils/enum";
+import { addYears } from "date-fns";
 
 const CurrentToken = localStorage.getItem("token");
 
@@ -32,6 +33,7 @@ export const getCategories = async () => {
 
 export const createNewQuiz = async (data) => {
   try {
+    debugger;
     const response = await axios.post(
       API_URLS.CREATE_NEW_QUIZ,
       JSON.stringify(data),
@@ -181,3 +183,20 @@ export const DeleteQuiz = async (quizLink) => {
   //   console.log(error);
   // }
 };
+
+export const PublishQuiz = async (quizLink)=>{
+  try{
+   const response = await axios.get(API_URLS.PUBLISH_QUIZ + quizLink, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${CurrentToken}`,
+    }
+   })
+   
+   console.log(response);
+   return response.data;
+  }
+  catch(error){
+    console.log(error)
+  }
+}

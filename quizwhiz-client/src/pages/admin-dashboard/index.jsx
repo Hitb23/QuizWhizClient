@@ -2,7 +2,6 @@ import { React, useEffect, useRef, useState } from "react";
 import {
   Box,
   FormControl,
-  Input,
   InputLabel,
   MenuItem,
   Select,
@@ -43,7 +42,6 @@ import ViewQuizModal from "../../components/dialog-boxes/view-quiz";
 import EditQuizModal from "../../components/dialog-boxes/edit-quiz-details";
 import QuizEditTable from "../../components/admin-quiz-edit";
 import { HashLoader } from "react-spinners";
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -132,6 +130,7 @@ const AdminDashboard = () => {
   }, []);
 
   const navigateToCategory = (id) => {
+    SetFilteredData([]);
     navigate(`/admin-dashboard/${id}`);
   };
 
@@ -397,34 +396,58 @@ const AdminDashboard = () => {
                 value={difficulty}
                 onChange={handleDifficulty}
                 label="Difficulty"
-                MenuProps={MenuProps}
                 sx={{
-                  backgroundColor: "#fffff",
+                  backgroundColor: "#ffffff",
                   color: "#21201e",
                   boxShadow: "none",
                   "& .MuiOutlinedInput-notchedOutline": {
                     border: "1px solid #3d3189",
-                    borderColor: "#3d3189", // Always set the border color to #21201e
                   },
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                     border: "1px solid #3d3189",
-                    borderColor: "#3d3189", // Maintain the border color on focus
                   },
                   "&:hover .MuiOutlinedInput-notchedOutline": {
                     border: "1px solid #3d3189",
-                    borderColor: "#3d3189", // Maintain the border color on hover
                   },
                   "& .MuiSvgIcon-root": {
                     color: "#3d3189",
                   },
                 }}
+                MenuProps={{
+                  MenuListProps: {
+                    sx: {
+                      backgroundColor: "#ffffff",
+                    },
+                  },
+                }}
               >
-                <MenuItem key={0} value={0}>
+                <MenuItem
+                  key={0}
+                  value={0}
+                  sx={{
+                    backgroundColor: difficulty === 0 ? "#a89ee9" : "#ffffff",
+                    "&:hover": {
+                      backgroundColor: "#a89ee9",
+                    },
+                  }}
+                >
                   All
                 </MenuItem>
                 {difficultyList &&
                   difficultyList.map((ele) => (
-                    <MenuItem key={ele.DifficultyId} value={ele.DifficultyId}>
+                    <MenuItem
+                      key={ele.DifficultyId}
+                      value={ele.DifficultyId}
+                      sx={{
+                        backgroundColor:
+                          difficulty === ele.DifficultyId
+                            ? "#a89ee9"
+                            : "#ffffff",
+                        "&:hover": {
+                          backgroundColor: "#a89ee9",
+                        },
+                      }}
+                    >
                       {ele.DifficultyName}
                     </MenuItem>
                   ))}
@@ -522,7 +545,7 @@ const AdminDashboard = () => {
             //   style={{height:'500px',width:'500px'}}
             // />
             <div className="d-flex justify-content-center align-items-center">
-              {difficultyList.length <= 0 ? (
+              {difficultyList.length <= 0 || filteredData.length<=0 ? (
                 <HashLoader
                   className="text-center me-2 mt-5"
                   style={{ color: "#a89ee9" }}

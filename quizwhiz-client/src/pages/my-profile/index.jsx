@@ -355,7 +355,6 @@ const MyProfile = () => {
             />
           </FileUploadButton>
         </div>
-        {/* <div className={`col-md-6 ${classes["vertical-line-centre"]}`}></div> */}
         <div className={`col-lg-6 col-12 ${classes["form-group"]}`}>
           <form onSubmit={formik.handleSubmit}>
             {/* <Field
