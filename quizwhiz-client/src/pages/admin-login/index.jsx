@@ -58,7 +58,7 @@ const AdminLogin = () => {
       const response = await adminLogin({ email, password });
       console.log(response);
       localStorage.setItem("token", response.data.data);
-      localStorage.setItem("token-expiry", new Date().getTime() + 3600 * 1000);
+      localStorage.setItem("token-expiry", new Date().getTime() + 7200 * 1000);
 
       const data = await jwtDecoder();
       const userRole = data["Role"];
@@ -206,7 +206,6 @@ const AdminLogin = () => {
                 </Form>
               )}
             </Formik>
-
             {/* <div className={`d-flex justify-content-center`}>
               <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
                 <div

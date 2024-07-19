@@ -5,6 +5,7 @@ import useWindowSize from 'react-use/lib/useWindowSize'
 import Confetti from 'react-confetti'
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
+
 const Quiz = () => {
   const [minutes, SetMinutes] = useState(0);
   const [Seconds, SetSeconds] = useState(0);
@@ -22,13 +23,12 @@ const Quiz = () => {
     return `${hours}:${minutes}:${seconds}`;
   };
 
-
-   useEffect(() => {
-    const connection = new HubConnectionBuilder()
-      .withUrl("https://localhost:44361/quizhub")
-      .withAutomaticReconnect()
-      .build();
-    setConnection(connection);
+  //  useEffect(() => {
+  //   const connection = new HubConnectionBuilder()
+  //     .withUrl("https://localhost:44361/quizhub")
+  //     .withAutomaticReconnect()
+  //     .build();
+  //   setConnection(connection);
 
     // connection.on("ReceiveMessage", (user, message) => {
     //   setMessages((prevMessages) => [...prevMessages, { user, message }]);
@@ -69,26 +69,54 @@ const Quiz = () => {
     // var user = jwtDecoder();
     // console.log(user);
     // console.log(connection);
-      connection
-        .start()
-        .catch((error) => console.error("Connection failed: ", error));
-
-      return () => {
-          connection.stop();
-      }
-  }, [Seconds,Question]);
+  //     connection
+  //       .start()
+  //       .catch((error) => console.error("Connection failed: ", error));
 
 
-  const fun=async()=>{
-    console.log(connection)
-    if(connection){
-      await connection
+  //   connection.on("ReceiveQuestion", (message) => {
+  //     setMessages((prevMessages) => [
+  //       ...prevMessages,
+  //       { user: "System", message },
+  //     ]);
+  //   });
+    
+  //   connection.on("ContestActivated", (message) => {
+  //     console.log(message);
+  //     setIsContestActive(true);
+  //   });
 
-        .invoke("SendAnswer",'WJqpRNMN',59,'ishanbhatt',[1])
+  //   connection.on("ReceiveRemainingTime", (contestId, time) => {
+  //     setRemainingTime(time);
+  //     console.log(time);
+  //     const minutesRemaining =
+  //       time.minutes + time.hours * 60 + time.days * 24 * 60;
+  //     if (minutesRemaining <= 15) {
+  //       setShowJoinButton(true);
 
-        .catch((error) => console.error("SendMessage failed: ", error));
-    }
-  }
+  //     return () => {
+  //         connection.stop();
+  //     }}
+  // }, [Seconds,Question]);
+
+
+  // const fun=async()=> {
+  //   console.log(connection)
+  //   if(connection){
+  //     await connection
+
+  //       .invoke("SendAnswer",'WJqpRNMN',59,'ishanbhatt',[1]);
+
+
+  // const handleSendMessage = () => {
+  //   if (connection) {
+  //     connection
+  //       .invoke("ReceiveRemainingTime", "0GgfW7eG", newMessage)
+  //       .catch((error) => console.error("SendMessage failed: ", error));
+  //     setNewMessage(newMessage);
+
+  //   }
+  // }
 
   return (
     <div>
@@ -131,9 +159,10 @@ const Quiz = () => {
             Time Remaining: {formatTime(remainingTime)}
           </div>
         )}
-      </div> */}
+      
+    </div> */}
     </div>
-  );
+  )
 };
 
 export default Quiz;

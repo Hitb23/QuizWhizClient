@@ -15,6 +15,7 @@ export const RoutePaths = {
   CreateNewQuiz:"/create-new-quiz",
   GetQuizDetails:"/get-quiz-details",
   AddQuizQuestions:"/add-quiz-questions",
+  LiveQuiz:"/live-quiz",
   UpdateQuizQuestions:"/update-quiz-question",
   ViewQuizResult:"/admin-dashboard/view-quiz-result"
 };

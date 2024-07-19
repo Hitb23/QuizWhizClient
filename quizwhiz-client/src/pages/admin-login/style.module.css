@@ -79,7 +79,7 @@
 
 .error-message {
   font-size: 17px;
-  color: #fada65;
+  color: #fada65 !important;
 }
 
 .link-message {

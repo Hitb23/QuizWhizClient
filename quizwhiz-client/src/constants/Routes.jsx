@@ -17,8 +17,9 @@ import ViewQuizModal from "../components/dialog-boxes/view-quiz";
 import QuizDescription from "../pages/problem-description";
 import QuizList from "../pages/quiz-list";
 import Quiz from "../pages/QuizHub";
+import LiveQuiz from "../pages/live-quiz";
+import LiveQuestions from "../components/live-questions";
 import ViewQuizResult from "../pages/view-quiz-result";
-
 
 export const ROUTES = [
   {
@@ -105,6 +106,21 @@ export const ROUTES = [
   {
     path: "/admin-dashboard/:id/:quizLink",
     element: <QuizDescription />,
+    roles: [Role.Admin, Role.Contestant, Role.Public],
+  },
+  {
+    path: "/live-quiz/:quizLink",
+    element: <LiveQuiz />,
+    roles: [Role.Admin, Role.Contestant],
+  },
+  {
+    path: "/admin-dashboard/quiz",
+    element: <Quiz />,
+    roles: [Role.Admin, Role.Contestant, Role.Public],
+  },
+  {
+    path: "/live-quiz/:quizLink/questions",
+    element: <LiveQuestions />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
