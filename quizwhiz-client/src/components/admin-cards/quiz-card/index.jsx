@@ -6,9 +6,10 @@ import { LuFileSpreadsheet } from "react-icons/lu";
 import { FaListCheck } from "react-icons/fa6";
 import classes from "./style.module.css";
 import { DIFFICULTIES, CATEGORIES } from "../../../utils/enum";
+import { useNavigate } from "react-router-dom";
 import QuizDescription from "../quiz-description";
 import CountdownTimer from "../../countdown-timer";
-import { useNavigate } from "react-router-dom";
+
 const QuizCard = ({
   title,
   scheduledDate,
@@ -16,8 +17,12 @@ const QuizCard = ({
   difficultyId,
   totalMarks,
   totalQuestions,
-  quizLink,
+  quizLink
 }) => {
+
+  if(title == "Tech Trivia"){
+    console.log(quizLink);
+  }
   const [minutes, setMinutes] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(0);
   var quizDate = new Date(scheduledDate);
@@ -28,11 +33,10 @@ const QuizCard = ({
   });
 
   var categoryName = CATEGORIES[categoryId];
-  var imageUrl = `${
-    import.meta.env.VITE_PUBLIC_URL
-  }src/assets/${categoryName.toLowerCase()}.jpg`;
+  // console.log(categoryName.toLowerCase().replace(/\s+/g, ""));
+  var imageUrl = `/src/assets/${categoryName.toLowerCase()}.jpg`;
   if (categoryName == "General Knowledge") {
-    imageUrl = `${import.meta.env.VITE_PUBLIC_URL}src/assets/gk.jpg`;
+    imageUrl = `/src/assets/gk.jpg`;
   }
 
   const formattedDate = new Date(scheduledDate).toLocaleDateString("en-US", {
@@ -62,6 +66,9 @@ const QuizCard = ({
     },
   });
 
+  const navigateToQuiz = () => {
+    navigate(`/user-dashboard/${quizLink}`);
+  }
   const viewDetailsHandler = () => {
     setIsModalOpen(1);
     console.log("open");
@@ -125,7 +132,7 @@ const QuizCard = ({
           </div>
         </div>
         <div className="col-xl-3 text-xl-end d-flex justify-content-center align-items-center flex-wrap">
-          {minutes <= 5 && minutes >= 0 ? (
+          {minutes <= 60 && minutes >= 0 ? (
             <div className="d-none d-xl-inline">
               <button
                 type="submit"
@@ -214,7 +221,7 @@ const QuizCard = ({
         <QuizDescription quizLink={quizLink} modalClose={closeModalHandler} />
       ) : null}
     </>
-  );
+  )
 };
 
 export default QuizCard;

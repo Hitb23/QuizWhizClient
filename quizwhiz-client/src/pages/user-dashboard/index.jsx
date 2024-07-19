@@ -4,123 +4,150 @@ import LandingHeader from "../../components/header/landing-header";
 import { ToastContainer, toast } from "react-toastify";
 import { getSingleQuestion } from "../../services/quizSocket.service";
 import { getQuizDetailsByLink } from "../../services/admindashboard.service";
+import { useParams } from "react-router-dom";
+import { HubConnectionBuilder } from "@microsoft/signalr";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 
 const UserDashboard = () => {
-  const [questions, setQuestions] = useState([]);
+  const { quizLink } = useParams();
   const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [intervalId, setIntervalId] = useState(null);
-  const [questionCount, setQuestionCount] = useState(-1);
+  const [questionCount, setQuestionCount] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
-
-  const QuizLink = "PEPa86wz";
+  const [questionId, setQuestionId] = useState(0);
+  const [connection, setConnection] = useState(null);
+  const [correctAnswer, setCorrectAnswer] = useState(null);
 
   useEffect(() => {
     async function fetchQuizData() {
-      const response = await getQuizDetailsByLink(QuizLink);
+      const response = await getQuizDetailsByLink(quizLink);
+      console.log("Data");
+      console.log(response.data);
       setTotalQuestions(response.data.TotalQuestion);
     }
 
     fetchQuizData();
-  }, []);
 
-  useEffect(() => {
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-    };
-  }, [intervalId]);
+    const connection = new HubConnectionBuilder()
+      .withUrl("https://localhost:44361/quizhub")
+      .build();
+    setConnection(connection);
 
-  const attendQuiz = async () => {
-    if (intervalId) {
-      clearInterval(intervalId);
-    }
-
-    setQuestionCount((q) => {
-      const newCount = q + 1;
-      if (newCount < totalQuestions) {
-        fetchQuestion(newCount);
-        return newCount;
-      } else {
-        return q;
-      }
+    connection.on("ReceiveQuestion", (question) => {
+      console.log("Question : ");
+      console.log(question);
+      setCurrentQuestion(question);
+      setQuestionCount((prevCount) => prevCount + 1);
+      setQuestionId(question.questionId);
+      console.log("QuestionId : " + typeof(question.questionId));
     });
 
-    const newIntervalId = setInterval(async () => {
-      setQuestionCount((q) => {
-        const newCount = q + 1;
-        if (newCount < totalQuestions) {
-          fetchQuestion(newCount);
-          return newCount;
-        } else {
-          clearInterval(intervalId);
-          return q;
-        }
-      });
-    }, 5000);
+    connection.on("ReceiveCorrectAnswer", (answer) => {
+      console.log("Correct ans : " + answer);
+      setCorrectAnswer(answer);
+    });
 
-    setIntervalId(newIntervalId);
-  };
+    connection.on("ReceiveError", (message) => {
+      console.log(message);
+    });
 
-  const fetchQuestion = async (updatedQuestionCount) => {
-    console.log("Updated question count : " + updatedQuestionCount);
-    console.log("Total question count : " + totalQuestions);
-    try {
-      const response = await getSingleQuestion({
-        QuizLink,
-        QuestionCount: updatedQuestionCount,
-      });
-      if (response.isSuccess) {
-        console.log(response.data);
-      }
-      setCurrentQuestion(response.data);
-      setQuestions((prevQuestions) => [...prevQuestions, response.data]);
-    } catch (error) {
+    connection.on("GetTitleOfQuiz", (data) =>  {
+      console.log(data);
+    });
+
+    connection.start().catch((error) => {
       console.error(error);
+    });
+
+    // fetchQuestion(0);
+  }, []);
+
+  // const fetchQuestion = async (updatedQuestionCount) => {
+  //   if (questionCount <= totalQuestions) {
+  //     await connection
+  //       .invoke("GetNewQuestion", quizLink, updatedQuestionCount)
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   }
+  // };
+
+
+  const getCorrectAnswer = async (quizLink, questionCount) => {
+    console.log("Quizlink and its type: " + quizLink + typeof(quizLink));
+    if (questionCount <= totalQuestions) {
+      await connection
+        .invoke("GetCorrectAnswer", quizLink, questionCount)
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
+
+  useEffect(() => {
+    if (questionCount <= totalQuestions) {
+      // fetchQuestion(questionCount);
+      // getCorrectAnswer(quizLink, questionCount);
+    }
+  }, [questionCount, totalQuestions]);
 
   return (
     <React.Fragment>
       <LandingHeader />
         <h1>User Dashboard</h1>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <button onClick={attendQuiz}>Attend Quiz</button>
       <h1 className="text-white">Current Question:</h1>
-      <p className="text-white">
-        {currentQuestion ? currentQuestion.QuestionText : ""}
-      </p>
+      <div className="d-flex justify-content-center">
+        <div className="text-white">
+          {currentQuestion ? (
+            <div className="d-flex align-items-center text-white">
+              <div>{currentQuestion.questionText}</div>
+            </div>
+          ) : (
+            <div>No question available</div>
+          )}
+        </div>
+      </div>
 
-      {currentQuestion && currentQuestion.Options ? (
-        currentQuestion.Options.length === 2 ? (
-          <div>
-            <button>{currentQuestion.Options[0].OptionText}</button>
-            <button>{currentQuestion.Options[1].OptionText}</button>
+      <div className="d-flex justify-content-center">
+        <div className="text-white">
+          {correctAnswer ? (
+            <div className="d-flex align-items-center text-white">
+              <div>{correctAnswer}</div>
+            </div>
+          ) : (
+            <div></div>
+          )}
+        </div>
+      </div>
+
+      {currentQuestion && currentQuestion.options ? (
+        currentQuestion.options.length === 2 ? (
+          <div className="d-flex justify-content-center">
+            <button>{currentQuestion.options[0].optionText}</button>
+            <button>{currentQuestion.options[1].optionText}</button>
           </div>
         ) : (
-          <div>
-            {currentQuestion.Options.map((option, index) => (
-              <div key={index}>
-                <input type="radio" name="option" value={option.OptionText} />
-                <label className="text-white">{option.OptionText}</label>
+          <div className="d-flex flex-column align-items-center">
+            {currentQuestion.options.map((option, index) => (
+              <div className="d-flex align-items-center mb-2" key={index}>
+                <input
+                  type="radio"
+                  name="option"
+                  className="me-2"
+                  value={option.optionText}
+                />
+                <label className="text-white">{option.optionText}</label>
               </div>
             ))}
           </div>
         )
       ) : (
-        <div>No question available</div>
+        <div className="text-white">No question available</div>
       )}
-
-      <h1 className="text-white">Previous Questions:</h1>
-      <ul>
-        {questions.map((question, index) => (
-          <li className="text-white" key={index}>
-            {question.QuestionText}
-          </li>
-        ))}
-      </ul>
     </React.Fragment>
   );
 };
- 
+
 export default UserDashboard;

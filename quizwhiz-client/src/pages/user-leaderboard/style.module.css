@@ -1,0 +1,12 @@
+.LeaderBoard-table{
+    background-color: transparent !important;
+}
+.full-screen {
+    min-height: 100vh;
+    background-image: none !important;
+    background-color: aliceblue !important;
+    /* backdrop-filter: blur(1.8px); */
+  }
+  .bg-transparent{
+    background-color: aliceblue !important;
+  }

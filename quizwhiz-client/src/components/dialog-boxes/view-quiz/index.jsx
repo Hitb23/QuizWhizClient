@@ -14,12 +14,13 @@ import Slide from "@mui/material/Slide";
 import { useState, Fragment, forwardRef, useEffect } from "react";
 import ViewQuizQuestions from "../../view-quiz-questions";
 import { getQuizDetailsByLink } from "../../../services/admindashboard.service";
+import { ToastContainer, toast } from "react-toastify";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ViewQuizModal({ currentQuizLink }) {
+export default function ViewQuizModal({ currentQuizLink , closeEditDialog}) {
   const [open, setOpen] = useState(false);
   const [quizDetail, setQuizDetail] = useState({});
 
@@ -29,6 +30,7 @@ export default function ViewQuizModal({ currentQuizLink }) {
 
   const handleClose = () => {
     setOpen(false);
+    closeEditDialog();
   };
 
   useEffect(() => {
@@ -47,7 +49,7 @@ export default function ViewQuizModal({ currentQuizLink }) {
         variant="contained"
         onClick={handleClickOpen}
       >
-        View Questions
+        Edit Questions
       </Button>
       <Dialog
         fullScreen
@@ -55,7 +57,7 @@ export default function ViewQuizModal({ currentQuizLink }) {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: "relative", backgroundColor: "#6F41DB" }}>
+        <AppBar sx={{ position: "fixed", backgroundColor: "#6F41DB" }}>
           <Toolbar>
             <IconButton
               edge="start"
@@ -79,11 +81,11 @@ export default function ViewQuizModal({ currentQuizLink }) {
               }}
               onClick={handleClose}
             >
-              Go To Dashboard
+               Dashboard
             </Button>
           </Toolbar>
         </AppBar>
-        <ViewQuizQuestions currentQuizLink={currentQuizLink} />
+        <ViewQuizQuestions currentQuizLink={currentQuizLink}  />
       </Dialog>
     </Fragment>
   );

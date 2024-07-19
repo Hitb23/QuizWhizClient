@@ -1,9 +1,9 @@
+.admin-profile{
+  background-color: #ffffff;
+}
+
 .main-box {
-  display: flex;
-  justify-content: space-around;
-  min-height: 80vh;
-  /* margin-top: 9rem; */
-  padding: 12rem 12rem;
+  margin-top: 6rem;
 }
 
 .profile-photo {
@@ -12,18 +12,28 @@
   width: 250px !important;
 }
 
-div.vertical-line-centre {
+/* .profile-photo-div{
+  margin-top: 25rem;
+} */
+
+/* div.vertical-line-centre {
   border-left: 3px solid #fada65;
   position: relative;
   margin-right: 2rem;
-  /* left: 50%; */
+  height: 40rem;
+  left: 50%;
+} */
+
+.black-font {
+  /* / align-self: flex-start; / */
+  color: #fada65;
 }
 
-.error-message {
+/* .error-message {
   color: red;
   font-size: 0.875rem;
   margin-top: 0.5rem;
-}
+} */
 
 .log-in-title {
   color: #fada65;
@@ -34,14 +44,14 @@ div.vertical-line-centre {
 
 .upload-btn {
   padding: 0.5rem 2.1rem;
-  background-color: #fada65 !important; 
+  background-color: #fada65 !important;
   color: #000000 !important;
   border-radius: 0.5rem;
   border: none;
 }
 
-.upload-btn:hover{
-  background-color: #6F41DB !important;
+.upload-btn:hover {
+  background-color: #6f41db !important;
   color: #fada65 !important;
   border: 1px solid #fada65 !important;
 }
@@ -51,12 +61,14 @@ div.vertical-line-centre {
   color: #000000 !important;
   border-radius: 0.5rem !important;
   border: 1px solid #fada65 !important;
+  padding: 0.6rem 2.5rem 0.6rem 2.5rem !important;
 }
 
 .edit-button:hover {
-  background-color: #6F41DB !important;
+  background-color: #6f41db !important;
   color: #fada65 !important;
   border: 1px solid #fada65 !important;
+  padding: 0.6rem 2.5rem 0.6rem 2.5rem !important;
 }
 
 .error-message {
@@ -64,51 +76,74 @@ div.vertical-line-centre {
   color: #fada65;
 }
 
-.form-group{
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-gap: 5px;
-  align-items: start;
-}
+/* .form-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+} */
 
-.form-lavbel{
-  grid-column: 1;
+.form-label {
+  flex-basis: 100%;
+  margin-bottom: 0.5rem;
+  color: #fada65;
 }
 
 .input-field {
   background-color: #fbf5dd !important;
   border: 1px solid #fada65 !important;
-  width: 30rem !important;
-  grid-column: 1;
+  width: 100% !important;
+  max-width: 80vw !important;
+  padding: 0.5rem;
 }
 
 .input-field:focus,
 .input-field:hover {
   outline: 1px solid #f0c20c !important;
   border: 1px solid #f0c20c !important;
-  box-shadow: 0 0 16px 0 rgba(228, 55, 55, 0.18), 0 2px 4px 0 rgba(228, 55, 55, 0.12) !important;
-}
-
-.black-font{
-  color: #fada65;
+  box-shadow: 0 0 16px 0 rgba(228, 55, 55, 0.18),
+    0 2px 4px 0 rgba(228, 55, 55, 0.12) !important;
 }
 
 @media (max-width: 1199px) {
+
+  /* .profile-photo-div {
+    margin-top: 25rem !important;
+  }
   .edit-button {
     margin: 0.7rem auto !important;
   }
+  .main-box {
+    flex-direction: column !important;
+  }
+  .form-group {
+    align-items: center !important;
+  }
+  .input-field {
+    max-width: 250px !important;
+  } */
+}
+
+@media (max-width: 991px){
   .profile-photo {
     width: 170px !important;
     height: 170px !important;
-    margin-top: 9rem;
-  }
-  
-  .input-field{
-    margin: auto !important;
+    margin-top: 25rem;
   }
 }
 
-@media (max-width: 900px) {
+/* @media (max-width: 768px) {
+  
+  .main-box {
+    padding: 2rem 4.5rem;
+  }
+  .profile-photo {
+    width: 110px !important;
+    height: 110px !important;
+  }
+} */
+
+/* @media (max-width: 900px) {
   .main-box {
     padding: 2rem 4rem;
   }
@@ -130,16 +165,7 @@ div.vertical-line-centre {
   }
 }
 
-@media (max-width: 767px) {
-  .main-box {
-    padding: 2rem 4.5rem;
-  }
 
-  .profile-photo {
-    width: 110px !important;
-    height: 110px !important;
-  }
-}
 
 @media (max-width: 675px) {
   .main-box {
@@ -175,4 +201,57 @@ div.vertical-line-centre {
   .main-box {
     padding: 2rem 2rem;
   }
+} */
+
+.admin-label-font {
+  color:#3d3189 !important;
+}
+
+.admin-error-message {
+  font-size: 17px;
+  color: #3d3189;
+}
+
+.admin-upload-btn {
+  padding: 0.5rem 2.1rem;
+  background-color: #a89ee9 !important;
+  color: #000000 !important;
+  border-radius: 0.5rem;
+  border: none;
+}
+
+.admin-upload-btn:hover {
+  background-color: #ffffff !important;
+  color: #3d3189 !important;
+  border: 1px solid #a89ee9 !important;
+}
+
+.admin-edit-button {
+  background-color: #a89ee9 !important;
+  color: #000000 !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid #a89ee9 !important;
+  padding: 0.6rem 3rem 0.6rem 3rem !important;
+}
+
+.admin-edit-button:hover {
+  background-color: #ffffff !important;
+  color: #3d3189 !important;
+  border: 1px solid #a89ee9 !important;
+}
+
+.admin-input-field {
+  background-color: #ded9fc;
+  border: 1px solid #a89ee9 !important;
+  width: 100% !important;
+  max-width: 80vw !important;
+  padding: 0.5rem;
+}
+
+.admin-input-field:focus,
+.admin-input-field:hover {
+  outline: 1px solid #a89ee9 !important;
+  border: 1px solid #a89ee9 !important;
+  box-shadow: 0 0 16px 0 rgba(228, 55, 55, 0.18),
+    0 2px 4px 0 rgba(228, 55, 55, 0.12) !important;
 }

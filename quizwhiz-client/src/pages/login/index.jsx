@@ -1,9 +1,8 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import AuthHeader from "../../components/header/auth-header";
 import classes from "./style.module.css";
-import { Link, Navigate, RouterProvider, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RoutePaths } from "../../utils/enum";
-import axios from "../../services/axios";
 import { login } from "../../services/auth.service";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
@@ -14,17 +13,44 @@ import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { userActions } from "../../redux/action-creators";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
-import { useEffect } from "react";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const actions = bindActionCreators(userActions, dispatch);
   const [showPassword, setShowPassword] = useState(false);
+  const [isCapsLockOn, setIsCapsLockOn] = useState(false);
+  const [actionsList, setActionsList] = useState([]);
+
+  // useEffect(() => {
+  //   const handleVisibilityChange = () => {
+  //     if (document.hidden) {
+  //       setActionsList((prevActions) => [...prevActions, "hide"]);
+  //       alert("You are trying to leave the page!");
+  //       event.preventDefault();
+  //     } else {
+  //       setActionsList((prevActions) => [...prevActions, "show"]);
+  //     }
+  //   };
+
+  //   const handleBeforeUnload = (event) => {
+  //     event.preventDefault();
+  //     event.returnValue = "";
+  //   };
+
+  //   document.addEventListener("visibilitychange", handleVisibilityChange, false);
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+
+  //   return () => {
+  //     document.removeEventListener("visibilitychange", handleVisibilityChange);
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, []);
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
   const validationSchema = yup.object().shape({
     email: yup
       .string()
@@ -50,11 +76,9 @@ const Login = () => {
 
       const data = await jwtDecoder();
       const userRole = data["Role"];
-      {
-        actions.changeUserRole(data["Role"]);
-        actions.changeUserName(data["Username"]);
-        actions.changeUserEmail(data["Email"]);
-      }
+      actions.changeUserRole(data["Role"]);
+      actions.changeUserName(data["Username"]);
+      actions.changeUserEmail(data["Email"]);
 
       if (userRole === "Admin") {
         navigate(RoutePaths.AdminDashboard, {
@@ -81,6 +105,14 @@ const Login = () => {
       });
     }
   };
+
+  const checkCapsLock = (event) => {
+    if (event.getModifierState && event.getModifierState('CapsLock')) {
+      setIsCapsLockOn(true);
+    } else {
+      setIsCapsLockOn(false);
+    }
+  }
 
   return (
     <Fragment>
@@ -142,6 +174,7 @@ const Login = () => {
                                 className={`${classes["form-input"]} form-control form-control-md p-3`}
                                 placeholder="Password"
                                 id="password"
+                                onKeyDown={checkCapsLock}
                                 autoComplete="off"
                               />
                               <button
@@ -162,6 +195,9 @@ const Login = () => {
                           <span className={classes["error-message"]}>
                             {errors.password}
                           </span>
+                        ) : null}
+                        {isCapsLockOn ? (
+                          <span className={classes["error-message"]}>Caps Lock is on</span>
                         ) : null}
                       </div>
                     </div>
@@ -214,7 +250,7 @@ const Login = () => {
             </div>
           </div>
         </main>
-        <ToastContainer />
+        {/* <ToastContainer /> */}
       </div>
     </Fragment>
   );

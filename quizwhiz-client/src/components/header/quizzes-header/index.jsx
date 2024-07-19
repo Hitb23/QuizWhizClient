@@ -40,6 +40,9 @@ import { Link } from "react-router-dom";
 import { DrawerHeader, AppBar, Drawer } from "../../admin-components/index";
 import { RoutePaths } from "../../../utils/enum";
 import jwtDecoder from "../../../services/jwtDecoder";
+import { bindActionCreators } from "redux";
+import { useDispatch } from "react-redux";
+import { userActions } from "../../../redux/action-creators";
 
 const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
   const [open, setOpen] = React.useState(false);
@@ -50,6 +53,7 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
   var username = "";
   const data = jwtDecoder();
   username = data["Username"];
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setFullImagePath(
@@ -79,6 +83,17 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
   const clickOnProfile = () => {
     navigate(RoutePaths.MyProfile);
     setAnchorEl(null);
+  };
+  const logoutHandler = () => {
+    const actions = bindActionCreators(userActions, dispatch);
+    {
+      actions.changeUserRole("");
+      actions.changeUserName("");
+      actions.changeUserEmail("");
+    }
+
+    localStorage.removeItem("token");
+    navigate(RoutePaths.Login);
   };
   return (
     <>
@@ -155,25 +170,10 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
             <MenuItem onClick={clickOnProfile}>
-              <Avatar /> Profile
+              <Avatar src={fullImagePath}></Avatar> Profile
             </MenuItem>
-            <MenuItem onClick={handleAvatarClose}>
-              <Avatar /> My account
-            </MenuItem>
-            <Divider />
-            <MenuItem onClick={handleAvatarClose}>
-              <ListItemIcon>
-                <PersonAdd fontSize="small" />
-              </ListItemIcon>
-              Add another account
-            </MenuItem>
-            <MenuItem onClick={handleAvatarClose}>
-              <ListItemIcon>
-                <Settings fontSize="small" />
-              </ListItemIcon>
-              Settings
-            </MenuItem>
-            <MenuItem onClick={handleAvatarClose}>
+            <Divider/>
+            <MenuItem onClick={logoutHandler}>
               <ListItemIcon>
                 <Logout fontSize="small" />
               </ListItemIcon>
