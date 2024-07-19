@@ -69,6 +69,7 @@ const AdminDashboard = () => {
   const [countOfUpcoming, SetCountOfUpcoming] = useState(null);
   const [countOfActive, SetCountOfActive] = useState(null);
   const [countOfCompleted, SetCountOfCompleted] = useState(null);
+  const [isLoading,setIsLoading]=useState(false);
   const navigate = useNavigate();
   const params = useParams();
   var username = "";
@@ -76,6 +77,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+       
         setDifficulty(0);
         setCategory(0);
         SetCurrentPage(1);
@@ -104,6 +106,7 @@ const AdminDashboard = () => {
         SetCountOfCompleted(status?.data?.data?.CompletedCount);
         SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
         setRecords(allData?.data?.data?.Pagination?.RecordSize);
+        setIsLoading(false);
       } catch (error) {
         SetFilteredData([]);
         console.error("Error fetching data", error);
@@ -130,6 +133,7 @@ const AdminDashboard = () => {
 
   const navigateToCategory = (id) => {
     SetFilteredData([]);
+    
     navigate(`/admin-dashboard/${id}`);
   };
 
@@ -197,9 +201,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const ViewDetailsHandler = (e) => {
-    navigate(`/admin-dashboard/${params.id}/${e}`);
-  };
+  
   const onDeleteHandler = async () => {
     try {
       const result = await filterByCategory({
@@ -524,7 +526,7 @@ const AdminDashboard = () => {
             //   style={{height:'500px',width:'500px'}}
             // />
             <div className="d-flex justify-content-center align-items-center">
-              {difficultyList.length <= 0 || filteredData.length<=0 ? (
+              {difficultyList.length <= 0 ? (
                 <HashLoader
                   className="text-center me-2 mt-5"
                   style={{ color: "#a89ee9" }}

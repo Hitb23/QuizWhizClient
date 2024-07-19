@@ -44,6 +44,7 @@ import jwtDecoder from "../../../services/jwtDecoder";
 import { bindActionCreators } from "redux";
 import { userActions } from "../../../redux/action-creators";
 import { useDispatch } from "react-redux";
+import { ROUTES } from "../../../constants/Routes";
 
 const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
   const [open, setOpen] = React.useState(false);
@@ -112,7 +113,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
         className={`${classes["nav-color"]}`}
       >
         <Toolbar>
-          <Link to="/">
+          <Link to={RoutePaths.AdminDashboard}>
             <img className={classes["logo-image"]} src={Logo} height={70} />
           </Link>
         </Toolbar>
