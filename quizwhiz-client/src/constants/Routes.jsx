@@ -18,8 +18,9 @@ import AddQuestions from "../components/dialog-boxes/add-questions";
 import ViewQuizModal from "../components/dialog-boxes/view-quiz";
 import QuizDescription from "../pages/problem-description";
 import QuizList from "../pages/quiz-list";
-import LiveQuestions from "../pages/live-questions";
 import Quiz from "../pages/QuizHub";
+import LiveQuiz from "../pages/live-quiz";
+import LiveQuestions from "../components/live-questions";
 
 export const ROUTES = [
   {
@@ -110,12 +111,17 @@ export const ROUTES = [
   },
   {
     path:'/live-quiz/:quizLink',
-    element:<LiveQuestions/>,
+    element:<LiveQuiz/>,
     roles:[Role.Admin, Role.Contestant]
   },
   {
     path:'/admin-dashboard/quiz',
     element:<Quiz/>,
     roles:[Role.Admin, Role.Contestant, Role.Public]
-  }
+  },
+  {
+    path:'/live-quiz/:quizLink/questions',
+    element:<LiveQuestions />,
+    roles:[Role.Admin, Role.Contestant, Role.Public]
+  },
 ];

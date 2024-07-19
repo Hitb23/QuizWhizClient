@@ -125,7 +125,7 @@ const QuizCard = ({
           </div>
         </div>
         <div className="col-xl-3 text-xl-end d-flex justify-content-center align-items-center flex-wrap">
-          {minutes <= 60 && minutes >= 0 ? (
+          {minutes <= 5 && minutes >= 0 ? (
             <div className="d-none d-xl-inline">
               <button
                 type="submit"
