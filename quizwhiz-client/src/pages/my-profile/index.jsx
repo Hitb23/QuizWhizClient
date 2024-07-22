@@ -196,7 +196,7 @@ const MyProfile = () => {
     console.log("Image state updated: ", image);
     const data = jwtDecoder();
     const Username = data.Username;
-    const imgPath = `${
+    const imgPath = `${ 
       import.meta.env.VITE_PUBLIC_URL
     }/ProfilePhoto/${Username}/${Username}.jpg`;
     setFullImagePath(imgPath);
