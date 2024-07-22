@@ -30,6 +30,7 @@ import { BorderAll, BorderColorSharp } from "@mui/icons-material";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
+import LifelineGift from "../../components/dialog-boxes/lifeline-gift";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -57,6 +58,7 @@ const Quizzes = () => {
   const [searchedWord, SetSearchedWord] = useState("");
   const [tabStatus, setTabStatus] = useState(2);
   const [toggleTabs, setToggleTabs] = useState(1);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [connection, setConnection] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
@@ -100,6 +102,8 @@ const Quizzes = () => {
     fetchData();
   }, [Records, params]);
 
+  var userFirstName = "";
+
   useEffect(() => {
     const conn = new HubConnectionBuilder()
       .withUrl("https://localhost:44361/quizhub")
@@ -122,60 +126,26 @@ const Quizzes = () => {
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
+    
     const fetchUserDetails = async () => {
       try {
         const response = await getUserDetails(data["Username"]);
+        userFirstName = response.data.data.FirstName;
         setFirstName(response.data.data.FirstName);
         setLastName(response.data.data.LastName);
       } catch (error) {
         console.log(error);
       }
     };
+
     fetchUserDetails();
-
-    // const steps = [
-    //   {
-    //     element: '#completedQuizzes',
-    //     popover: {
-    //       title: 'Quizzes completed',
-    //       description: 'This displays the information about the completed quizzes',
-    //       position: 'left',
-    //       className: 'info-popover'
-    //     }
-    //   },
-    //   {
-    //     element: '#participatedQuizzes',
-    //     popover: {
-    //       title: 'Quizzes participated',
-    //       description: 'This displays the information about the participated quizzes',
-    //       position: 'right',
-    //       className: 'info-popover'
-    //     }
-    //   },
-    //   {
-    //     element: '#demo-theme',
-    //     popover: {
-    //       title: 'Style However You Want',
-    //       description: 'You can use the default class names and override the styles or you can pass a custom class name to the popoverClass option either globally or per step.',
-    //       position: 'bottom',
-    //       className: 'info-popover'
-    //     }
-    //   }
-    // ];
-    
-    // const driverInstance = driver({
-    //   popoverClass: 'driverjs-theme',
-    //   animate: false,
-    //   showProgress: false,
-    //   showButtons: ["next", "previous", "close"],
-    //   steps: steps
-    // });
-    
-    // driverInstance.drive();
-    
+    var isLoggedInEarlier = data["IsLoggedInEarlier"];
+    console.log("Logged in earlier : " + isLoggedInEarlier);
+    if(isLoggedInEarlier === "False"){
+      console.log(isModalVisible);
+      setIsModalVisible(true);
+    }
   }, []);
-
-  
 
   const handlePageSize = async (event) => {
     SetCurrentPage(1);
@@ -269,21 +239,7 @@ const Quizzes = () => {
   };
   var username = "";
 
-  useEffect(() => {
-    const data = jwtDecoder();
-    username = data["Username"];
-    const fetchUserDetails = async () => {
-      try {
-        const response = await getUserDetails(data["Username"]);
-        setFirstName(response.data.data.FirstName);
-        setLastName(response.data.data.LastName);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchUserDetails();
-  }, []);
+  
 
   const toggleTabsChange = async (index) => {
     setToggleTabs(index);
@@ -315,6 +271,7 @@ const Quizzes = () => {
   return (
     <Fragment>
       <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>
+        {isModalVisible ? <LifelineGift isVisible={true}/> : null}
         <CssBaseline />
         {/* Admin offcanvas with navbar */}
         <QuizHeader

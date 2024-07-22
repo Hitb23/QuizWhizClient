@@ -1,9 +1,16 @@
+.main-div{
+  min-height: 100vh !important;
+  min-width: 100vw !important;
+  box-sizing: border-box !important;
+}
+
 .admin-profile{
   background-color: #ffffff;
+  min-height: 100vh !important;
 }
 
 .main-box {
-  margin-top: 6rem;
+  margin-top: 8rem;
 }
 
 .profile-photo {
@@ -128,10 +135,13 @@
   .profile-photo {
     width: 170px !important;
     height: 170px !important;
-    margin-top: 25rem;
+    margin-top: 5rem;
+  }
+  .profile-photo-div{
+    height: 50% !important;
+    align-items: center !important;
   }
 }
-
 /* @media (max-width: 768px) {
   
   .main-box {

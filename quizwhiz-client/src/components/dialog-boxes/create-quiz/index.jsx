@@ -400,7 +400,7 @@ export default function CreateQuizModal() {
                   <Field
                     as={DateTimePicker}
                     name="scheduledDateTime"
-                    label="Scheduled Date and Time"
+                    label="Schedule Date and Time"
                     value={values.scheduledDateTime}
                     onChange={(value) =>
                       setFieldValue("scheduledDateTime", value)
