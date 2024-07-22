@@ -11,27 +11,31 @@ import classes from "./style.module.css";
 import { PacmanLoader } from "react-spinners";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import LiveQuestions from "../../components/live-questions";
+import jwtDecoder from "../../services/jwtDecoder";
 
 const LiveQuiz = () => {
   const [datetime, setDateTime] = useState();
   const [countdownStart, setCountdownStart] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [connection, setConnection] = useState(null);
+  const [connections, setConnections] = useState(null);
   const [remainingTime, setRemainingTime] = useState(null);
   const [remainingMinutes, setRemainingMinutes] = useState();
   const [remainingSeconds, setRemainingSeconds] = useState();
-  const [currentQuestion, setcurrentQuestion] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [answerList, setAnswerList] = useState([]);
   const [questionCountdown, setQuestionCountdown] = useState(0);
   const [questionDetails, setQuestionDetails] = useState({});
+  const [questionId, setQuestionId] = useState();
   const [totalQuestions, setTotalQuestions] = useState();
   const [isClock, setIsClock] = useState(false);
   const [isOut, setIsOut] = useState(false);
   const params = useParams();
   const [redirect, setRedirect] = useState(false);
+  const [sendAnswers, setSendAnswers] = useState([]);
   const navigate = useNavigate();
-
+  const data = jwtDecoder();
+  const username = data["Username"];
 
   useEffect(() => {
     setIsLoading(true);
@@ -40,14 +44,12 @@ const LiveQuiz = () => {
       .withAutomaticReconnect()
       .build();
 
-    setConnection(conn);
+    setConnections(conn);
 
     conn.on(`ReceiveRemainingTime_${params.quizLink}`, (minutes, seconds) => {
-      console.log("Time");
       setIsLoading(true);
       setIsClock(true);
-      if(minutes >= 0 && seconds >= 0)
-      {
+      if (minutes >= 0 && seconds >= 0) {
         setRemainingMinutes(minutes);
         setRemainingSeconds(seconds);
       }
@@ -56,16 +58,24 @@ const LiveQuiz = () => {
 
     conn.on(
       `ReceiveQuestion_${params.quizLink}`,
-      (questionNo, question, timerSeconds) => {
+      (questionNo, question, timerSeconds, disqualifiedUsers) => {
         if (questionNo) {
+          console.log(username);
+          setQuestionId(question?.question?.questionId);
+          localStorage.setItem("questionId", question?.question?.questionId);
           setIsClock(false);
           setIsLoading(true);
           setQuestionDetails(question);
-          setcurrentQuestion(questionNo);
+          setCurrentQuestion(questionNo);
           setTotalQuestions(question.question.quiz.totalQuestion);
           setQuestionCountdown(timerSeconds);
           setIsOut(false);
           setIsLoading(false);
+          if(disqualifiedUsers.data.includes(username))
+            {
+              console.log(username);
+              setIsOut(true);
+            }
         }
       }
     );
@@ -85,6 +95,16 @@ const LiveQuiz = () => {
       setIsClock(false);
       setQuestionCountdown(timerSeconds);
     });
+
+    conn.start().then(() => {
+      conn
+        .invoke("RegisterUser", params.quizLink, username)
+        .catch(function (err) {
+          return console.error(err.toString());
+        });
+    });
+
+    // conn.invoke(`UpdateScore`, (params.quizLink, username, currentQuestion, ))
 
     conn.start().catch((error) => console.error("Connection failed: ", error));
   }, []);
@@ -115,9 +135,40 @@ const LiveQuiz = () => {
     answers.map((element, index) => {
       var number = element.optionNo;
       list = list.concat(number);
-    })
+    });
     setAnswerList(list);
-  },[answers]);
+  }, [answers]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
+  const getAnswersHandler = async (answerIds) => {
+    setSendAnswers(answerIds);
+    const tempQuestionId = parseInt(localStorage.getItem("questionId"));
+    console.log(tempQuestionId);
+    if (questionCountdown >= 17 && connections && tempQuestionId) {
+      console.log(answerIds);
+      await connections
+        .invoke(
+          "UpdateScore",
+          params.quizLink,
+          username,
+          tempQuestionId,
+          answerIds
+        )
+        .catch(function (err) {
+          return console.error(err.toString());
+        });
+    }
+  };
 
   return (
     <main className={classes["live-quiz-div"]}>
@@ -143,7 +194,7 @@ const LiveQuiz = () => {
           </div>
         </div>
       )}
-      {(isClock == false && isLoading == false) && (
+      {isClock == false && isLoading == false && (
         <div className="d-flex justify-content-center align-items-center row-gap-2 row min-vh-100 m-0">
           <div className="d-flex justify-content-center align-items-center row row-gap-5">
             <>
@@ -152,11 +203,12 @@ const LiveQuiz = () => {
                 questionNo={currentQuestion}
                 total={totalQuestions}
                 questionCountdown={questionCountdown}
-                answers = {answerList}
-                isOut = {isOut}
-                isLoading = {() => {
+                answers={answerList}
+                isOut={isOut}
+                isLoading={() => {
                   setIsLoading(true);
                 }}
+                getAnswer={getAnswersHandler}
               />
             </>
           </div>
