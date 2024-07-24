@@ -194,7 +194,6 @@ const MyProfile = () => {
   }, []);
 
   useEffect(() => {
-    console.log("Image state updated: ", image);
     const data = jwtDecoder();
     const Username = data.Username;
     const imgPath = `${
@@ -220,13 +219,13 @@ const MyProfile = () => {
         import.meta.env.VITE_PUBLIC_URL
       }ProfilePhoto/${Username}/${Username}.jpg`;
       setFullImagePath(imgPath);
-      setUploadCount(uploadCount + 1);
     }
 
     try {
       const data = jwtDecoder();
       const Username = data.Username;
       const response = await uploadProfilePhoto(ProfilePhoto, Username);
+      setUploadCount(uploadCount + 1);
     } catch (error) {
       console.log(error);
     }
