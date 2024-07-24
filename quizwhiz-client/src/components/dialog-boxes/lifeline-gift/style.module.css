@@ -1,0 +1,148 @@
+@import url("https://fonts.googleapis.com/css?family=Raleway:200");
+
+/* gift animation */
+
+
+
+#giftModal {
+  font-family: "Raleway", sans-serif;
+  background-color: #fada65;
+  font-size: 20px;
+  transition: 1s;
+}
+
+.gift {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  transform-origin: 0% 0%;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition: 1s;
+}
+
+.dukdik {
+  transform-origin: 0% 0%;
+  cursor: pointer;
+  animation: dukdik 0.5s infinite;
+}
+
+@keyframes dukdik {
+  0% {
+    transform: rotate(0deg) translate(-50%, -50%);
+  }
+  25% {
+    transform: rotate(1deg) translate(-50%, -50%);
+  }
+  50% {
+    transform: rotate(0deg) translate(-50%, -50%);
+  }
+  70% {
+    transform: rotate(-1deg) translate(-50%, -50%);
+  }
+  100% {
+    transform: rotate(0deg) translate(-50%, -50%);
+  }
+}
+
+.gift-top {
+  position: relative;
+  width: 110%;
+  height: 25%;
+  background: #6f41db;
+  border-radius: 5px 5px 0 0;
+  transform: translate3d(-5%, 0, 0);
+  background-image: linear-gradient(
+    to right,
+    #6f41db 0%,
+    #6f41db 44%,
+    #fada65 44%,
+    #fada65 56%,
+    #6f41db 56%,
+    #6f41db 100%
+  );
+  transition: 1s;
+}
+
+.gift-top.boxOpen {
+  animation: box-open 1s;
+  opacity: 0;
+}
+
+@keyframes box-open {
+  0% {
+    top: 0px;
+    opacity: 1;
+  }
+  100% {
+    top: -50px;
+    opacity: 0;
+  }
+}
+
+.gift-top::before,
+.gift-top::after {
+  content: "";
+  width: 15px;
+  height: 15px;
+  border: 10px solid #6f41db;
+  border-radius: 50% 50% 0 50%;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate3d(-100%, -100%, 0) skew(10deg, 10deg);
+}
+
+.gift-top::after {
+  border-radius: 50% 50% 50% 0;
+  transform: translate3d(0, -100%, 0) skew(-10deg, -10deg);
+}
+
+.gift-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  color: #6f41db;
+  white-space: nowrap;
+  transform: translate3d(-50%, -50%, 0) scale(0.5);
+  transform-origin: center center;
+  z-index: -1;
+  opacity: 1;
+  transition: 5s;
+}
+
+.gift-box {
+  width: 100%;
+  height: 75%;
+  position: relative;
+  background-image: linear-gradient(
+    to right,
+    #6f41db 0%,
+    #6f41db 45%,
+    #fada65 45%,
+    #fada65 55%,
+    #6f41db 55%,
+    #6f41db 100%
+  );
+  border-radius: 0 0 5px 5px;
+  transition: 1s;
+}
+
+.gift-box.boxDown {
+  animation: box-down 1s;
+  opacity: 0;
+}
+
+@keyframes box-down {
+  0% {
+    top: 0px;
+    opacity: 1;
+  }
+  100% {
+    top: 50px;
+    opacity: 0;
+  }
+}

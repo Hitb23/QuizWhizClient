@@ -70,6 +70,7 @@ export default function ViewQuizModal({ currentQuizLink , closeEditDialog}) {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               {quizDetail.Title} ({quizDetail.CategoryName})
             </Typography>
+            
             <Button
               autoFocus
               sx={{

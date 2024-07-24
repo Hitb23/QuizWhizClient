@@ -1,3 +1,9 @@
+.main-div{
+  min-height: 100vh !important;
+  min-width: 100vw !important;
+  box-sizing: border-box !important;
+}
+
 .admin-profile{
   background-color: #ffffff;
   min-height: 100vh;
@@ -123,7 +129,6 @@
     height: 170px !important;
   }
 }
-
 /* @media (max-width: 768px) {
   
   .main-box {

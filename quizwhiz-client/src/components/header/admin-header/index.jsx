@@ -58,14 +58,12 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
   const storedImageUrl = localStorage.getItem("profilePhotoUrl");
 
   useEffect(() => {
-    setTimeout(() => {
-      const imgPath =
-        `${
-          import.meta.env.VITE_PUBLIC_URL
-        }ProfilePhoto/${username}/${username}.jpg#` + new Date().getTime();
-      console.log(imgPath);
-      setFullImagePath(imgPath);
-    }, 5000);
+    const imgPath =
+      `${
+        import.meta.env.VITE_PUBLIC_URL
+      }ProfilePhoto/${username}/${username}.jpg#` + new Date().getTime();
+    console.log(imgPath);
+    setFullImagePath(imgPath);
   }, [uploadCount]);
 
   const handleDrawerOpen = () => {
