@@ -79,7 +79,6 @@ const QuizCard = ({
   };
 
   const joinNowHandler = () => {
-    console.log("H");
     navigate(`/live-quiz/${quizLink}`);
   };
 

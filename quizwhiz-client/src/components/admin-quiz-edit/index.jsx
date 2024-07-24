@@ -11,8 +11,8 @@ import { useNavigate } from "react-router-dom";
 import { RoutePaths } from "../../utils/enum";
 import { toast } from "react-toastify";
 import withReactContent from "sweetalert2-react-content";
-import { MdLeaderboard } from "react-icons/md";
 import Swal from "sweetalert2";
+import { MdLeaderboard } from "react-icons/md";
 import { TbTriangle } from "react-icons/tb";
 import { TbTriangleInverted } from "react-icons/tb";
 

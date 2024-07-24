@@ -42,6 +42,7 @@ import ViewQuizModal from "../../components/dialog-boxes/view-quiz";
 import EditQuizModal from "../../components/dialog-boxes/edit-quiz-details";
 import QuizEditTable from "../../components/admin-quiz-edit";
 import { HashLoader } from "react-spinners";
+import Quiz from "../QuizHub";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -69,6 +70,7 @@ const AdminDashboard = () => {
   const [countOfUpcoming, SetCountOfUpcoming] = useState(null);
   const [countOfActive, SetCountOfActive] = useState(null);
   const [countOfCompleted, SetCountOfCompleted] = useState(null);
+  const [IsModalOpen, setIsModalOpen]=useState(false);
   const navigate = useNavigate();
   const params = useParams();
   const childRef = useRef(null);
@@ -114,6 +116,12 @@ const AdminDashboard = () => {
     fetchData();
   }, [Records, params]);
 
+ const ModalOpenHandler=()=>{
+     setIsModalOpen(true);
+ }
+ const onCloseHandler=()=>{
+     setIsModalOpen(false);
+ }
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
@@ -512,6 +520,8 @@ const AdminDashboard = () => {
               </Select>
             </FormControl>
           </div>
+          
+
           <div className="col-lg-6 mb-4 col-sm-6 col-12 d-flex justify-content-end">
             <CreateQuizModal />
           </div>
@@ -519,7 +529,7 @@ const AdminDashboard = () => {
 
         <h4 className="ms-2 text-black my-3">
           {params.id.substring(0, 1).toUpperCase() + params.id.substring(1)}{" "}
-          Contest
+          Quiz
         </h4>
         <div className="row">
           {filteredData.length > 0 ? (
@@ -545,7 +555,7 @@ const AdminDashboard = () => {
             //   style={{height:'500px',width:'500px'}}
             // />
             <div className="d-flex justify-content-center align-items-center">
-              {difficultyList.length <= 0 || filteredData.length<=0 ? (
+              {difficultyList.length <= 0 ? (
                 <HashLoader
                   className="text-center me-2 mt-5"
                   style={{ color: "#a89ee9" }}
@@ -682,6 +692,7 @@ const AdminDashboard = () => {
           </div>
         )}
       </Box>
+      {IsModalOpen ? <Quiz IsOpen={false} onCloseHandler={onCloseHandler}/> : null}
     </div>
   );
 };

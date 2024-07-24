@@ -36,7 +36,8 @@ import {
   StarBorder,
 } from "@mui/icons-material";
 import { IoNotificationsOutline } from "react-icons/io5";
-
+import CoinIcon from "../../../assets/coins-logo.svg";
+import LifeLineIcons from "../../../assets/lifeline.svg";
 import { Link } from "react-router-dom";
 import { DrawerHeader, AppBar, Drawer } from "../../admin-components/index";
 import { RoutePaths } from "../../../utils/enum";
@@ -124,32 +125,53 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             marginRight: "1rem",
           }}
         >
-          <Badge
-            badgeContent={4}
-            sx={{
-              cursor: "pointer",
-              "& .MuiBadge-badge": {
-                background: "#3D3189",
-                color: "#fada65", // This sets the text color of the badge
-              },
-            }}
+            <Badge color="secondary" badgeContent={'+'}
+          sx={{
+            '.MuiBadge-badge':{
+              background:'#FFE110',
+              color:'black',
+              fontWeight:'900'
+            },
+          }}
           >
-            <IoNotificationsOutline
-              color="#fada65"
-              background="#3D3189"
-              border="2px solid #3D3189"
-              size={30}
+          <div className="bg-primary rounded-4 d-flex align-items-center justify-content-between">
+            <img
+              src={CoinIcon}
+              height={28}
+              sx={{ color: "yellow" }}
+              className="ms-2 me-3 my-2"
             />
+            <small className="mx-2 fw-bold fs-5">3</small>
+          </div>
           </Badge>
+          <Badge color="secondary" badgeContent={'+'}
+          sx={{
+            '.MuiBadge-badge':{
+              background:'#FFE110',
+              color:'black',
+              fontWeight:'900'
+            },
+          }}
+          >
+            <div className="bg-primary rounded-4 d-flex align-items-center justify-content-between">
+              <img
+                src={LifeLineIcons}
+                height={28}
+                sx={{ color: "yellow" }}
+                className={`ms-2 me-3 my-2`}
+              />
+              <small className="mx-2 fw-bold fs-5">20</small>
+            </div>
+          </Badge>
+          <p
+            className={`${classes["username"]} fs-5 mt-3 fw-semibold d-sm-inline d-none text-white`}
+          >
+            {username}
+          </p>
           <IconButton
             className="gap-2 rounded d-flex align-items-center"
             onClick={handleAvatarClick}
           >
-            <p
-              className={`${classes["username"]} fs-5 mt-3 px-3 fw-semibold d-sm-inline d-none`}
-            >
-              {username}
-            </p>
             <Avatar
               sx={{ background: "#5f071c", cursor: "pointer" }}
               src={fullImagePath}
