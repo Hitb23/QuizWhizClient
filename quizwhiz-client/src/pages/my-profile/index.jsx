@@ -136,7 +136,7 @@ const MyProfile = () => {
             PhoneNumber,
             Country,
           });
-          if (clickOnSave) {
+          if (clickOnSave && !isEditable) {
             toast.success("Details changed successfully", {
               position: "top-right",
               autoClose: 5000,
@@ -167,6 +167,7 @@ const MyProfile = () => {
     setEmail(data.Email);
 
     const fetchUserDetails = async () => {
+      `${import.meta.env.VITE_PUBLIC_URL}src/assets/gk.jpg`;
       const imgPath = `${
         import.meta.env.VITE_PUBLIC_URL
       }/ProfilePhoto/${username}/${username}.jpg`;
@@ -196,7 +197,7 @@ const MyProfile = () => {
     console.log("Image state updated: ", image);
     const data = jwtDecoder();
     const Username = data.Username;
-    const imgPath = `${ 
+    const imgPath = `${
       import.meta.env.VITE_PUBLIC_URL
     }/ProfilePhoto/${Username}/${Username}.jpg`;
     setFullImagePath(imgPath);
@@ -209,7 +210,7 @@ const MyProfile = () => {
       reader.onload = (e) => {
         console.log("FileReader onload called");
         setImage(e.target.result); // Update state
-        setUploadCount(uploadCount + 1);
+        console.log("Count", uploadCount);
         setUploadKey(Date.now());
       };
       reader.readAsDataURL(ProfilePhoto);
@@ -217,8 +218,9 @@ const MyProfile = () => {
       const Username = data.Username;
       const imgPath = `${
         import.meta.env.VITE_PUBLIC_URL
-      }/ProfilePhoto/${Username}/${Username}.jpg`;
+      }ProfilePhoto/${Username}/${Username}.jpg`;
       setFullImagePath(imgPath);
+      setUploadCount(uploadCount + 1);
     }
 
     try {
@@ -249,7 +251,7 @@ const MyProfile = () => {
 
   const handleSaveClick = () => {
     setClickOnSave(true);
-    if (clickOnSave) {
+    if (clickOnSave && !isEditable) {
       toast.success("Details changed successfully", {
         position: "top-right",
         autoClose: 5000,
@@ -257,7 +259,7 @@ const MyProfile = () => {
     }
   };
 
-  const handleCancelClick = () => {
+  const handleCancelClick = ({ resetForm }) => {
     formik.setTouched([]);
     setIsEditable(false);
   };
@@ -301,10 +303,9 @@ const MyProfile = () => {
   };
 
   return (
-    <main className={`${classes["main-div"]}`}>
-      <div
-        className={`${isAdmin ? classes["admin-profile"] : ""}`}
-        style={{
+    <main className={`${isAdmin ? classes["admin-profile"] : ""} container`} >
+      <Box
+        sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -328,9 +329,9 @@ const MyProfile = () => {
             userName={jwtDecoder().userName}
           />
         )}
-        <div className={`row container ${classes["main-box"]}`}>
+        <div className={`row container-fluid px-0 ${classes["main-box"]} min-vh-100`}>
           <div
-            className={`col-lg-6 d-flex flex-column align-items-start ${classes["profile-photo-div"]}`}
+            className={`col-lg-6 col-12 d-flex flex-column align-items-center justify-content-center ${classes["profile-photo-div"]}`}
           >
             <Avatar
               className={`${classes["profile-photo"]}`}
@@ -355,8 +356,14 @@ const MyProfile = () => {
               />
             </FileUploadButton>
           </div>
-          <div className={`col-lg-6 col-12 ${classes["form-group"]}`}>
-            <form onSubmit={formik.handleSubmit}>
+          <div
+            className={`col-lg-6 col-md-12 col-sm-12 col-12 ${classes["form-group"]} d-flex justify-content-center align-items-center`}
+          >
+            <form
+              onSubmit={formik.handleSubmit}
+              onReset={formik.resetForm}
+              className={`col-lg-8 col-md-6 col-sm-8 col-10`}
+            >
               {/* <Field
               as="input"
               type="text"
@@ -365,7 +372,7 @@ const MyProfile = () => {
               id="username"
               inputProps={{readOnly: !isEditable}}
             /> */}
-              <div className={`col-md-12`}>
+              <div className={`col-12`}>
                 <label
                   htmlFor="userName"
                   className={`form-label fw-bold ${
@@ -390,6 +397,7 @@ const MyProfile = () => {
                     "& fieldset": { border: "none" },
                     backgroundColor: "#ded9fc",
                   }}
+                  disabled={true}
                 />
               </div>
 
@@ -419,6 +427,7 @@ const MyProfile = () => {
                     "& fieldset": { border: "none" },
                     backgroundColor: "#ded9fc",
                   }}
+                  disabled={true}
                 />
               </div>
 
@@ -450,6 +459,7 @@ const MyProfile = () => {
                       isEditable && isAdmin ? "#FFFFFF" : "#ded9fc"
                     }`,
                   }}
+                  disabled={!isEditable}
                 />
                 {formik.touched.firstName && formik.errors.firstName ? (
                   <span
@@ -492,6 +502,7 @@ const MyProfile = () => {
                       isEditable && isAdmin ? "#FFFFFF" : "#ded9fc"
                     }`,
                   }}
+                  disabled={!isEditable}
                 />
                 {formik.touched.lastName && formik.errors.lastName ? (
                   <span
@@ -534,6 +545,7 @@ const MyProfile = () => {
                       isEditable && isAdmin ? "#FFFFFF" : "#ded9fc"
                     }`,
                   }}
+                  disabled={!isEditable}
                 />
                 {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
                   <span
@@ -564,7 +576,7 @@ const MyProfile = () => {
                     isAdmin
                       ? classes["admin-input-field"]
                       : classes["input-field"]
-                  }`}
+                  } form-control`}
                   name="country"
                   onChange={handleCountryChange}
                   value={formik.values.country}
@@ -579,6 +591,7 @@ const MyProfile = () => {
                       isEditable && isAdmin ? "#FFFFFF" : "#ded9fc"
                     }`,
                   }}
+                  disabled={!isEditable}
                 >
                   {countries.map((country) => (
                     <MenuItem key={country.code} value={country.name}>
@@ -625,7 +638,7 @@ const MyProfile = () => {
                       Save
                     </Button>
                     <Button
-                      type="button"
+                      type="reset"
                       variant="outlined"
                       className={`mt-4 ms-1 ${
                         isAdmin
@@ -660,7 +673,7 @@ const MyProfile = () => {
             </form>
           </div>
         </div>
-      </div>
+      </Box>
     </main>
   );
 };

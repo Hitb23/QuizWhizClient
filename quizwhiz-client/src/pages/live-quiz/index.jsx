@@ -12,6 +12,8 @@ import { PacmanLoader } from "react-spinners";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import LiveQuestions from "../../components/live-questions";
 import jwtDecoder from "../../services/jwtDecoder";
+import useSound from 'use-sound';
+import {Theme} from "../../assets/index";
 
 const LiveQuiz = () => {
   const [datetime, setDateTime] = useState();
@@ -33,9 +35,11 @@ const LiveQuiz = () => {
   const params = useParams();
   const [redirect, setRedirect] = useState(false);
   const [sendAnswers, setSendAnswers] = useState([]);
+  const [isQuizCompleted, setIsQuizCompleted] = useState(false);
   const navigate = useNavigate();
   const data = jwtDecoder();
   const username = data["Username"];
+  const [playSound, { stop }] = useSound(Theme, { loop: true });
 
   useEffect(() => {
     setIsLoading(true);
@@ -87,6 +91,10 @@ const LiveQuiz = () => {
         setIsLoading(false);
         setAnswers(answers);
         setQuestionCountdown(timerSeconds);
+        if(currentQuestion == totalQuestions)
+        {
+          setIsQuizCompleted(true);
+        }
       }
     );
 
@@ -115,6 +123,14 @@ const LiveQuiz = () => {
   const stopTimerHandler = () => {
     setCountdownStart(0);
   };
+
+  useEffect(() => {
+    playSound();
+
+    return () => {
+      stop();
+    };
+  },[playSound, stop]);
 
   useEffect(() => {
     const setData = async () => {
@@ -198,6 +214,7 @@ const LiveQuiz = () => {
         <div className="d-flex justify-content-center align-items-center row-gap-2 row min-vh-100 m-0">
           <div className="d-flex justify-content-center align-items-center row row-gap-5">
             <>
+              
               <LiveQuestions
                 questionDetail={questionDetails}
                 questionNo={currentQuestion}

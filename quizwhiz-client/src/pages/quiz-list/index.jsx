@@ -71,7 +71,6 @@ const Quizzes = () => {
         setDifficulty(0);
         setCategory(0);
         SetCurrentPage(1);
-        setTabStatus(3);
         SetSearchedWord("");
 
         setUploadCount(uploadCount + 1);
@@ -150,8 +149,9 @@ const Quizzes = () => {
   const handlePageSize = async (event) => {
     SetCurrentPage(1);
     setRecords(event.target.value);
+
     try {
-      const result = await changeRecordsSize({
+      const result1 = await changeRecordsSize({
         recordSize: event.target.value,
       });
     } catch (error) {
@@ -510,6 +510,7 @@ const Quizzes = () => {
                   totalMarks={ele.TotalMarks}
                   totalQuestions={ele.TotalQuestion}
                   onClickHandler={ViewDetailsHandler}
+                  statusId={tabStatus}
                   quizLink={ele.QuizLink}
                 />
               ))
@@ -519,7 +520,7 @@ const Quizzes = () => {
                 color="#fada65"
               />
             ) : (
-              <h2 className="text-center text-white">No Data Available</h2>
+              <h2 className="text-center text-white my-5">No Data Available</h2>
             )}
           </div>
           {filteredData.length > 0 && (
