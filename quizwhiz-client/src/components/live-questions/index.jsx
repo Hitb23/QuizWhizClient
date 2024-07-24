@@ -4,6 +4,9 @@ import QuestionTimer from "../question-timer";
 import CheckIcon from "@mui/icons-material/Check";
 import Clear from "@mui/icons-material/Clear";
 import { Gauge, gaugeClasses } from "@mui/x-charts";
+import { GiEntryDoor } from "react-icons/gi";
+import { FaSignOutAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const LiveQuestions = ({
   questionDetail,
@@ -27,6 +30,7 @@ const LiveQuestions = ({
   const [isCorrect, setIsCorrect] = useState([-1]);
   const [isIncorrect, setIsIncorrect] = useState([-1]);
   const [isOutCheck, setIsOutCheck] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (questionNo != 0) {
@@ -124,6 +128,10 @@ const LiveQuestions = ({
     console.log("Sent", sendAnswersList);
     getAnswer(sendAnswersList);
   }, [sendAnswersList]);
+
+  const onLeaveHandler = () => {
+    navigate("/quizzes");
+  }
 
   const onOptionSelect = (e) => {
     if (questionCountdown < 17 && questionTypeId == 1) {
@@ -255,6 +263,11 @@ const LiveQuestions = ({
                 </div>
               </div>
             ))}
+          {isOutCheck == true && (
+            <div className={`d-flex justify-content-center p-0`}>
+              <FaSignOutAlt size={70} className={`${classes["leave-btn"]}`} onClick={onLeaveHandler}/>
+            </div>
+          )}
 
           {/* <div
             className={`${classes["options"]} d-flex justify-content-start align-items-center row-gap-5 column-gap-1`}

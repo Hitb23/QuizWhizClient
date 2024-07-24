@@ -5,6 +5,7 @@ import Instagram from './instagram-icon.svg';
 import WelcomePoster from './welcome-poster.png';
 import Logo from './NewQuizLogo.svg';
 import LandingImage from './landing-image.svg';
+import Theme from './theme.mp3';
 
 export {
   Facebook,
@@ -13,5 +14,6 @@ export {
   Instagram,
   WelcomePoster,
   Logo,
-  LandingImage
+  LandingImage,
+  Theme
 };

@@ -58,10 +58,14 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
   const storedImageUrl = localStorage.getItem("profilePhotoUrl");
 
   useEffect(() => {
-    const imgPath = `${
-      import.meta.env.VITE_PUBLIC_URL
-    }/ProfilePhoto/${username}/${username}.jpg`;
-    setFullImagePath(imgPath);
+    setTimeout(() => {
+      const imgPath =
+        `${
+          import.meta.env.VITE_PUBLIC_URL
+        }ProfilePhoto/${username}/${username}.jpg#` + new Date().getTime();
+      console.log(imgPath);
+      setFullImagePath(imgPath);
+    }, 5000);
   }, [uploadCount]);
 
   const handleDrawerOpen = () => {
@@ -112,7 +116,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
         className={`${classes["nav-color"]}`}
       >
         <Toolbar>
-          <Link to="/">
+          <Link to="/admin-dashboard/upcoming">
             <img className={classes["logo-image"]} src={Logo} height={70} />
           </Link>
         </Toolbar>
@@ -124,23 +128,6 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             marginRight: "1rem",
           }}
         >
-          <Badge
-            badgeContent={4}
-            sx={{
-              cursor: "pointer",
-              "& .MuiBadge-badge": {
-                background: "#3D3189",
-                color: "#fada65", // This sets the text color of the badge
-              },
-            }}
-          >
-            <IoNotificationsOutline
-              color="#fada65"
-              background="#3D3189"
-              border="2px solid #3D3189"
-              size={30}
-            />
-          </Badge>
           <IconButton
             className="gap-2 rounded d-flex align-items-center"
             onClick={handleAvatarClick}
@@ -192,7 +179,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
             <MenuItem onClick={clickOnProfile}>
-              <Avatar /> Profile
+              <Avatar src={fullImagePath} /> Profile
             </MenuItem>
             <Divider />
             <MenuItem onClick={logoutHandler}>

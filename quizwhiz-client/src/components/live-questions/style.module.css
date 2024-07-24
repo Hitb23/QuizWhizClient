@@ -120,6 +120,15 @@
   cursor: not-allowed;
 }
 
+.leave-btn {
+  color: #ffe37e;
+  width: 70px;
+  height: 70px;
+  border: 2px solid #ffe37e;
+  border-radius: 5px;
+  padding: 0.6rem;
+}
+
 @media (max-width: 700px) {
   .questionText {
     font-size: 25px;
