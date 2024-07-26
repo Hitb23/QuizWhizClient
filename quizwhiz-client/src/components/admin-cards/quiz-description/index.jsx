@@ -87,7 +87,21 @@ const QuizDescription = ({ quizLink, modalClose }) => {
           margin: "2rem",
         }}
       >
-        <ModalClose variant="plain" sx={{ m: 1 }} />
+        <ModalClose
+          variant="plain"
+          sx={{
+            m: 1,
+            "& .MuiSvgIcon-root": {
+              color: "#fada65",
+            },
+            "&:hover": {
+              backgroundColor: "#fada65",
+              "& .MuiSvgIcon-root": {
+                color: "#3d3189",
+              },
+            },
+          }}
+        />
         <Typography
           component="h2"
           id="modal-title"
@@ -100,7 +114,9 @@ const QuizDescription = ({ quizLink, modalClose }) => {
         </Typography>
         <div className="m-2">
           <div className="row p-0">
-            <div className={`${classes["div-underline"]} d-flex justify-content-start align-items-start column-gap-2 py-3 col-12`}>
+            <div
+              className={`${classes["div-underline"]} d-flex justify-content-start align-items-start column-gap-2 py-3 col-12`}
+            >
               <div>
                 <Typography
                   id="modal-category"
@@ -112,14 +128,15 @@ const QuizDescription = ({ quizLink, modalClose }) => {
               </div>
             </div>
           </div>
-          <div className={`${classes["div-underline"]} row p-0 pt-3 pb-3 row-gap-3`}>
+          <div
+            className={`${classes["div-underline"]} row p-0 pt-3 pb-3 row-gap-3`}
+          >
             <div className="d-flex justify-content-start align-items-center column-gap-2 col-sm-6 col-12">
               <div>
                 <Typography
                   id="modal-category-label"
                   textColor="#fada65"
                   className="col-md-2 fw-bold"
-
                 >
                   Category:
                 </Typography>

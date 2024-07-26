@@ -44,7 +44,7 @@ import { ToastContainer, toast } from "react-toastify";
 import ViewQuizModal from "../view-quiz/index";
 import { display } from "@mui/system";
 
-export default function EditQuizModal({ currentQuizLink }) {
+export default function EditQuizModal({ currentQuizLink, onClose }) {
   const [open, setOpen] = React.useState(false);
   const [categoryDetails, setCategoryDetails] = useState([]);
   const [difficultyDetails, setDifficultyDetails] = useState([]);
@@ -53,7 +53,6 @@ export default function EditQuizModal({ currentQuizLink }) {
   const [quizLink, setQuizLink] = useState("");
   const [quizDetail, setQuizDetail] = useState({});
   const [currentQuestionsCount, setCurrentQuestionsCount] = useState(0);
-
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -64,6 +63,7 @@ export default function EditQuizModal({ currentQuizLink }) {
     setOpen(false);
     fetchData();
     setAddQuestionsOpen1(false);
+    onClose();
   };
 
   const validationSchema = yup.object().shape(CREATE_QUIZ_VALIDATIONS);
@@ -72,11 +72,11 @@ export default function EditQuizModal({ currentQuizLink }) {
       const difficultyData = await getDifficulties();
       const categoryData = await getCategories();
       const quizDetailResponse = await getQuizDetailsByLink(currentQuizLink);
-      const quizQuestions= await getQuizQuestions(currentQuizLink);
+      const quizQuestions = await getQuizQuestions(currentQuizLink);
       setCategoryDetails(categoryData.data.data);
       setDifficultyDetails(difficultyData.data.data);
       setQuizDetail(quizDetailResponse.data);
-      setCurrentQuestionsCount(quizQuestions.data.length)
+      setCurrentQuestionsCount(quizQuestions?.data?.length);
     } catch (error) {
       console.error("Error fetching data", error);
     }
@@ -442,7 +442,7 @@ export default function EditQuizModal({ currentQuizLink }) {
                 </LocalizationProvider>
               </DialogContent>
               <DialogActions>
-              <Button
+                <Button
                   onClick={handleClose}
                   type="button"
                   variant="outlined"
@@ -454,26 +454,32 @@ export default function EditQuizModal({ currentQuizLink }) {
                   type="button"
                   onClick={() => {
                     console.log("add clicked");
-                    setAddQuestionsOpen1(true);                                                        
+                    setAddQuestionsOpen1(true);
                   }}
                   sx={{ backgroundColor: "#6f41db" }}
                   variant="contained"
-                  style={{display:currentQuestionsCount >= quizDetail.TotalQuestion ? "none" :"block"}}
+                  style={{
+                    display:
+                      currentQuestionsCount >= quizDetail.TotalQuestion
+                        ? "none"
+                        : "block",
+                  }}
                 >
                   Add Questions
                 </Button>
 
-               
-              
-                <ViewQuizModal currentQuizLink={currentQuizLink}  closeEditDialog={handleClose} />
+                <ViewQuizModal
+                  currentQuizLink={currentQuizLink}
+                  closeEditDialog={handleClose}
+                />
                 {addQuestionsOpen1 && (
                   <AddQuestions
-                    openDialog={true} 
+                    openDialog={true}
                     currentQuizLink={currentQuizLink}
                     closeEditDialog={handleClose}
                   />
                 )}
-                  <Button
+                <Button
                   onClick={handleSubmit}
                   variant="contained"
                   type="submit"

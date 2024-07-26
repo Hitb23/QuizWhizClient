@@ -22,6 +22,7 @@ const AdminLogin = () => {
   const dispatch = useDispatch();
   const actions = bindActionCreators(userActions, dispatch);
   const [showPassword, setShowPassword] = useState(false);
+  const [isCapsLockOn, setIsCapsLockOn] = useState(false);
   const location = useLocation();
   useEffect(() => {
     // console.log(location);
@@ -57,7 +58,7 @@ const AdminLogin = () => {
       const response = await adminLogin({ email, password });
       console.log(response);
       localStorage.setItem("token", response.data.data);
-      localStorage.setItem("token-expiry", new Date().getTime() + 3600 * 1000);
+      localStorage.setItem("token-expiry", new Date().getTime() + 7200 * 1000);
 
       const data = await jwtDecoder();
       const userRole = data["Role"];
@@ -84,6 +85,14 @@ const AdminLogin = () => {
       });
     }
   };
+
+  const checkCapsLock = (event) => {
+    if (event.getModifierState && event.getModifierState('CapsLock')) {
+      setIsCapsLockOn(true);
+    } else {
+      setIsCapsLockOn(false);
+    }
+  }
 
   return (
     <Fragment>
@@ -142,6 +151,7 @@ const AdminLogin = () => {
                               type={showPassword ? "text" : "password"}
                               className={`${classes["form-input"]} form-control form-control-md p-3`}
                               placeholder="Password"
+                              onKeyDown={checkCapsLock}
                               id="password"
                               autoComplete="off"
                             />
@@ -161,6 +171,9 @@ const AdminLogin = () => {
                       </Field>
                       {touched.password && errors.password ? (
                         <span className={classes["error-message"]}>{errors.password}</span>
+                      ) : null}
+                      {isCapsLockOn ? (
+                        <span className={classes["error-message"]}>Caps Lock is on</span>
                       ) : null}
                     </div>
                   </div>
@@ -193,8 +206,7 @@ const AdminLogin = () => {
                 </Form>
               )}
             </Formik>
-
-            <div className={`d-flex justify-content-center`}>
+            {/* <div className={`d-flex justify-content-center`}>
               <div className="col-xl-4 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center column-gap-2 flex-wrap">
                 <div
                   className={`d-flex align-items-center ${classes["link-message"]}`}
@@ -209,7 +221,7 @@ const AdminLogin = () => {
                   </label>
                 </Link>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </main>

@@ -8,6 +8,10 @@ import classes from "./style.module.css";
 import { DIFFICULTIES, CATEGORIES } from "../../../utils/enum";
 import { useNavigate } from "react-router-dom";
 import QuizDescription from "../quiz-description";
+import CountdownTimer from "../../countdown-timer";
+import QuizCompletion from "../../quiz-completion";
+import jwtDecoder from "../../../services/jwtDecoder";
+
 const QuizCard = ({
   title,
   scheduledDate,
@@ -15,22 +19,21 @@ const QuizCard = ({
   difficultyId,
   totalMarks,
   totalQuestions,
-  quizLink
+  quizLink,
+  statusId
 }) => {
-  const navigate = useNavigate();
-
-  if(title == "Tech Trivia"){
-    console.log(quizLink);
-  }
   const [minutes, setMinutes] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(0);
   var quizDate = new Date(scheduledDate);
+  const navigate = useNavigate();
+  const data = jwtDecoder();
+  const username = data["Username"];
+
   useEffect(() => {
     setMinutes(Math.round((quizDate.getTime() - new Date().getTime()) / 60000));
   });
 
   var categoryName = CATEGORIES[categoryId];
-  // console.log(categoryName.toLowerCase().replace(/\s+/g, ""));
   var imageUrl = `/src/assets/${categoryName.toLowerCase()}.jpg`;
   if (categoryName == "General Knowledge") {
     imageUrl = `/src/assets/gk.jpg`;
@@ -46,6 +49,7 @@ const QuizCard = ({
     hour: "2-digit",
     minute: "2-digit",
   });
+
   const AnimatedButton = styled(Button)({
     position: "relative",
     overflow: "hidden",
@@ -67,15 +71,16 @@ const QuizCard = ({
   }
   const viewDetailsHandler = () => {
     setIsModalOpen(1);
-    console.log("open");
   };
 
   const closeModalHandler = () => {
     setIsModalOpen(0);
-  }
-  const onJoinHandler=()=>{
+  };
 
-  }
+  const joinNowHandler = () => {
+    navigate(`/live-quiz/${quizLink}`);
+  };
+
   return (
     <>
       <div
@@ -125,16 +130,18 @@ const QuizCard = ({
           </div>
         </div>
         <div className="col-xl-3 text-xl-end d-flex justify-content-center align-items-center flex-wrap">
-          {minutes <= 60 && minutes >= 0 ? (
+          {minutes <= 5 && minutes > 0 && statusId == 3 ? (
             <div className="d-none d-xl-inline">
-
-              <button type="submit" className={classes["join-now-button"]} onClick={navigateToQuiz}>
-
+              <button
+                type="submit"
+                className={classes["join-now-button"]}
+                onClick={joinNowHandler}
+              >
                 Join Now
               </button>
             </div>
           ) : null}
-          {minutes < 0 ? (
+          {statusId == 4 ? (
             <div className="d-none d-xl-inline">
               <button type="submit" className={classes["join-now-button"]}>
                 Leaderboard
@@ -142,7 +149,11 @@ const QuizCard = ({
             </div>
           ) : null}
           <div className="d-none d-xl-inline">
-            <button type="submit" className={classes["join-now-button"]} onClick={viewDetailsHandler}>
+            <button
+              type="submit"
+              className={classes["join-now-button"]}
+              onClick={viewDetailsHandler}
+            >
               View Details
             </button>
           </div>
@@ -175,14 +186,18 @@ const QuizCard = ({
           </div>
         </div>
         <div className="col-md-12 mt-2 my-auto text-center text-xl-end d-xl-none d-flex justify-content-center align-items-center column-gap-3 row-gap-3 flex-wrap">
-          {minutes <= 60 && minutes >= 0 ? (
+          {minutes <= 5 && minutes > 0 && statusId == 3 ? (
             <div>
-              <button type="submit" className={classes["join-now-button"]}>
+              <button
+                type="submit"
+                className={classes["join-now-button"]}
+                onClick={joinNowHandler}
+              >
                 Join Now
               </button>
             </div>
           ) : null}
-          {minutes < 0 ? (
+          {statusId == 4 ? (
             <div>
               <button type="submit" className={classes["join-now-button"]}>
                 Leaderboard
@@ -200,9 +215,12 @@ const QuizCard = ({
           </div>
         </div>
       </div>
-      {isModalOpen == 1 ? <QuizDescription quizLink={quizLink} modalClose={closeModalHandler} /> : null}
+      {isModalOpen == 1 ? (
+        <QuizDescription quizLink={quizLink} modalClose={closeModalHandler} />
+        // <QuizCompletion quizLink={quizLink} username={username} modalClose={closeModalHandler}/>
+      ) : null}
     </>
-  );
+  )
 };
 
 export default QuizCard;

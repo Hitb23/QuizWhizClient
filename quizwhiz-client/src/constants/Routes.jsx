@@ -17,8 +17,10 @@ import ViewQuizModal from "../components/dialog-boxes/view-quiz";
 import QuizDescription from "../pages/problem-description";
 import QuizList from "../pages/quiz-list";
 import Quiz from "../pages/QuizHub";
+import LiveQuiz from "../pages/live-quiz";
+import LiveQuestions from "../components/live-questions";
 import ViewQuizResult from "../pages/view-quiz-result";
-
+import UserScoreModal from "../pages/user-score";
 
 export const ROUTES = [
   {
@@ -108,6 +110,21 @@ export const ROUTES = [
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
+    path: "/live-quiz/:quizLink",
+    element: <LiveQuiz />,
+    roles: [Role.Admin, Role.Contestant],
+  },
+  {
+    path: "/admin-dashboard/quiz",
+    element: <Quiz />,
+    roles: [Role.Admin, Role.Contestant, Role.Public],
+  },
+  {
+    path: "/live-quiz/:quizLink/questions",
+    element: <LiveQuestions />,
+    roles: [Role.Admin, Role.Contestant, Role.Public],
+  },
+  {
     path: "/admin-dashboard/view-quiz-result/:quizLink",
     element: <ViewQuizResult />,
     roles: [Role.Admin],
@@ -120,6 +137,11 @@ export const ROUTES = [
   {
     path: "/admin-dashboard/quiz",
     element: <Quiz />,
+    roles: [Role.Admin, Role.Contestant, Role.Public],
+  },
+  {
+    path: "/user-score",
+    element: <UserScoreModal />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
 ];

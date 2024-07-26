@@ -5,7 +5,11 @@
 .username {
   color: #fada65;
 }
-
+.coin-box:hover{
+  box-shadow: inset 1px -1px 14px 0px black;
+  cursor: pointer;
+  transform: scale(0.98);
+}
 @media (max-width: 450px) {
   .logo-image {
     height: 3rem;

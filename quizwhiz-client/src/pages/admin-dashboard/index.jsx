@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useRef, useState } from "react";
 import {
   Box,
   FormControl,
@@ -42,6 +42,7 @@ import ViewQuizModal from "../../components/dialog-boxes/view-quiz";
 import EditQuizModal from "../../components/dialog-boxes/edit-quiz-details";
 import QuizEditTable from "../../components/admin-quiz-edit";
 import { HashLoader } from "react-spinners";
+import Quiz from "../QuizHub";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -69,11 +70,14 @@ const AdminDashboard = () => {
   const [countOfUpcoming, SetCountOfUpcoming] = useState(null);
   const [countOfActive, SetCountOfActive] = useState(null);
   const [countOfCompleted, SetCountOfCompleted] = useState(null);
+
   const [isLoading,setIsLoading]=useState(false);
+  const [IsModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
+  const childRef = useRef(null);
   var username = "";
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -82,9 +86,8 @@ const AdminDashboard = () => {
         setCategory(0);
         SetCurrentPage(1);
         SetSearchedWord("");
-
         setUploadCount(uploadCount + 1);
-
+        setisLoading(false)
         const difficulties = await getDifficulties();
         const categories = await getCategories();
         const allData = await filterByCategory({
@@ -115,7 +118,16 @@ const AdminDashboard = () => {
 
     fetchData();
   }, [Records, params]);
-
+ useEffect(()=>{
+   setisLoading(true);
+ },[])
+  const ModalOpenHandler = () => {
+    setIsModalOpen(true);
+  };
+  const onCloseHandler = () => {
+    setIsModalOpen(false);
+    setRecords(1);
+  };
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
@@ -132,6 +144,7 @@ const AdminDashboard = () => {
   }, []);
 
   const navigateToCategory = (id) => {
+    setisLoading(true);
     SetFilteredData([]);
     
     navigate(`/admin-dashboard/${id}`);
@@ -167,7 +180,7 @@ const AdminDashboard = () => {
   };
 
   const handlePageChange = async (event, value) => {
-    SetCurrentPage(currentPage);
+    SetCurrentPage(value);
     try {
       const result = await filterByCategory({
         StatusId: statusEnum[params.id],
@@ -175,6 +188,23 @@ const AdminDashboard = () => {
         CategoryId: category,
         CurrentPage: value,
         SearchValue: searchedWord,
+      });
+      SetFilteredData(result.data.data.GetQuizzes);
+    } catch (error) {
+      SetFilteredData([]);
+    }
+  };
+
+  const changeOrderOnClick = async (name, isDataAscending) => {
+    try {
+      const result = await filterByCategory({
+        StatusId: statusEnum[params.id],
+        DifficultyId: difficulty,
+        CategoryId: category,
+        CurrentPage: currentPage,
+        SearchValue: searchedWord,
+        IsAscending: isDataAscending,
+        FilterBy: name,
       });
       SetFilteredData(result.data.data.GetQuizzes);
     } catch (error) {
@@ -210,6 +240,8 @@ const AdminDashboard = () => {
         CategoryId: category,
         CurrentPage: currentPage,
         SearchValue: searchedWord,
+        IsAscending: true,
+        FilterBy: "",
       });
       SetFilteredData(result.data.data.GetQuizzes);
     } catch (error) {
@@ -269,7 +301,7 @@ const AdminDashboard = () => {
       />
       {/* Main Content */}
       <Box
-        className={`container ${classes["h-100vh"]}`}
+        className={`container ${classes['content']}`}
         component="main"
         sx={{ boxSizing: "border-box", p: 3 }}
         style={{ background: "white" }}
@@ -494,6 +526,7 @@ const AdminDashboard = () => {
               </Select>
             </FormControl>
           </div>
+
           <div className="col-lg-6 mb-4 col-sm-6 col-12 d-flex justify-content-end">
             <CreateQuizModal />
           </div>
@@ -501,7 +534,7 @@ const AdminDashboard = () => {
 
         <h4 className="ms-2 text-black my-3">
           {params.id.substring(0, 1).toUpperCase() + params.id.substring(1)}{" "}
-          Contest
+          Quiz
         </h4>
         <div className="row">
           {filteredData.length > 0 ? (
@@ -515,9 +548,11 @@ const AdminDashboard = () => {
             //   Link={ele.QuizLink}
             // />
             <QuizEditTable
+              parentFunction={changeOrderOnClick}
               data={filteredData}
               Status={params.id}
               reload={onDeleteHandler}
+              onClose={onCloseHandler}
             />
           ) : (
             // <img
@@ -527,11 +562,16 @@ const AdminDashboard = () => {
             // />
             <div className="d-flex justify-content-center align-items-center">
               {difficultyList.length <= 0 ? (
+
                 <HashLoader
                   className="text-center me-2 mt-5"
                   style={{ color: "#a89ee9" }}
                 />
               ) : (
+                filteredData.length>0 ?  <HashLoader
+                className="text-center me-2 mt-5"
+                style={{ color: "#a89ee9" }}
+              />:
                 <h2 style={{ color: "#3d3189" }}>No Data Found</h2>
               )}
             </div>
@@ -623,6 +663,7 @@ const AdminDashboard = () => {
             <Pagination
               defaultPage={1}
               siblingCount={1}
+              page={currentPage}
               count={PageSize}
               variant="outlined"
               onChange={handlePageChange}
@@ -663,6 +704,9 @@ const AdminDashboard = () => {
           </div>
         )}
       </Box>
+      {IsModalOpen ? (
+        <Quiz IsOpen={false} onCloseHandler={onCloseHandler} />
+      ) : null}
     </div>
   );
 };

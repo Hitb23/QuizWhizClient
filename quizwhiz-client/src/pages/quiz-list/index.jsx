@@ -24,6 +24,13 @@ import {
 } from "../../services/admindashboard.service";
 import jwtDecoder from "../../services/jwtDecoder";
 import QuizHeader from "../../components/header/quizzes-header";
+import { PacmanLoader } from "react-spinners";
+import { border } from "@mui/system";
+import { BorderAll, BorderColorSharp } from "@mui/icons-material";
+import { HubConnectionBuilder } from "@microsoft/signalr";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import LifelineGift from "../../components/dialog-boxes/lifeline-gift";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -43,7 +50,7 @@ const Quizzes = () => {
   const [category, setCategory] = useState(0);
   const [difficultyList, setDifficultyList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
-  const [Records, setRecords] = useState(4);
+  const [Records, setRecords] = useState(5);
   const [PageSize, SetPageSize] = useState(1);
   const [currentPage, SetCurrentPage] = useState(1);
   const [filteredData, SetFilteredData] = useState([]);
@@ -51,6 +58,9 @@ const Quizzes = () => {
   const [searchedWord, SetSearchedWord] = useState("");
   const [tabStatus, setTabStatus] = useState(2);
   const [toggleTabs, setToggleTabs] = useState(1);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [connection, setConnection] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const params = useParams();
   var username = "";
@@ -58,11 +68,9 @@ const Quizzes = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("In UseEffect: Called");
         setDifficulty(0);
         setCategory(0);
         SetCurrentPage(1);
-        setTabStatus(2);
         SetSearchedWord("");
 
         setUploadCount(uploadCount + 1);
@@ -84,6 +92,7 @@ const Quizzes = () => {
         const status = await getAllStatusCount();
         SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
         setRecords(allData?.data?.data?.Pagination?.RecordSize);
+        setIsLoading(false);
       } catch (error) {
         SetFilteredData([]);
         console.error("Error fetching data", error);
@@ -92,26 +101,57 @@ const Quizzes = () => {
     fetchData();
   }, [Records, params]);
 
+  var userFirstName = "";
+
+  useEffect(() => {
+    const conn = new HubConnectionBuilder()
+      .withUrl("https://localhost:44361/quizhub")
+      .withAutomaticReconnect()
+      .build();
+
+    setConnection(conn);
+
+    console.log(params.quizLink);
+
+    conn.on(`ReceiveRemainingTime_${params.quizLink}`, (minutes, seconds) => {
+      setRemainingMinutes(minutes);
+      setRemainingSeconds(seconds);
+      setIsLoading(false);
+    });
+
+    conn.start().catch((error) => console.error("Connection failed: ", error));
+  }, []);
+
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
+    
     const fetchUserDetails = async () => {
       try {
         const response = await getUserDetails(data["Username"]);
+        userFirstName = response.data.data.FirstName;
         setFirstName(response.data.data.FirstName);
         setLastName(response.data.data.LastName);
       } catch (error) {
         console.log(error);
       }
     };
+
     fetchUserDetails();
+    var isLoggedInEarlier = data["IsLoggedInEarlier"];
+    console.log("Logged in earlier : " + isLoggedInEarlier);
+    if(isLoggedInEarlier === "False"){
+      console.log(isModalVisible);
+      setIsModalVisible(true);
+    }
   }, []);
 
   const handlePageSize = async (event) => {
     SetCurrentPage(1);
     setRecords(event.target.value);
+
     try {
-      const result = await changeRecordsSize({
+      const result1 = await changeRecordsSize({
         recordSize: event.target.value,
       });
     } catch (error) {
@@ -199,29 +239,18 @@ const Quizzes = () => {
   };
   var username = "";
 
-  useEffect(() => {
-    const data = jwtDecoder();
-    username = data["Username"];
-    const fetchUserDetails = async () => {
-      try {
-        const response = await getUserDetails(data["Username"]);
-        setFirstName(response.data.data.FirstName);
-        setLastName(response.data.data.LastName);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchUserDetails();
-  }, []);
+  
 
   const toggleTabsChange = async (index) => {
     setToggleTabs(index);
     SetCurrentPage(1);
-    {
-      index === 1 ? setTabStatus(2) : setTabStatus(4);
-    }
-    var quizStatus = index === 1 ? 2 : 4;
+    var quizStatus = 1;
+    index === 0 ? (setTabStatus(3), (quizStatus = 3)) : null;
+    index === 1 ? (setTabStatus(2), (quizStatus = 2)) : null;
+    index === 2 ? (setTabStatus(4), (quizStatus = 4)) : null;
+    index === 3 ? (setTabStatus(4), (quizStatus = 4)) : null;
+
+    console.log(quizStatus);
     try {
       const result = await filterByCategory({
         StatusId: quizStatus,
@@ -242,6 +271,7 @@ const Quizzes = () => {
   return (
     <Fragment>
       <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>
+        {isModalVisible ? <LifelineGift isVisible={true}/> : null}
         <CssBaseline />
         {/* Admin offcanvas with navbar */}
         <QuizHeader
@@ -262,15 +292,26 @@ const Quizzes = () => {
               <li className={`nav-item`}>
                 <button
                   className={`nav-link ${
+                    toggleTabs === 0 ? classes["tab-active"] : classes["tab"]
+                  }`}
+                  onClick={() => toggleTabsChange(0)}
+                >
+                  Active
+                </button>
+              </li>
+              <li className={`nav-item`}>
+                <button
+                  className={`nav-link ${
                     toggleTabs === 1 ? classes["tab-active"] : classes["tab"]
                   }`}
                   onClick={() => toggleTabsChange(1)}
                 >
-                  Quizzes
+                  Upcoming
                 </button>
               </li>
               <li className="nav-item">
                 <button
+                  id="completedQuizzes"
                   className={`nav-link ${
                     toggleTabs === 2 ? classes["tab-active"] : classes["tab"]
                   }`}
@@ -281,6 +322,7 @@ const Quizzes = () => {
               </li>
               <li className="nav-item">
                 <button
+                  id="participatedQuizzes"
                   className={`nav-link ${
                     toggleTabs === 3 ? classes["tab-active"] : classes["tab"]
                   }`}
@@ -468,11 +510,17 @@ const Quizzes = () => {
                   totalMarks={ele.TotalMarks}
                   totalQuestions={ele.TotalQuestion}
                   onClickHandler={ViewDetailsHandler}
+                  statusId={tabStatus}
                   quizLink={ele.QuizLink}
                 />
               ))
+            ) : isLoading == true ? (
+              <PacmanLoader
+                className="position-absolute top-50 start-50 translate-middle p-0"
+                color="#fada65"
+              />
             ) : (
-              <h2 className="text-center text-white">No Data Available</h2>
+              <h2 className="text-center text-white my-5">No Data Available</h2>
             )}
           </div>
           {filteredData.length > 0 && (
@@ -540,6 +588,7 @@ const Quizzes = () => {
                 count={PageSize}
                 variant="outlined"
                 onChange={handlePageChange}
+                className="p-0"
                 sx={{
                   "& .MuiButtonBase-root": {
                     backgroundColor: "#3d3189",

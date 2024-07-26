@@ -36,7 +36,8 @@ import {
   StarBorder,
 } from "@mui/icons-material";
 import { IoNotificationsOutline } from "react-icons/io5";
-
+import CoinIcon from "../../../assets/coins-logo.svg";
+import LifeLineIcons from "../../../assets/lifeline.svg";
 import { Link } from "react-router-dom";
 import { DrawerHeader, AppBar, Drawer } from "../../admin-components/index";
 import { RoutePaths } from "../../../utils/enum";
@@ -61,7 +62,8 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
   useEffect(() => {
     const imgPath = `${
       import.meta.env.VITE_PUBLIC_URL
-    }/ProfilePhoto/${username}/${username}.jpg`;
+    }ProfilePhoto/${username}/${username}.jpg?t=${new Date().getTime()}`;
+    console.log(imgPath);
     setFullImagePath(imgPath);
   }, [uploadCount]);
 
@@ -113,7 +115,8 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
         className={`${classes["nav-color"]}`}
       >
         <Toolbar>
-          <Link to={RoutePaths.AdminDashboard}>
+
+          <Link to="/admin-dashboard/upcoming">
             <img className={classes["logo-image"]} src={Logo} height={70} />
           </Link>
         </Toolbar>
@@ -125,20 +128,17 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             marginRight: "1rem",
           }}
         >
-          
-            <p className="fs-5 mt-3 fw-semibold d-sm-inline d-none text-white">
-              {username} 
+         <p className={`${classes["username"]} fs-5 mt-3 fw-semibold d-sm-inline d-none`}> 
+              {username}
             </p>
-            <IconButton
-              className="gap-2 rounded d-flex align-items-center"
-              onClick={handleAvatarClick}
-            >
+          <IconButton
+            className="gap-2 rounded d-flex align-items-center"
+            onClick={handleAvatarClick}
+          >
             <Avatar
               sx={{ background: "#5f071c", cursor: "pointer" }}
               src={fullImagePath}
             ></Avatar>
-
-
           </IconButton>
 
           <Menu
@@ -177,7 +177,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
             <MenuItem onClick={clickOnProfile}>
-              <Avatar /> Profile
+              <Avatar src={fullImagePath} /> Profile
             </MenuItem>
             <Divider />
             <MenuItem onClick={logoutHandler}>
@@ -189,7 +189,6 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
           </Menu>
         </Box>
       </AppBar>
-      
     </>
   );
 };

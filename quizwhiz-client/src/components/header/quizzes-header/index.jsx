@@ -19,6 +19,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import classes from "./style.module.css";
 import Logo from "../../../assets/NewQuizLogo.svg";
+import CoinIcon from "../../../assets/coins-logo.svg";
+import LifeLineIcons from "../../../assets/lifeline.svg";
 import {
   Avatar,
   Badge,
@@ -40,16 +42,27 @@ import { Link } from "react-router-dom";
 import { DrawerHeader, AppBar, Drawer } from "../../admin-components/index";
 import { RoutePaths } from "../../../utils/enum";
 import jwtDecoder from "../../../services/jwtDecoder";
+import { bindActionCreators } from "redux";
+import { useDispatch } from "react-redux";
+import { userActions } from "../../../redux/action-creators";
+import Quiz from "../../../pages/QuizHub";
+import { Button } from "@mui/joy";
+import { fetchUserCoinsAndLifeline } from "../../../services/quizSocket.service";
 
 const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [fullImagePath, setFullImagePath] = useState("");
+  const [isModalOpen,setIsModalOpen]=useState(false);
+  const [isOpen,setIsOpen]=useState(false);
+  const [isClose,setIsClose]=useState(false);
+  const [userCoinsAndLifeline,setuserCoinsAndLifeline]=useState(null);
   const theme = useTheme();
   const navigate = useNavigate();
   var username = "";
   const data = jwtDecoder();
   username = data["Username"];
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setFullImagePath(
@@ -59,12 +72,23 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
     );
   }, [uploadCount]);
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+  useEffect(()=>{
+    getData();
+  },[])
+
+  const getData=async()=>{
+    const userData=jwtDecoder();
+    const userName=userData.Username;
+    console.log("UserName:",userName);
+    var coinsData=await fetchUserCoinsAndLifeline(userName);
+    setuserCoinsAndLifeline(coinsData);
+  }
+  // const handleDrawerOpen = () => {
+  //   setOpen(true);
+  // };
+  // const handleDrawerClose = () => {
+  //   setOpen(false);
+  // };
   const [openIndex, setOpenIndex] = React.useState(null);
   const handleClick = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -80,6 +104,23 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
     navigate(RoutePaths.MyProfile);
     setAnchorEl(null);
   };
+  const ModalHandler=()=>{
+      setIsOpen(true);
+  }
+  const logoutHandler = () => {
+    const actions = bindActionCreators(userActions, dispatch);
+    {
+      actions.changeUserRole("");
+      actions.changeUserName("");
+      actions.changeUserEmail("");
+    }
+
+    localStorage.removeItem("token");
+    navigate(RoutePaths.Login);
+  };
+  const closeHandler=()=>{
+    setIsOpen(false);
+  }
   return (
     <>
       <AppBar
@@ -92,7 +133,7 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: "1rem",
+          padding: "1rem 0.4rem 1rem 0rem",
         }}
       >
         <Link to="/">
@@ -106,13 +147,58 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
             marginRight: "1rem",
           }}
         >
-          <IconButton
-            className="gap-2 rounded d-flex align-items-center"
-            onClick={handleAvatarClick}
+              {/* <Badge  badgeContent={'+'}
+          sx={{
+            '.MuiBadge-badge':{
+              background:'#FADA65',
+              color:'black',
+              fontWeight:'900'
+            },
+          }}
           >
+          <div className=" rounded-4 d-flex align-items-center justify-content-between" style={{background:'#3d3189'}}>
+            <img
+              src={CoinIcon}
+              height={28}
+              sx={{ color: "yellow" }}
+              className="ms-2 me-3 my-2"
+            />
+            <small className="mx-2 fw-bold fs-5">3</small>
+          </div>
+          </Badge> */}
+          {/* <Button className="bg-white" variant="outlined" onClick={ModalHandler}>
+                Open dialog
+          </Button> */}
+         
+          <Badge  badgeContent={'+'}
+          sx={{
+            '.MuiBadge-badge':{
+              background:'#FADA65',
+              color:'black',
+              fontWeight:'900',
+              '&:hover':{
+                boxShadow:'inset 1px -1px 14px 0px black'
+              }
+            },
+          }}
+          >
+            <div className={`${classes['coin-box']} rounded-4 d-flex align-items-center justify-content-between`} style={{background:'#3d3189'}} onClick={ModalHandler}>
+              <img
+                src={LifeLineIcons}
+                height={28}
+                sx={{ color: "yellow" }}
+                className={`ms-2 me-3 my-2`}
+              />
+              <small className="mx-2 fw-bold fs-5">{userCoinsAndLifeline?.data?.UserLifelines.length}</small>
+            </div>
+          </Badge>
             <p className={`${classes["username"]} fs-5 mt-3 px-3 fw-semibold d-sm-inline d-none`}> 
               {username}
             </p>
+          <IconButton
+            className="gap-2 rounded d-flex align-items-between"
+            onClick={handleAvatarClick}
+          >
             <Avatar
               sx={{ background: "#3d3189", color: "#fada65", cursor: "pointer" }}
               src={fullImagePath}
@@ -154,26 +240,12 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
+            
             <MenuItem onClick={clickOnProfile}>
-              <Avatar /> Profile
+              <Avatar src={fullImagePath}></Avatar> Profile
             </MenuItem>
-            <MenuItem onClick={handleAvatarClose}>
-              <Avatar /> My account
-            </MenuItem>
-            <Divider />
-            <MenuItem onClick={handleAvatarClose}>
-              <ListItemIcon>
-                <PersonAdd fontSize="small" />
-              </ListItemIcon>
-              Add another account
-            </MenuItem>
-            <MenuItem onClick={handleAvatarClose}>
-              <ListItemIcon>
-                <Settings fontSize="small" />
-              </ListItemIcon>
-              Settings
-            </MenuItem>
-            <MenuItem onClick={handleAvatarClose}>
+            <Divider/>
+            <MenuItem onClick={logoutHandler}>
               <ListItemIcon>
                 <Logout fontSize="small" />
               </ListItemIcon>
@@ -182,6 +254,7 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
           </Menu>
         </Box>
       </AppBar>
+      {isOpen && <Quiz isOpen={isOpen} closeHandler={closeHandler} coinsAndLifelinesDetails={userCoinsAndLifeline?.data}/>}
     </>
   );
 };
