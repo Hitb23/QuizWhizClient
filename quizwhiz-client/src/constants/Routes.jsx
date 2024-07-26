@@ -20,6 +20,7 @@ import Quiz from "../pages/QuizHub";
 import LiveQuiz from "../pages/live-quiz";
 import LiveQuestions from "../components/live-questions";
 import ViewQuizResult from "../pages/view-quiz-result";
+import UserScoreModal from "../pages/user-score";
 
 export const ROUTES = [
   {
@@ -48,7 +49,7 @@ export const ROUTES = [
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path: "/admin-dashboard/:id",
+    path: "/admin-dashboard",
     element: <AdminDashboard />,
     roles: [Role.Admin],
   },
@@ -103,11 +104,7 @@ export const ROUTES = [
     element: <ViewQuizModal />,
     roles: [Role.Admin],
   },
-  {
-    path: "/admin-dashboard/:id/:quizLink",
-    element: <QuizDescription />,
-    roles: [Role.Admin, Role.Contestant, Role.Public],
-  },
+ 
   {
     path: "/live-quiz/:quizLink",
     element: <LiveQuiz />,
@@ -136,6 +133,11 @@ export const ROUTES = [
   {
     path: "/admin-dashboard/quiz",
     element: <Quiz />,
+    roles: [Role.Admin, Role.Contestant, Role.Public],
+  },
+  {
+    path: "/user-score",
+    element: <UserScoreModal />,
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
 ];

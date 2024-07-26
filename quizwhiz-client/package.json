@@ -72,6 +72,7 @@
     "sweetalert2": "^11.6.13",
     "sweetalert2-react-content": "^5.0.7",
     "typed.js": "^2.1.0",
+    "vanilla-tilt": "^1.8.1",
     "use-sound": "^4.0.3",
     "yup": "^1.4.0"
   },

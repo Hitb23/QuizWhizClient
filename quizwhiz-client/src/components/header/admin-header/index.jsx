@@ -36,7 +36,8 @@ import {
   StarBorder,
 } from "@mui/icons-material";
 import { IoNotificationsOutline } from "react-icons/io5";
-
+import CoinIcon from "../../../assets/coins-logo.svg";
+import LifeLineIcons from "../../../assets/lifeline.svg";
 import { Link } from "react-router-dom";
 import { DrawerHeader, AppBar, Drawer } from "../../admin-components/index";
 import { RoutePaths } from "../../../utils/enum";
@@ -44,6 +45,7 @@ import jwtDecoder from "../../../services/jwtDecoder";
 import { bindActionCreators } from "redux";
 import { userActions } from "../../../redux/action-creators";
 import { useDispatch } from "react-redux";
+import { ROUTES } from "../../../constants/Routes";
 
 const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
   const [open, setOpen] = React.useState(false);
@@ -113,6 +115,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
         className={`${classes["nav-color"]}`}
       >
         <Toolbar>
+
           <Link to="/admin-dashboard/upcoming">
             <img className={classes["logo-image"]} src={Logo} height={70} />
           </Link>
@@ -125,15 +128,13 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             marginRight: "1rem",
           }}
         >
+         <p className={`${classes["username"]} fs-5 mt-3 fw-semibold d-sm-inline d-none`}> 
+              {username}
+            </p>
           <IconButton
             className="gap-2 rounded d-flex align-items-center"
             onClick={handleAvatarClick}
           >
-            <p
-              className={`${classes["username"]} fs-5 mt-3 px-3 fw-semibold d-sm-inline d-none`}
-            >
-              {username}
-            </p>
             <Avatar
               sx={{ background: "#5f071c", cursor: "pointer" }}
               src={fullImagePath}

@@ -104,8 +104,10 @@ const Quizzes = () => {
   var userFirstName = "";
 
   useEffect(() => {
+    const nameOfLoggedInUser=jwtDecoder();
+    console.log(nameOfLoggedInUser["Username"]);
     const conn = new HubConnectionBuilder()
-      .withUrl("https://localhost:44361/quizhub")
+      .withUrl(`https://localhost:44361/quizhub?username=${nameOfLoggedInUser["Username"]}`)
       .withAutomaticReconnect()
       .build();
 
@@ -136,7 +138,12 @@ const Quizzes = () => {
         console.log(error);
       }
     };
-
+    // conn.on(
+    //   `IsDisqualified_${params.quizLink}`,
+    //   (IsDisaqualified) => {
+    //    console.log("Disqualified_user:");
+    //   }
+    // );
     fetchUserDetails();
     var isLoggedInEarlier = data["IsLoggedInEarlier"];
     console.log("Logged in earlier : " + isLoggedInEarlier);

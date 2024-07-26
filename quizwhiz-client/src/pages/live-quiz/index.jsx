@@ -14,6 +14,7 @@ import LiveQuestions from "../../components/live-questions";
 import jwtDecoder from "../../services/jwtDecoder";
 import useSound from 'use-sound';
 import {Theme} from "../../assets/index";
+import { jwtDecode } from "jwt-decode";
 
 const LiveQuiz = () => {
   const [datetime, setDateTime] = useState();
@@ -44,7 +45,7 @@ const LiveQuiz = () => {
   useEffect(() => {
     setIsLoading(true);
     const conn = new HubConnectionBuilder()
-      .withUrl("https://localhost:44361/quizhub")
+      .withUrl(`https://localhost:44361/quizhub?username=${encodeURIComponent(username)}`)
       .withAutomaticReconnect()
       .build();
 
@@ -63,6 +64,7 @@ const LiveQuiz = () => {
     conn.on(
       `ReceiveQuestion_${params.quizLink}`,
       (questionNo, question, timerSeconds, disqualifiedUsers) => {
+        
         if (questionNo) {
           console.log(username);
           setQuestionId(question?.question?.questionId);
@@ -81,6 +83,12 @@ const LiveQuiz = () => {
               setIsOut(true);
             }
         }
+        conn.on(
+          `IsDisqualified_FLP4rUCd`,
+          (IsDisaqualified) => {
+           console.log("Disqualified_user: ",IsDisaqualified);
+          }
+        );
       }
     );
 
@@ -97,6 +105,18 @@ const LiveQuiz = () => {
         }
       }
     );
+    if(conn){
+    console.log(conn.on(
+      `IsDisqualified_FLP4rUCd`,
+      (IsDisaqualified) => {
+       console.log("Disqualified_user: ",IsDisaqualified);
+      })
+    );
+    console.log("Inside If conditoin")
+    }
+    else{
+      console.log("connection failed by some error yeeehh")
+    }
 
     conn.on(`ReceiveTimerSeconds${params.quizLink}`, (timerSeconds) => {
       setIsLoading(false);
@@ -214,7 +234,6 @@ const LiveQuiz = () => {
         <div className="d-flex justify-content-center align-items-center row-gap-2 row min-vh-100 m-0">
           <div className="d-flex justify-content-center align-items-center row row-gap-5">
             <>
-              
               <LiveQuestions
                 questionDetail={questionDetails}
                 questionNo={currentQuestion}

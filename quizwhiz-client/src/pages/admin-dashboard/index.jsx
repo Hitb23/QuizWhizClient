@@ -42,6 +42,7 @@ import ViewQuizModal from "../../components/dialog-boxes/view-quiz";
 import EditQuizModal from "../../components/dialog-boxes/edit-quiz-details";
 import QuizEditTable from "../../components/admin-quiz-edit";
 import { HashLoader } from "react-spinners";
+import Quiz from "../QuizHub";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -69,6 +70,8 @@ const AdminDashboard = () => {
   const [countOfUpcoming, SetCountOfUpcoming] = useState(null);
   const [countOfActive, SetCountOfActive] = useState(null);
   const [countOfCompleted, SetCountOfCompleted] = useState(null);
+  const [currentState,setCurrentState]=useState("upcoming");
+  const [IsModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
   const childRef = useRef(null);
@@ -81,13 +84,11 @@ const AdminDashboard = () => {
         setCategory(0);
         SetCurrentPage(1);
         SetSearchedWord("");
-
         setUploadCount(uploadCount + 1);
-
         const difficulties = await getDifficulties();
         const categories = await getCategories();
         const allData = await filterByCategory({
-          StatusId: statusEnum[params.id],
+          StatusId: statusEnum[currentState],
           DifficultyId: 0,
           CategoryId: 0,
           CurrentPage: 1,
@@ -112,8 +113,15 @@ const AdminDashboard = () => {
     };
 
     fetchData();
-  }, [Records, params]);
+  }, [Records, currentState]);
 
+  const ModalOpenHandler = () => {
+    setIsModalOpen(true);
+  };
+  const onCloseHandler = () => {
+    setIsModalOpen(false);
+    setRecords(1);
+  };
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
@@ -131,7 +139,9 @@ const AdminDashboard = () => {
 
   const navigateToCategory = (id) => {
     SetFilteredData([]);
-    navigate(`/admin-dashboard/${id}`);
+    SetPageSize(0);
+    setCurrentState(id);
+    // navigate(`/admin-dashboard/${id}`);
   };
 
   const handlePageSize = async (event) => {
@@ -149,7 +159,7 @@ const AdminDashboard = () => {
     setDifficulty(event.target.value);
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: event.target.value,
         CategoryId: category,
         CurrentPage: currentPage,
@@ -164,10 +174,10 @@ const AdminDashboard = () => {
   };
 
   const handlePageChange = async (event, value) => {
-    SetCurrentPage(currentPage);
+    SetCurrentPage(value);
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: value,
@@ -182,7 +192,7 @@ const AdminDashboard = () => {
   const changeOrderOnClick = async (name, isDataAscending) => {
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: currentPage,
@@ -201,7 +211,7 @@ const AdminDashboard = () => {
     SetSearchedWord(searchedWord);
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: currentPage,
@@ -215,13 +225,10 @@ const AdminDashboard = () => {
     }
   };
 
-  const ViewDetailsHandler = (e) => {
-    navigate(`/admin-dashboard/${params.id}/${e}`);
-  };
   const onDeleteHandler = async () => {
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: currentPage,
@@ -250,7 +257,7 @@ const AdminDashboard = () => {
     setCategory(e.target.value);
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: e.target.value,
         CurrentPage: currentPage,
@@ -287,7 +294,7 @@ const AdminDashboard = () => {
       />
       {/* Main Content */}
       <Box
-        className={`container ${classes["h-100vh"]}`}
+        className={`container ${classes["content"]}`}
         component="main"
         sx={{ boxSizing: "border-box", p: 3 }}
         style={{ background: "white" }}
@@ -299,28 +306,28 @@ const AdminDashboard = () => {
             text="Upcoming"
             icon={faCalendarAlt}
             onClickHandler={navigateToCategory}
-            active={params.id}
+            active={currentState}
           />
           <CardComponent
             count={countOfActive}
             text="Active"
             icon={faPlay}
             onClickHandler={navigateToCategory}
-            active={params.id}
+            active={currentState}
           />
           <CardComponent
             count={countOfCompleted}
             text="Completed"
             icon={faCheckCircle}
             onClickHandler={navigateToCategory}
-            active={params.id}
+            active={currentState}
           />
           <CardComponent
             count={countOfPending}
             text="Pending"
             icon={faQuestionCircle}
             onClickHandler={navigateToCategory}
-            active={params.id}
+            active={currentState}
           />
         </div>
         <div className="row">
@@ -353,13 +360,12 @@ const AdminDashboard = () => {
                     borderColor: "#3d3189",
                   },
                   "& .MuiInputBase-input": {
-                    color: "#3d3189",
                   },
                 },
               }}
               InputLabelProps={{
                 sx: {
-                  color: "#3d3189", // Set initial label color
+                  // color: "#3d3189", // Set initial label color
                   paddingLeft: "0.2rem",
                   paddingRight: "0.2rem",
                   "&:hover": {
@@ -512,14 +518,15 @@ const AdminDashboard = () => {
               </Select>
             </FormControl>
           </div>
+
           <div className="col-lg-6 mb-4 col-sm-6 col-12 d-flex justify-content-end">
             <CreateQuizModal />
           </div>
         </div>
 
         <h4 className="ms-2 text-black my-3">
-          {params.id.substring(0, 1).toUpperCase() + params.id.substring(1)}{" "}
-          Contest
+          {currentState.substring(0, 1).toUpperCase() + currentState.substring(1)}{" "}
+          Quiz
         </h4>
         <div className="row">
           {filteredData.length > 0 ? (
@@ -535,8 +542,9 @@ const AdminDashboard = () => {
             <QuizEditTable
               parentFunction={changeOrderOnClick}
               data={filteredData}
-              Status={params.id}
+              Status={currentState}
               reload={onDeleteHandler}
+              onClose={onCloseHandler}
             />
           ) : (
             // <img
@@ -545,7 +553,12 @@ const AdminDashboard = () => {
             //   style={{height:'500px',width:'500px'}}
             // />
             <div className="d-flex justify-content-center align-items-center">
-              {difficultyList.length <= 0 || filteredData.length<=0 ? (
+              {difficultyList.length <= 0 ? (
+                <HashLoader
+                  className="text-center me-2 mt-5"
+                  style={{ color: "#a89ee9" }}
+                />
+              ) : filteredData.length > 0 ? (
                 <HashLoader
                   className="text-center me-2 mt-5"
                   style={{ color: "#a89ee9" }}
@@ -639,49 +652,55 @@ const AdminDashboard = () => {
           <MenuItem value={15}>15</MenuItem>
         </Select>
       </FormControl> */}
-            <Pagination
-              defaultPage={1}
-              siblingCount={1}
-              count={PageSize}
-              variant="outlined"
-              onChange={handlePageChange}
-              sx={{
-                "& .MuiButtonBase-root": {
-                  backgroundColor: "#fffff",
-                  color: "#21201e",
-                  border: "1px solid #21201e",
-                  marginTop: "10px",
-                  marginBottom: "10px",
-                  "&:hover": {
+            {PageSize > 0 && (
+              <Pagination
+                defaultPage={1}
+                siblingCount={1}
+                page={currentPage}
+                count={PageSize}
+                variant="outlined"
+                onChange={handlePageChange}
+                sx={{
+                  "& .MuiButtonBase-root": {
+                    backgroundColor: "#fffff",
+                    color: "#21201e",
+                    border: "1px solid #21201e",
+                    marginTop: "10px",
+                    marginBottom: "10px",
+                    "&:hover": {
+                      backgroundColor: "#3d3189",
+                      color: "white",
+                    },
+                  },
+                  "& .MuiPaginationItem-root.Mui-selected": {
                     backgroundColor: "#3d3189",
                     color: "white",
+                    border: "1px solid #21201e",
+                    "&:hover": {
+                      backgroundColor: "#a89ee9",
+                      color: "#000000",
+                    },
                   },
-                },
-                "& .MuiPaginationItem-root.Mui-selected": {
-                  backgroundColor: "#3d3189",
-                  color: "white",
-                  border: "1px solid #21201e",
-                  "&:hover": {
-                    backgroundColor: "#a89ee9",
-                    color: "#000000",
-                  },
-                },
-                "& .MuiPaginationItem-ellipsis": {
-                  fontWeight: "bolder",
-                  color: "#21201e",
-                  "&:hover": {
+                  "& .MuiPaginationItem-ellipsis": {
+                    fontWeight: "bolder",
                     color: "#21201e",
+                    "&:hover": {
+                      color: "#21201e",
+                    },
                   },
-                },
-                "@media (max-width: 600px)": {
-                  flexDirection: "column",
-                  rowGap: "10px",
-                },
-              }}
-            />
+                  "@media (max-width: 600px)": {
+                    flexDirection: "column",
+                    rowGap: "10px",
+                  },
+                }}
+              />
+            )}
           </div>
         )}
       </Box>
+      {IsModalOpen ? (
+        <Quiz IsOpen={false} onCloseHandler={onCloseHandler} />
+      ) : null}
     </div>
   );
 };
