@@ -30,6 +30,7 @@ const CoinsCard = ({imageUrl,value,priceIcon,totalLifeline,incrementCount,NotEno
                   <span className={` ${classes["text-bg"]}`}>{totalLifeline}</span>
                 </div>
               </div>
+              
             </div>
     </>
   )

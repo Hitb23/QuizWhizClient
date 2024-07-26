@@ -1,9 +1,17 @@
+.main-div{
+  min-height: 100vh !important;
+  min-width: 100vw !important;
+  box-sizing: border-box !important;
+}
+
 .admin-profile{
   background-color: #ffffff;
+  min-height: 100vh;
+  min-width: 100vw;
 }
 
 .main-box {
-  margin-top: 6rem;
+  padding-top: 125px !important;
 }
 
 .profile-photo {
@@ -76,13 +84,6 @@
   color: #fada65;
 }
 
-/* .form-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: center;
-} */
-
 .form-label {
   flex-basis: 100%;
   margin-bottom: 0.5rem;
@@ -92,8 +93,6 @@
 .input-field {
   background-color: #fbf5dd !important;
   border: 1px solid #fada65 !important;
-  width: 100% !important;
-  max-width: 80vw !important;
   padding: 0.5rem;
 }
 
@@ -128,10 +127,8 @@
   .profile-photo {
     width: 170px !important;
     height: 170px !important;
-    margin-top: 25rem;
   }
 }
-
 /* @media (max-width: 768px) {
   
   .main-box {
@@ -162,14 +159,6 @@
 @media (max-width: 814px) {
   .uplaod-icon-text {
     display: none;
-  }
-}
-
-
-
-@media (max-width: 675px) {
-  .main-box {
-    padding: 2rem 4.3rem;
   }
 }
 
@@ -243,8 +232,6 @@
 .admin-input-field {
   background-color: #ded9fc;
   border: 1px solid #a89ee9 !important;
-  width: 100% !important;
-  max-width: 80vw !important;
   padding: 0.5rem;
 }
 
@@ -254,4 +241,10 @@
   border: 1px solid #a89ee9 !important;
   box-shadow: 0 0 16px 0 rgba(228, 55, 55, 0.18),
     0 2px 4px 0 rgba(228, 55, 55, 0.12) !important;
+}
+
+@media (max-width: 991px) {
+  .form-group {
+    padding-bottom: 60px;
+  }
 }

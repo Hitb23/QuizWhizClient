@@ -12,6 +12,8 @@ import { ToastContainer, toast } from "react-toastify";
 
 import { RoutePaths } from "../../utils/enum";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
+import CreateQuizModal from "../../components/dialog-boxes/create-quiz";
+import LifelineGift from "../../components/dialog-boxes/lifeline-gift";
 
 const SignUp = () => {
   const navigate = useNavigate();

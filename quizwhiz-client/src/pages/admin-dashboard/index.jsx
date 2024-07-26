@@ -70,12 +70,13 @@ const AdminDashboard = () => {
   const [countOfUpcoming, SetCountOfUpcoming] = useState(null);
   const [countOfActive, SetCountOfActive] = useState(null);
   const [countOfCompleted, SetCountOfCompleted] = useState(null);
-  const [IsModalOpen, setIsModalOpen]=useState(false);
+  const [IsModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
   const childRef = useRef(null);
   var username = "";
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -83,9 +84,8 @@ const AdminDashboard = () => {
         setCategory(0);
         SetCurrentPage(1);
         SetSearchedWord("");
-
         setUploadCount(uploadCount + 1);
-
+        setisLoading(false)
         const difficulties = await getDifficulties();
         const categories = await getCategories();
         const allData = await filterByCategory({
@@ -115,13 +115,16 @@ const AdminDashboard = () => {
 
     fetchData();
   }, [Records, params]);
-
- const ModalOpenHandler=()=>{
-     setIsModalOpen(true);
- }
- const onCloseHandler=()=>{
-     setIsModalOpen(false);
- }
+ useEffect(()=>{
+   setisLoading(true);
+ },[])
+  const ModalOpenHandler = () => {
+    setIsModalOpen(true);
+  };
+  const onCloseHandler = () => {
+    setIsModalOpen(false);
+    setRecords(1);
+  };
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
@@ -138,6 +141,7 @@ const AdminDashboard = () => {
   }, []);
 
   const navigateToCategory = (id) => {
+    setisLoading(true);
     SetFilteredData([]);
     navigate(`/admin-dashboard/${id}`);
   };
@@ -172,7 +176,7 @@ const AdminDashboard = () => {
   };
 
   const handlePageChange = async (event, value) => {
-    SetCurrentPage(currentPage);
+    SetCurrentPage(value);
     try {
       const result = await filterByCategory({
         StatusId: statusEnum[params.id],
@@ -223,9 +227,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const ViewDetailsHandler = (e) => {
-    navigate(`/admin-dashboard/${params.id}/${e}`);
-  };
+  
   const onDeleteHandler = async () => {
     try {
       const result = await filterByCategory({
@@ -295,7 +297,7 @@ const AdminDashboard = () => {
       />
       {/* Main Content */}
       <Box
-        className={`container ${classes["h-100vh"]}`}
+        className={`container ${classes['content']}`}
         component="main"
         sx={{ boxSizing: "border-box", p: 3 }}
         style={{ background: "white" }}
@@ -520,7 +522,6 @@ const AdminDashboard = () => {
               </Select>
             </FormControl>
           </div>
-          
 
           <div className="col-lg-6 mb-4 col-sm-6 col-12 d-flex justify-content-end">
             <CreateQuizModal />
@@ -547,6 +548,7 @@ const AdminDashboard = () => {
               data={filteredData}
               Status={params.id}
               reload={onDeleteHandler}
+              onClose={onCloseHandler}
             />
           ) : (
             // <img
@@ -554,13 +556,17 @@ const AdminDashboard = () => {
             //   alt="No Data Available"
             //   style={{height:'500px',width:'500px'}}
             // />
-            <div className="d-flex justify-content-center align-items-center">
-              {difficultyList.length <= 0 ? (
+            <div className="d-flex justify-content-center align-items-center pt-5">
+              {(difficultyList.length == 0 || isLoading) ? (
                 <HashLoader
                   className="text-center me-2 mt-5"
                   style={{ color: "#a89ee9" }}
                 />
               ) : (
+                filteredData.length>0 ?  <HashLoader
+                className="text-center me-2 mt-5"
+                style={{ color: "#a89ee9" }}
+              />:
                 <h2 style={{ color: "#3d3189" }}>No Data Found</h2>
               )}
             </div>
@@ -652,6 +658,7 @@ const AdminDashboard = () => {
             <Pagination
               defaultPage={1}
               siblingCount={1}
+              page={currentPage}
               count={PageSize}
               variant="outlined"
               onChange={handlePageChange}
@@ -692,7 +699,9 @@ const AdminDashboard = () => {
           </div>
         )}
       </Box>
-      {IsModalOpen ? <Quiz IsOpen={false} onCloseHandler={onCloseHandler}/> : null}
+      {IsModalOpen ? (
+        <Quiz IsOpen={false} onCloseHandler={onCloseHandler} />
+      ) : null}
     </div>
   );
 };

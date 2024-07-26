@@ -54,7 +54,8 @@ export const API_URLS = {
   QUIZ_DETAILS:'/quiz/get-quiz-details?quizLink=',
   DELETE_QUIZ:'/quiz/delete-quiz?quizLink=',
   PUBLISH_QUIZ:'/quiz/publish-quiz?quizLink=',
-  COINS_LIFELINE_URL:'quiz/get-coins-lifeline?userName='
+  COINS_LIFELINE_URL:'quiz/get-coins-lifeline?userName=',
+  GET_QUIZ_RANK: '/quiz/get-quiz-rank',
 };
 export const statusEnum={
   "pending": 1,

@@ -61,7 +61,8 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
   useEffect(() => {
     const imgPath = `${
       import.meta.env.VITE_PUBLIC_URL
-    }/ProfilePhoto/${username}/${username}.jpg`;
+    }ProfilePhoto/${username}/${username}.jpg?t=${new Date().getTime()}`;
+    console.log(imgPath);
     setFullImagePath(imgPath);
   }, [uploadCount]);
 
@@ -113,7 +114,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
         className={`${classes["nav-color"]}`}
       >
         <Toolbar>
-          <Link to="/">
+          <Link to="/admin-dashboard/upcoming">
             <img className={classes["logo-image"]} src={Logo} height={70} />
           </Link>
         </Toolbar>
@@ -125,49 +126,9 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             marginRight: "1rem",
           }}
         >
-            <Badge color="secondary" badgeContent={'+'}
-          sx={{
-            '.MuiBadge-badge':{
-              background:'#FFE110',
-              color:'black',
-              fontWeight:'900'
-            },
-          }}
-          >
-          <div className="bg-primary rounded-4 d-flex align-items-center justify-content-between">
-            <img
-              src={CoinIcon}
-              height={28}
-              sx={{ color: "yellow" }}
-              className="ms-2 me-3 my-2"
-            />
-            <small className="mx-2 fw-bold fs-5">3</small>
-          </div>
-          </Badge>
-          <Badge color="secondary" badgeContent={'+'}
-          sx={{
-            '.MuiBadge-badge':{
-              background:'#FFE110',
-              color:'black',
-              fontWeight:'900'
-            },
-          }}
-          >
-            <div className="bg-primary rounded-4 d-flex align-items-center justify-content-between">
-              <img
-                src={LifeLineIcons}
-                height={28}
-                sx={{ color: "yellow" }}
-                className={`ms-2 me-3 my-2`}
-              />
-              <small className="mx-2 fw-bold fs-5">20</small>
-            </div>
-          </Badge>
-          <p
-            className={`${classes["username"]} fs-5 mt-3 fw-semibold d-sm-inline d-none text-white`}
-          >
-            {username}
-          </p>
+         <p className={`${classes["username"]} fs-5 mt-3 fw-semibold d-sm-inline d-none`}> 
+              {username}
+            </p>
           <IconButton
             className="gap-2 rounded d-flex align-items-center"
             onClick={handleAvatarClick}
@@ -214,7 +175,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
             <MenuItem onClick={clickOnProfile}>
-              <Avatar /> Profile
+              <Avatar src={fullImagePath} /> Profile
             </MenuItem>
             <Divider />
             <MenuItem onClick={logoutHandler}>
