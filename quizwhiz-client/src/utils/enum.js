@@ -7,7 +7,7 @@ export const RoutePaths = {
   SignUp: "/sign-up",
   ForgotPassword: "/forgot-password",
   ResetPassword: "/reset-password",
-  AdminDashboard: "/admin-dashboard/upcoming",
+  AdminDashboard: "/admin-dashboard",
   Quizzes: "/quizzes",
   PageNotFound: "/page-not-found",
   MyProfile: "/my-profile",

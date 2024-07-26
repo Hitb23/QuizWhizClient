@@ -49,7 +49,7 @@ export const ROUTES = [
     roles: [Role.Admin, Role.Contestant, Role.Public],
   },
   {
-    path: "/admin-dashboard/:id",
+    path: "/admin-dashboard",
     element: <AdminDashboard />,
     roles: [Role.Admin],
   },
@@ -104,11 +104,7 @@ export const ROUTES = [
     element: <ViewQuizModal />,
     roles: [Role.Admin],
   },
-  {
-    path: "/admin-dashboard/:id/:quizLink",
-    element: <QuizDescription />,
-    roles: [Role.Admin, Role.Contestant, Role.Public],
-  },
+ 
   {
     path: "/live-quiz/:quizLink",
     element: <LiveQuiz />,

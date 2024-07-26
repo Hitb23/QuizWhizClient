@@ -64,6 +64,7 @@ const LiveQuiz = () => {
     conn.on(
       `ReceiveQuestion_${params.quizLink}`,
       (questionNo, question, timerSeconds, disqualifiedUsers) => {
+        
         if (questionNo) {
           console.log(username);
           setQuestionId(question?.question?.questionId);
@@ -82,6 +83,12 @@ const LiveQuiz = () => {
               setIsOut(true);
             }
         }
+        conn.on(
+          `IsDisqualified_FLP4rUCd`,
+          (IsDisaqualified) => {
+           console.log("Disqualified_user: ",IsDisaqualified);
+          }
+        );
       }
     );
 
@@ -98,13 +105,18 @@ const LiveQuiz = () => {
         }
       }
     );
-
-    conn.on(
-      `IsDisqualified_${params.quizLink}`,
+    if(conn){
+    console.log(conn.on(
+      `IsDisqualified_FLP4rUCd`,
       (IsDisaqualified) => {
-       console.log("Disqualified_user:");
-      }
+       console.log("Disqualified_user: ",IsDisaqualified);
+      })
     );
+    console.log("Inside If conditoin")
+    }
+    else{
+      console.log("connection failed by some error yeeehh")
+    }
 
     conn.on(`ReceiveTimerSeconds${params.quizLink}`, (timerSeconds) => {
       setIsLoading(false);

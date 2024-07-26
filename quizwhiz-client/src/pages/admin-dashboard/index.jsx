@@ -70,28 +70,25 @@ const AdminDashboard = () => {
   const [countOfUpcoming, SetCountOfUpcoming] = useState(null);
   const [countOfActive, SetCountOfActive] = useState(null);
   const [countOfCompleted, SetCountOfCompleted] = useState(null);
-
-  const [isLoading,setIsLoading]=useState(false);
+  const [currentState,setCurrentState]=useState("upcoming");
   const [IsModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
   const childRef = useRef(null);
   var username = "";
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-       
         setDifficulty(0);
         setCategory(0);
         SetCurrentPage(1);
         SetSearchedWord("");
         setUploadCount(uploadCount + 1);
-        setisLoading(false)
         const difficulties = await getDifficulties();
         const categories = await getCategories();
         const allData = await filterByCategory({
-          StatusId: statusEnum[params.id],
+          StatusId: statusEnum[currentState],
           DifficultyId: 0,
           CategoryId: 0,
           CurrentPage: 1,
@@ -109,7 +106,6 @@ const AdminDashboard = () => {
         SetCountOfCompleted(status?.data?.data?.CompletedCount);
         SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
         setRecords(allData?.data?.data?.Pagination?.RecordSize);
-        setIsLoading(false);
       } catch (error) {
         SetFilteredData([]);
         console.error("Error fetching data", error);
@@ -117,10 +113,8 @@ const AdminDashboard = () => {
     };
 
     fetchData();
-  }, [Records, params]);
- useEffect(()=>{
-   setisLoading(true);
- },[])
+  }, [Records, currentState]);
+
   const ModalOpenHandler = () => {
     setIsModalOpen(true);
   };
@@ -144,10 +138,10 @@ const AdminDashboard = () => {
   }, []);
 
   const navigateToCategory = (id) => {
-    setisLoading(true);
     SetFilteredData([]);
-    
-    navigate(`/admin-dashboard/${id}`);
+    SetPageSize(0);
+    setCurrentState(id);
+    // navigate(`/admin-dashboard/${id}`);
   };
 
   const handlePageSize = async (event) => {
@@ -165,7 +159,7 @@ const AdminDashboard = () => {
     setDifficulty(event.target.value);
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: event.target.value,
         CategoryId: category,
         CurrentPage: currentPage,
@@ -183,7 +177,7 @@ const AdminDashboard = () => {
     SetCurrentPage(value);
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: value,
@@ -198,7 +192,7 @@ const AdminDashboard = () => {
   const changeOrderOnClick = async (name, isDataAscending) => {
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: currentPage,
@@ -217,7 +211,7 @@ const AdminDashboard = () => {
     SetSearchedWord(searchedWord);
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: currentPage,
@@ -231,11 +225,10 @@ const AdminDashboard = () => {
     }
   };
 
-  
   const onDeleteHandler = async () => {
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: currentPage,
@@ -264,7 +257,7 @@ const AdminDashboard = () => {
     setCategory(e.target.value);
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: e.target.value,
         CurrentPage: currentPage,
@@ -301,7 +294,7 @@ const AdminDashboard = () => {
       />
       {/* Main Content */}
       <Box
-        className={`container ${classes['content']}`}
+        className={`container ${classes["content"]}`}
         component="main"
         sx={{ boxSizing: "border-box", p: 3 }}
         style={{ background: "white" }}
@@ -313,28 +306,28 @@ const AdminDashboard = () => {
             text="Upcoming"
             icon={faCalendarAlt}
             onClickHandler={navigateToCategory}
-            active={params.id}
+            active={currentState}
           />
           <CardComponent
             count={countOfActive}
             text="Active"
             icon={faPlay}
             onClickHandler={navigateToCategory}
-            active={params.id}
+            active={currentState}
           />
           <CardComponent
             count={countOfCompleted}
             text="Completed"
             icon={faCheckCircle}
             onClickHandler={navigateToCategory}
-            active={params.id}
+            active={currentState}
           />
           <CardComponent
             count={countOfPending}
             text="Pending"
             icon={faQuestionCircle}
             onClickHandler={navigateToCategory}
-            active={params.id}
+            active={currentState}
           />
         </div>
         <div className="row">
@@ -367,13 +360,12 @@ const AdminDashboard = () => {
                     borderColor: "#3d3189",
                   },
                   "& .MuiInputBase-input": {
-                    color: "#3d3189",
                   },
                 },
               }}
               InputLabelProps={{
                 sx: {
-                  color: "#3d3189", // Set initial label color
+                  // color: "#3d3189", // Set initial label color
                   paddingLeft: "0.2rem",
                   paddingRight: "0.2rem",
                   "&:hover": {
@@ -533,7 +525,7 @@ const AdminDashboard = () => {
         </div>
 
         <h4 className="ms-2 text-black my-3">
-          {params.id.substring(0, 1).toUpperCase() + params.id.substring(1)}{" "}
+          {currentState.substring(0, 1).toUpperCase() + currentState.substring(1)}{" "}
           Quiz
         </h4>
         <div className="row">
@@ -550,7 +542,7 @@ const AdminDashboard = () => {
             <QuizEditTable
               parentFunction={changeOrderOnClick}
               data={filteredData}
-              Status={params.id}
+              Status={currentState}
               reload={onDeleteHandler}
               onClose={onCloseHandler}
             />
@@ -562,16 +554,16 @@ const AdminDashboard = () => {
             // />
             <div className="d-flex justify-content-center align-items-center">
               {difficultyList.length <= 0 ? (
-
+                <HashLoader
+                  className="text-center me-2 mt-5"
+                  style={{ color: "#a89ee9" }}
+                />
+              ) : filteredData.length > 0 ? (
                 <HashLoader
                   className="text-center me-2 mt-5"
                   style={{ color: "#a89ee9" }}
                 />
               ) : (
-                filteredData.length>0 ?  <HashLoader
-                className="text-center me-2 mt-5"
-                style={{ color: "#a89ee9" }}
-              />:
                 <h2 style={{ color: "#3d3189" }}>No Data Found</h2>
               )}
             </div>
@@ -660,47 +652,49 @@ const AdminDashboard = () => {
           <MenuItem value={15}>15</MenuItem>
         </Select>
       </FormControl> */}
-            <Pagination
-              defaultPage={1}
-              siblingCount={1}
-              page={currentPage}
-              count={PageSize}
-              variant="outlined"
-              onChange={handlePageChange}
-              sx={{
-                "& .MuiButtonBase-root": {
-                  backgroundColor: "#fffff",
-                  color: "#21201e",
-                  border: "1px solid #21201e",
-                  marginTop: "10px",
-                  marginBottom: "10px",
-                  "&:hover": {
+            {PageSize > 0 && (
+              <Pagination
+                defaultPage={1}
+                siblingCount={1}
+                page={currentPage}
+                count={PageSize}
+                variant="outlined"
+                onChange={handlePageChange}
+                sx={{
+                  "& .MuiButtonBase-root": {
+                    backgroundColor: "#fffff",
+                    color: "#21201e",
+                    border: "1px solid #21201e",
+                    marginTop: "10px",
+                    marginBottom: "10px",
+                    "&:hover": {
+                      backgroundColor: "#3d3189",
+                      color: "white",
+                    },
+                  },
+                  "& .MuiPaginationItem-root.Mui-selected": {
                     backgroundColor: "#3d3189",
                     color: "white",
+                    border: "1px solid #21201e",
+                    "&:hover": {
+                      backgroundColor: "#a89ee9",
+                      color: "#000000",
+                    },
                   },
-                },
-                "& .MuiPaginationItem-root.Mui-selected": {
-                  backgroundColor: "#3d3189",
-                  color: "white",
-                  border: "1px solid #21201e",
-                  "&:hover": {
-                    backgroundColor: "#a89ee9",
-                    color: "#000000",
-                  },
-                },
-                "& .MuiPaginationItem-ellipsis": {
-                  fontWeight: "bolder",
-                  color: "#21201e",
-                  "&:hover": {
+                  "& .MuiPaginationItem-ellipsis": {
+                    fontWeight: "bolder",
                     color: "#21201e",
+                    "&:hover": {
+                      color: "#21201e",
+                    },
                   },
-                },
-                "@media (max-width: 600px)": {
-                  flexDirection: "column",
-                  rowGap: "10px",
-                },
-              }}
-            />
+                  "@media (max-width: 600px)": {
+                    flexDirection: "column",
+                    rowGap: "10px",
+                  },
+                }}
+              />
+            )}
           </div>
         )}
       </Box>
