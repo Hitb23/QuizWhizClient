@@ -24,7 +24,6 @@ import { CREATE_QUIZ_VALIDATIONS } from "../../../validations/createQuizValidati
 import { Formik, Form, Field } from "formik";
 import { styled } from "@mui/material/styles";
 import { Edit, Style } from "@mui/icons-material";
-import AddQuestions from "../add-questions";
 import Typography from "@mui/material/Typography";
 import classes from "./style.module.css";
 import { resolvePath, useNavigate } from "react-router-dom";
@@ -49,11 +48,9 @@ export default function EditQuizModal({ currentQuizLink }) {
   const [categoryDetails, setCategoryDetails] = useState([]);
   const [difficultyDetails, setDifficultyDetails] = useState([]);
   const navigate = useNavigate();
-  const [addQuestionsOpen1, setAddQuestionsOpen1] = useState(false);
   const [quizLink, setQuizLink] = useState("");
   const [quizDetail, setQuizDetail] = useState({});
   const [currentQuestionsCount, setCurrentQuestionsCount] = useState(0);
-
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -63,7 +60,6 @@ export default function EditQuizModal({ currentQuizLink }) {
   const handleClose = () => {
     setOpen(false);
     fetchData();
-    setAddQuestionsOpen1(false);
   };
 
   const validationSchema = yup.object().shape(CREATE_QUIZ_VALIDATIONS);
@@ -72,11 +68,13 @@ export default function EditQuizModal({ currentQuizLink }) {
       const difficultyData = await getDifficulties();
       const categoryData = await getCategories();
       const quizDetailResponse = await getQuizDetailsByLink(currentQuizLink);
-      const quizQuestions= await getQuizQuestions(currentQuizLink);
+      const quizQuestions = await getQuizQuestions(currentQuizLink);
       setCategoryDetails(categoryData.data.data);
       setDifficultyDetails(difficultyData.data.data);
       setQuizDetail(quizDetailResponse.data);
-      setCurrentQuestionsCount(quizQuestions.data.length)
+      if (quizQuestions != null ) {
+        setCurrentQuestionsCount(quizQuestions.data.length);
+      }
     } catch (error) {
       console.error("Error fetching data", error);
     }
@@ -99,13 +97,15 @@ export default function EditQuizModal({ currentQuizLink }) {
       WinningAmount: values.winningAmount,
       ScheduleDate: formattedDate,
     };
-
+ 
     console.log("send", sendData);
     try {
       var response = await updateQuizDetails(sendData);
       if (response && response.statusCode === 200) {
         toast.success("edited succesfully");
         console.log("success edit");
+      }else{
+        toast.error("Error While Editing");
       }
     } catch (error) {
       toast.error("Error While Editing");
@@ -288,7 +288,7 @@ export default function EditQuizModal({ currentQuizLink }) {
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                  <Grid item sm={4} xs={12}>
+                  <Grid item sm={8} xs={12}>
                     <Field
                       as={TextField}
                       disabled
@@ -329,7 +329,7 @@ export default function EditQuizModal({ currentQuizLink }) {
                       }
                     />
                   </Grid>
-                  <Grid item sm={4} xs={12}>
+                  {/* <Grid item sm={4} xs={12}>
                     <Field
                       as={TextField}
                       fullWidth
@@ -351,7 +351,7 @@ export default function EditQuizModal({ currentQuizLink }) {
                           : ""
                       }
                     />
-                  </Grid>
+                  </Grid> */}
                 </Grid>
 
                 <Grid container spacing={2}>
@@ -414,6 +414,7 @@ export default function EditQuizModal({ currentQuizLink }) {
                     name="scheduledDateTime"
                     label="Scheduled Date and Time"
                     value={values.scheduledDateTime}
+                    disabled
                     onChange={(value) =>
                       setFieldValue("scheduledDateTime", value)
                     }
@@ -442,7 +443,7 @@ export default function EditQuizModal({ currentQuizLink }) {
                 </LocalizationProvider>
               </DialogContent>
               <DialogActions>
-              <Button
+                <Button
                   onClick={handleClose}
                   type="button"
                   variant="outlined"
@@ -450,30 +451,13 @@ export default function EditQuizModal({ currentQuizLink }) {
                 >
                   Cancel
                 </Button>
-                <Button
-                  type="button"
-                  onClick={() => {
-                    console.log("add clicked");
-                    setAddQuestionsOpen1(true);                                                        
-                  }}
-                  sx={{ backgroundColor: "#6f41db" }}
-                  variant="contained"
-                  style={{display:currentQuestionsCount >= quizDetail.TotalQuestion ? "none" :"block"}}
-                >
-                  Add Questions
-                </Button>
+                <ViewQuizModal
+                  currentQuizLink={currentQuizLink}
+                  closeEditDialog={handleClose}
+                  openViewQuiz={false}
+                />
 
-               
-              
-                <ViewQuizModal currentQuizLink={currentQuizLink}  closeEditDialog={handleClose} />
-                {addQuestionsOpen1 && (
-                  <AddQuestions
-                    openDialog={true} 
-                    currentQuizLink={currentQuizLink}
-                    closeEditDialog={handleClose}
-                  />
-                )}
-                  <Button
+                <Button
                   onClick={handleSubmit}
                   variant="contained"
                   type="submit"

@@ -64,13 +64,17 @@ const QuizEditTable = ({ data, Status, reload, parentFunction }) => {
   };
 
  const OnPublishHandler = async (QuizLink)=>{
+  debugger;
   try{
-    debugger;
     const result = await PublishQuiz(QuizLink);
     console.log(result)
     if(result.statusCode === 200){
       navigate(RoutePaths.AdminDashboard)
       toast.success("Quiz Published Successfully")
+    }
+    else if(result.statusCode === 400){
+      navigate(RoutePaths.AdminDashboard)
+      toast.error(result.message)
     }
     else{
       toast.error("Failed To Publish Quiz")
