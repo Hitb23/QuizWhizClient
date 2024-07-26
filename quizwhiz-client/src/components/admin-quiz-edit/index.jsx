@@ -69,13 +69,17 @@ const QuizEditTable = ({ data, Status, reload, parentFunction, onClose }) => {
   };
 
   const OnPublishHandler = async (QuizLink) => {
+    debugger;
     try {
-      debugger;
       const result = await PublishQuiz(QuizLink);
       console.log(result);
       if (result.statusCode === 200) {
         navigate(RoutePaths.AdminDashboard);
         toast.success("Quiz Published Successfully");
+        reload();
+      } else if (result.statusCode === 400) {
+        navigate(RoutePaths.AdminDashboard);
+        toast.error(result.message);
       } else {
         toast.error("Failed To Publish Quiz");
       }
@@ -83,6 +87,7 @@ const QuizEditTable = ({ data, Status, reload, parentFunction, onClose }) => {
       toast.error("Error While Publishing The Quiz");
     }
   };
+
   const handleFormatDate = (date) => {
     const formattedDate = new Date(date).toLocaleDateString("en-US", {
       year: "numeric",

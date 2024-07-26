@@ -1,19 +1,12 @@
 .bgimage {
   background: #ffffff !important;
   min-height: 100vh !important;
-  max-width: 100% !important;
-  overflow: hidden;
+  width: 100% !important;
 }
 
 .content {
   flex: 1; /* Take up remaining space */
   overflow: auto; /* Enable scrolling if content overflows */
-}
-main {
-  min-height: 100%;
-}
-.h-100vh {
-  min-height: 100vh;
 }
 .total-category {
   cursor: pointer;

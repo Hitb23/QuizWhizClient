@@ -116,7 +116,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
       >
         <Toolbar>
 
-          <Link to="/admin-dashboard/upcoming">
+          <Link to="/admin-dashboard">
             <img className={classes["logo-image"]} src={Logo} height={70} />
           </Link>
         </Toolbar>

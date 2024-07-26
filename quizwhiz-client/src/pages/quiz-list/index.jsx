@@ -223,7 +223,7 @@ const Quizzes = () => {
   };
 
   const ViewDetailsHandler = (e) => {
-    navigate(`/admin-dashboard/${params.id}/${e}`);
+    navigate(`/admin-dashboard`);
   };
 
   const handleCategory = async (e) => {

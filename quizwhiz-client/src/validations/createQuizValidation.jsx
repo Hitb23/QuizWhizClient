@@ -18,14 +18,6 @@ export const CREATE_QUIZ_VALIDATIONS = {
     .min(1, "Marks per question must be at least 1")
     .max(10, "Marks per question must be at most 10"),
 
-  negativeMarksPerQuestion: yup
-    .number()
-    .nullable()
-    .max(
-      yup.ref("marksPerQuestion"),
-      "Negative marks per question cannot exceed marks per question"
-    ),
-
 
   totalQuestions: yup
     .number()
@@ -39,16 +31,4 @@ export const CREATE_QUIZ_VALIDATIONS = {
 
   totalMarks: yup.number().nullable(),
 
-  minMarks: yup
-    .number()
-    .nullable()
-    .test(
-      "max-minMarks",
-      "Min marks cannot exceed total marks",
-      function (value) {
-        const { totalQuestions, marksPerQuestion } = this.parent;
-        const totalMarks = totalQuestions * marksPerQuestion;
-        return value === null || value <= totalMarks;
-      }
-    ),
 };

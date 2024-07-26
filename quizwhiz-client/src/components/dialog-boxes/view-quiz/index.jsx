@@ -20,8 +20,8 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ViewQuizModal({ currentQuizLink , closeEditDialog}) {
-  const [open, setOpen] = useState(false);
+export default function ViewQuizModal({ currentQuizLink , closeEditDialog, openViewQuiz, addQueChange  }) {
+  const [open, setOpen] = useState(openViewQuiz);
   const [quizDetail, setQuizDetail] = useState({});
 
   const handleClickOpen = () => {
@@ -31,6 +31,9 @@ export default function ViewQuizModal({ currentQuizLink , closeEditDialog}) {
   const handleClose = () => {
     setOpen(false);
     closeEditDialog();
+   if(addQueChange != null) {
+    addQueChange();
+   } 
   };
 
   useEffect(() => {
@@ -86,7 +89,9 @@ export default function ViewQuizModal({ currentQuizLink , closeEditDialog}) {
             </Button>
           </Toolbar>
         </AppBar>
+        <div className="mt-5">
         <ViewQuizQuestions currentQuizLink={currentQuizLink}  />
+        </div>
       </Dialog>
     </Fragment>
   );

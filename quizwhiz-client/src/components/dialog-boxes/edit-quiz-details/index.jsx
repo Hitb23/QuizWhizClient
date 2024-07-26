@@ -24,7 +24,6 @@ import { CREATE_QUIZ_VALIDATIONS } from "../../../validations/createQuizValidati
 import { Formik, Form, Field } from "formik";
 import { styled } from "@mui/material/styles";
 import { Edit, Style } from "@mui/icons-material";
-import AddQuestions from "../add-questions";
 import Typography from "@mui/material/Typography";
 import classes from "./style.module.css";
 import { resolvePath, useNavigate } from "react-router-dom";
@@ -49,7 +48,6 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
   const [categoryDetails, setCategoryDetails] = useState([]);
   const [difficultyDetails, setDifficultyDetails] = useState([]);
   const navigate = useNavigate();
-  const [addQuestionsOpen1, setAddQuestionsOpen1] = useState(false);
   const [quizLink, setQuizLink] = useState("");
   const [quizDetail, setQuizDetail] = useState({});
   const [currentQuestionsCount, setCurrentQuestionsCount] = useState(0);
@@ -62,7 +60,6 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
   const handleClose = () => {
     setOpen(false);
     fetchData();
-    setAddQuestionsOpen1(false);
     onClose();
   };
 
@@ -99,20 +96,20 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
       WinningAmount: values.winningAmount,
       ScheduleDate: formattedDate,
     };
-
+ 
     console.log("send", sendData);
     try {
       var response = await updateQuizDetails(sendData);
       if (response && response.statusCode === 200) {
-        toast.success("edited succesfully");
-        console.log("success edit");
+        toast.success("Quiz edited succesfully");
+      }else{
+        toast.error("Error While Editing");
       }
     } catch (error) {
       toast.error("Error While Editing");
       console.error("Error creating quiz", error);
     }
     handleClose();
-    navigate(`/admin-dashboard/pending`);
   };
 
   return (
@@ -288,7 +285,7 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                  <Grid item sm={4} xs={12}>
+                  <Grid item sm={8} xs={12}>
                     <Field
                       as={TextField}
                       disabled
@@ -329,7 +326,7 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
                       }
                     />
                   </Grid>
-                  <Grid item sm={4} xs={12}>
+                  {/* <Grid item sm={4} xs={12}>
                     <Field
                       as={TextField}
                       fullWidth
@@ -351,7 +348,7 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
                           : ""
                       }
                     />
-                  </Grid>
+                  </Grid> */}
                 </Grid>
 
                 <Grid container spacing={2}>
@@ -414,6 +411,7 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
                     name="scheduledDateTime"
                     label="Scheduled Date and Time"
                     value={values.scheduledDateTime}
+                    disabled
                     onChange={(value) =>
                       setFieldValue("scheduledDateTime", value)
                     }
@@ -450,35 +448,11 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
                 >
                   Cancel
                 </Button>
-                <Button
-                  type="button"
-                  onClick={() => {
-                    console.log("add clicked");
-                    setAddQuestionsOpen1(true);
-                  }}
-                  sx={{ backgroundColor: "#6f41db" }}
-                  variant="contained"
-                  style={{
-                    display:
-                      currentQuestionsCount >= quizDetail.TotalQuestion
-                        ? "none"
-                        : "block",
-                  }}
-                >
-                  Add Questions
-                </Button>
-
                 <ViewQuizModal
                   currentQuizLink={currentQuizLink}
                   closeEditDialog={handleClose}
+                  openViewQuiz={false}
                 />
-                {addQuestionsOpen1 && (
-                  <AddQuestions
-                    openDialog={true}
-                    currentQuizLink={currentQuizLink}
-                    closeEditDialog={handleClose}
-                  />
-                )}
                 <Button
                   onClick={handleSubmit}
                   variant="contained"
