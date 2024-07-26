@@ -2,15 +2,17 @@
   padding: 0.9rem 2.1rem;
   font-size: 20px;
   height: 58px;
-  background-color: #fada65;
-  color: #000000;
+  font-weight: 600;
+  background-color: #A89EE9;
+  color: #3d3189;
   border-radius: 0.5rem;
-  border: 1px solid #fada65;
+  border: none;
 }
 
 .add-quiz-btn:hover {
   background: none;
-  color: #fada65;
+  color: white;
+  background-color: #9789f1;
 }
 .dialog-title {
   background-color: #fada65;

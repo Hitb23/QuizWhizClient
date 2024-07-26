@@ -44,8 +44,7 @@ import EditQuizModal from "../../components/dialog-boxes/edit-quiz-details";
 import QuizEditTable from "../../components/admin-quiz-edit";
 import { HashLoader } from "react-spinners";
 import { ToastContainer } from "react-toastify";
-
-
+import Quiz from "../QuizHub";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -73,6 +72,8 @@ const AdminDashboard = () => {
   const [countOfUpcoming, SetCountOfUpcoming] = useState(null);
   const [countOfActive, SetCountOfActive] = useState(null);
   const [countOfCompleted, SetCountOfCompleted] = useState(null);
+  const [currentState, setCurrentState] = useState("upcoming");
+  const [IsModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
   var username = "";
@@ -84,13 +85,11 @@ const AdminDashboard = () => {
         setCategory(0);
         SetCurrentPage(1);
         SetSearchedWord("");
-
         setUploadCount(uploadCount + 1);
-
         const difficulties = await getDifficulties();
         const categories = await getCategories();
         const allData = await filterByCategory({
-          StatusId: statusEnum[params.id],
+          StatusId: statusEnum[currentState],
           DifficultyId: 0,
           CategoryId: 0,
           CurrentPage: 1,
@@ -115,8 +114,16 @@ const AdminDashboard = () => {
     };
 
     fetchData();
-  }, [Records, params]);
+  }, [Records, currentState, IsModalOpen]);
 
+  const ModalOpenHandler = () => {
+    setIsModalOpen(true);
+  };
+
+  const onCloseHandler = () => {
+    setIsModalOpen(false);
+    setRecords(1);
+  };
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
@@ -133,7 +140,10 @@ const AdminDashboard = () => {
   }, []);
 
   const navigateToCategory = (id) => {
-    navigate(`/admin-dashboard/${id}`);
+    SetFilteredData([]);
+    SetPageSize(0);
+    setCurrentState(id);
+    // navigate(`/admin-dashboard`);
   };
 
   const handlePageSize = async (event) => {
@@ -151,7 +161,7 @@ const AdminDashboard = () => {
     setDifficulty(event.target.value);
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: event.target.value,
         CategoryId: category,
         CurrentPage: currentPage,
@@ -166,14 +176,31 @@ const AdminDashboard = () => {
   };
 
   const handlePageChange = async (event, value) => {
-    SetCurrentPage(currentPage);
+    SetCurrentPage(value);
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: value,
         SearchValue: searchedWord,
+      });
+      SetFilteredData(result.data.data.GetQuizzes);
+    } catch (error) {
+      SetFilteredData([]);
+    }
+  };
+
+  const changeOrderOnClick = async (name, isDataAscending) => {
+    try {
+      const result = await filterByCategory({
+        StatusId: statusEnum[currentState],
+        DifficultyId: difficulty,
+        CategoryId: category,
+        CurrentPage: currentPage,
+        SearchValue: searchedWord,
+        IsAscending: isDataAscending,
+        FilterBy: name,
       });
       SetFilteredData(result.data.data.GetQuizzes);
     } catch (error) {
@@ -186,7 +213,7 @@ const AdminDashboard = () => {
     SetSearchedWord(searchedWord);
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: currentPage,
@@ -200,13 +227,10 @@ const AdminDashboard = () => {
     }
   };
 
-  const ViewDetailsHandler = (e) => {
-    navigate(`/admin-dashboard/${params.id}/${e}`);
-  };
   const onDeleteHandler = async () => {
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: currentPage,
@@ -217,24 +241,23 @@ const AdminDashboard = () => {
       console.log("error:", error);
       SetFilteredData([]);
     }
-    try{
-        const status = await getAllStatusCount();
-        SetCountOfPending(status?.data?.data?.PendingCount);
-        SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
-        SetCountOfActive(status?.data?.data?.ActiveCount);
-        SetCountOfCompleted(status?.data?.data?.CompletedCount);
-        SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
-        setRecords(allData?.data?.data?.Pagination?.RecordSize);
-    }
-    catch(error){
-       console.log(error)
+    try {
+      const status = await getAllStatusCount();
+      SetCountOfPending(status?.data?.data?.PendingCount);
+      SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
+      SetCountOfActive(status?.data?.data?.ActiveCount);
+      SetCountOfCompleted(status?.data?.data?.CompletedCount);
+      SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
+      setRecords(allData?.data?.data?.Pagination?.RecordSize);
+    } catch (error) {
+      console.log(error);
     }
   };
   const handleCategory = async (e) => {
     setCategory(e.target.value);
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: e.target.value,
         CurrentPage: currentPage,
@@ -250,9 +273,8 @@ const AdminDashboard = () => {
 
   return (
     <div
-      className={`${classes[" "]} ${classes["specific-page"]} d-flex m-0 bg-white`}
+      className={`${classes["bgimage"]} d-flex m-0 bg-white`}
     >
-      
       <CssBaseline />
       {/* Admin offcanvas with navbar */}
       <AdminSlider
@@ -263,7 +285,7 @@ const AdminDashboard = () => {
       />
       {/* Main Content */}
       <Box
-        className={`container ${classes["h-100vh"]}`}
+        className={`container ${classes["content"]}`}
         component="main"
         sx={{ boxSizing: "border-box", p: 3 }}
         style={{ background: "white" }}
@@ -275,28 +297,28 @@ const AdminDashboard = () => {
             text="Upcoming"
             icon={faCalendarAlt}
             onClickHandler={navigateToCategory}
-            active={params.id}
+            active={currentState}
           />
           <CardComponent
             count={countOfActive}
             text="Active"
             icon={faPlay}
             onClickHandler={navigateToCategory}
-            active={params.id}
+            active={currentState}
           />
           <CardComponent
             count={countOfCompleted}
             text="Completed"
             icon={faCheckCircle}
             onClickHandler={navigateToCategory}
-            active={params.id}
+            active={currentState}
           />
           <CardComponent
             count={countOfPending}
             text="Pending"
             icon={faQuestionCircle}
             onClickHandler={navigateToCategory}
-            active={params.id}
+            active={currentState}
           />
         </div>
         <div className="row">
@@ -327,9 +349,6 @@ const AdminDashboard = () => {
                   "&.Mui-focused fieldset": {
                     border: "1px solid #21201e",
                     borderColor: "#21201e",
-                  },
-                  "& .MuiInputBase-input": {
-                    color: "#21201e",
                   },
                 },
               }}
@@ -464,14 +483,16 @@ const AdminDashboard = () => {
               </Select>
             </FormControl>
           </div>
+
           <div className="col-lg-6 mb-4 col-sm-6 col-12 d-flex justify-content-end">
             <CreateQuizModal />
           </div>
         </div>
 
         <h4 className="ms-2 text-black my-3">
-          {params.id.substring(0, 1).toUpperCase() + params.id.substring(1)}{" "}
-          Contest
+          {currentState.substring(0, 1).toUpperCase() +
+            currentState.substring(1)}{" "}
+          Quiz
         </h4>
         <div className="row">
           {filteredData.length > 0 ? (
@@ -486,9 +507,9 @@ const AdminDashboard = () => {
             // />
             <QuizEditTable
               data={filteredData}
-              Status={params.id}
+              Status={currentState}
               reload={onDeleteHandler}
-              
+              onClose={onCloseHandler}
             />
           ) : (
             // <img
@@ -566,50 +587,80 @@ const AdminDashboard = () => {
                 <MenuItem value={15}>15 </MenuItem>
               </Select>
             </FormControl>
-            <Pagination
-              defaultPage={1}
-              siblingCount={1}
-              count={PageSize}
-              variant="outlined"
-              onChange={handlePageChange}
-              sx={{
-                "& .MuiButtonBase-root": {
-                  backgroundColor: "#fffff",
-                  color: "#21201e",
-                  border: "1px solid #21201e",
-                  marginTop: "10px",
-                  marginBottom: "10px",
-                  "&:hover": {
-                    backgroundColor: "#ffe541",
-                    color: "#000000",
-                  },
-                },
-                "& .MuiPaginationItem-root.Mui-selected": {
-                  backgroundColor: "#ffe541",
-                  color: "#000000",
-                  border: "1px solid #21201e",
-                  "&:hover": {
-                    backgroundColor: "#ffe541",
-                    color: "#000000",
-                  },
-                },
-                "& .MuiPaginationItem-ellipsis": {
-                  fontWeight: "bolder",
-                  color: "#21201e",
-                  "&:hover": {
+            {/* <select class="form-select form-select-lg mb-3"  aria-label=".form-select-lg example"  value={Records}
+                onChange={handlePageSize}>
+          <option value={5}>5</option>
+          <option value={10}>10</option>
+          <option value={15}>15</option>
+        </select> */}
+            {/* <FormControl sx={{ m: 1, minWidth: 80 }}>
+        <InputLabel id="demo-simple-select-autowidth-label">Records</InputLabel>
+        <Select
+          labelId="demo-simple-select-autowidth-label"
+          id="demo-simple-select-autowidth"
+          value={Records}
+                onChange={handlePageSize}
+          autoWidth
+          label="Records"
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          <MenuItem value={5}>5</MenuItem>
+          <MenuItem value={10}>10</MenuItem>
+          <MenuItem value={15}>15</MenuItem>
+        </Select>
+      </FormControl> */}
+            {PageSize > 0 && (
+              <Pagination
+                defaultPage={1}
+                siblingCount={1}
+                page={currentPage}
+                count={PageSize}
+                variant="outlined"
+                onChange={handlePageChange}
+                sx={{
+                  "& .MuiButtonBase-root": {
+                    backgroundColor: "#fffff",
                     color: "#21201e",
+                    border: "1px solid #21201e",
+                    marginTop: "10px",
+                    marginBottom: "10px",
+                    "&:hover": {
+                      backgroundColor: "#3d3189",
+                      color: "white",
+                    },
                   },
-                },
-                "@media (max-width: 600px)": {
-                  flexDirection: "column",
-                  rowGap: "10px",
-                },
-              }}
-            />
+                  "& .MuiPaginationItem-root.Mui-selected": {
+                    backgroundColor: "#3d3189",
+                    color: "white",
+                    border: "1px solid #21201e",
+                    "&:hover": {
+                      backgroundColor: "#a89ee9",
+                      color: "#000000",
+                    },
+                  },
+                  "& .MuiPaginationItem-ellipsis": {
+                    fontWeight: "bolder",
+                    color: "#21201e",
+                    "&:hover": {
+                      color: "#21201e",
+                    },
+                  },
+                  "@media (max-width: 600px)": {
+                    flexDirection: "column",
+                    rowGap: "10px",
+                  },
+                }}
+              />
+            )}
           </div>
         )}
       </Box>
-      <ToastContainer/>
+      <ToastContainer />
+      {IsModalOpen ? (
+        <Quiz IsOpen={false} onCloseHandler={onCloseHandler} />
+      ) : null}
     </div>
   );
 };

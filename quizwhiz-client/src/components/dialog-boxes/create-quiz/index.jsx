@@ -51,7 +51,7 @@ export default function CreateQuizModal() {
   const handleClose = () => {
     setOpen(false);
     if (addQuestionsOpen != true) {
-      navigate(`/admin-dashboard/pending`);
+      navigate(`/admin-dashboard`);
     }
   };
 
@@ -110,7 +110,7 @@ export default function CreateQuizModal() {
             console.log(response.data);
             setQuizLink(response.data);
           } else {
-            navigate(`/admin-dashboard/pending`);
+            navigate(`/admin-dashboard`);
           }
         });
         resetForm();
@@ -384,7 +384,7 @@ export default function CreateQuizModal() {
                   <Field
                     as={DateTimePicker}
                     name="scheduledDateTime"
-                    label="Scheduled Date and Time"
+                    label="Schedule Date and Time"
                     value={values.scheduledDateTime}
                     onChange={(value) =>
                       setFieldValue("scheduledDateTime", value)

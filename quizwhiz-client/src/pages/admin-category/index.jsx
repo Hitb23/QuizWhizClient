@@ -123,7 +123,7 @@ const AdminDashboard = () => {
   
   const navigateToCategory = (id) => {
     if (id === "upcoming") navigate(`/admin-dashboard`);
-    else navigate(`/admin-dashboard/${id}`);
+    else navigate(`/admin-dashboard`);
   };
 
   const handlePageSize = async (event) => {

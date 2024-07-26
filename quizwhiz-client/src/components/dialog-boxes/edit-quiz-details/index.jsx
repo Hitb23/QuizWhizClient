@@ -43,7 +43,7 @@ import { ToastContainer, toast } from "react-toastify";
 import ViewQuizModal from "../view-quiz/index";
 import { display } from "@mui/system";
 
-export default function EditQuizModal({ currentQuizLink }) {
+export default function EditQuizModal({ currentQuizLink, onClose }) {
   const [open, setOpen] = React.useState(false);
   const [categoryDetails, setCategoryDetails] = useState([]);
   const [difficultyDetails, setDifficultyDetails] = useState([]);
@@ -60,6 +60,7 @@ export default function EditQuizModal({ currentQuizLink }) {
   const handleClose = () => {
     setOpen(false);
     fetchData();
+    onClose();
   };
 
   const validationSchema = yup.object().shape(CREATE_QUIZ_VALIDATIONS);
@@ -72,9 +73,7 @@ export default function EditQuizModal({ currentQuizLink }) {
       setCategoryDetails(categoryData.data.data);
       setDifficultyDetails(difficultyData.data.data);
       setQuizDetail(quizDetailResponse.data);
-      if (quizQuestions != null ) {
-        setCurrentQuestionsCount(quizQuestions.data.length);
-      }
+      setCurrentQuestionsCount(quizQuestions?.data?.length);
     } catch (error) {
       console.error("Error fetching data", error);
     }
@@ -102,8 +101,7 @@ export default function EditQuizModal({ currentQuizLink }) {
     try {
       var response = await updateQuizDetails(sendData);
       if (response && response.statusCode === 200) {
-        toast.success("edited succesfully");
-        console.log("success edit");
+        toast.success("Quiz edited succesfully");
       }else{
         toast.error("Error While Editing");
       }
@@ -112,7 +110,6 @@ export default function EditQuizModal({ currentQuizLink }) {
       console.error("Error creating quiz", error);
     }
     handleClose();
-    navigate(`/admin-dashboard/pending`);
   };
 
   return (
@@ -456,7 +453,6 @@ export default function EditQuizModal({ currentQuizLink }) {
                   closeEditDialog={handleClose}
                   openViewQuiz={false}
                 />
-
                 <Button
                   onClick={handleSubmit}
                   variant="contained"

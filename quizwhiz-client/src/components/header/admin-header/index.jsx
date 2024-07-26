@@ -36,7 +36,8 @@ import {
   StarBorder,
 } from "@mui/icons-material";
 import { IoNotificationsOutline } from "react-icons/io5";
-
+import CoinIcon from "../../../assets/coins-logo.svg";
+import LifeLineIcons from "../../../assets/lifeline.svg";
 import { Link } from "react-router-dom";
 import { DrawerHeader, AppBar, Drawer } from "../../admin-components/index";
 import { RoutePaths } from "../../../utils/enum";
@@ -44,6 +45,7 @@ import jwtDecoder from "../../../services/jwtDecoder";
 import { bindActionCreators } from "redux";
 import { userActions } from "../../../redux/action-creators";
 import { useDispatch } from "react-redux";
+import { ROUTES } from "../../../constants/Routes";
 
 const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
   const [open, setOpen] = React.useState(false);
@@ -60,7 +62,8 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
   useEffect(() => {
     const imgPath = `${
       import.meta.env.VITE_PUBLIC_URL
-    }/ProfilePhoto/${username}/${username}.jpg`;
+    }ProfilePhoto/${username}/${username}.jpg?t=${new Date().getTime()}`;
+    console.log(imgPath);
     setFullImagePath(imgPath);
   }, [uploadCount]);
 
@@ -112,7 +115,8 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
         className={`${classes["nav-color"]}`}
       >
         <Toolbar>
-          <Link to="/">
+
+          <Link to="/admin-dashboard">
             <img className={classes["logo-image"]} src={Logo} height={70} />
           </Link>
         </Toolbar>
@@ -124,32 +128,13 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             marginRight: "1rem",
           }}
         >
-          <Badge
-            badgeContent={4}
-            sx={{
-              cursor: "pointer",
-              "& .MuiBadge-badge": {
-                background: "#3D3189",
-                color: "#fada65", // This sets the text color of the badge
-              },
-            }}
-          >
-            <IoNotificationsOutline
-              color="#fada65"
-              background="#3D3189"
-              border="2px solid #3D3189"
-              size={30}
-            />
-          </Badge>
+         <p className={`${classes["username"]} fs-5 mt-3 fw-semibold d-sm-inline d-none`}> 
+              {username}
+            </p>
           <IconButton
             className="gap-2 rounded d-flex align-items-center"
             onClick={handleAvatarClick}
           >
-            <p
-              className={`${classes["username"]} fs-5 mt-3 px-3 fw-semibold d-sm-inline d-none`}
-            >
-              {username}
-            </p>
             <Avatar
               sx={{ background: "#5f071c", cursor: "pointer" }}
               src={fullImagePath}
@@ -192,7 +177,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
             <MenuItem onClick={clickOnProfile}>
-              <Avatar /> Profile
+              <Avatar src={fullImagePath} /> Profile
             </MenuItem>
             <Divider />
             <MenuItem onClick={logoutHandler}>

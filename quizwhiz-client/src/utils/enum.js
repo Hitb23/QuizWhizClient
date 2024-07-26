@@ -7,7 +7,7 @@ export const RoutePaths = {
   SignUp: "/sign-up",
   ForgotPassword: "/forgot-password",
   ResetPassword: "/reset-password",
-  AdminDashboard: "/admin-dashboard/upcoming",
+  AdminDashboard: "/admin-dashboard",
   Quizzes: "/quizzes",
   PageNotFound: "/page-not-found",
   MyProfile: "/my-profile",
@@ -52,7 +52,9 @@ export const API_URLS = {
   GET_COUNT_OF_QUESTIONS: '/quiz/get-count-of-questions',
   QUIZ_DETAILS:'/quiz/get-quiz-details?quizLink=',
   DELETE_QUIZ:'/quiz/delete-quiz?quizLink=',
-  PUBLISH_QUIZ:'/quiz/publish-quiz?quizLink='
+  PUBLISH_QUIZ:'/quiz/publish-quiz?quizLink=',
+  COINS_LIFELINE_URL:'quiz/get-coins-lifeline?userName=',
+  GET_QUIZ_RANK: '/quiz/get-quiz-rank',
 };
 export const statusEnum={
   "pending": 1,
