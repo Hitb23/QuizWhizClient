@@ -263,6 +263,7 @@ const Quizzes = () => {
       SetFilteredData(filteredData);
       SetPageSize(result?.data?.data?.Pagination?.TotalPages);
       SetCurrentPage(1);
+      
     } catch (error) {
       SetFilteredData([]);
     }

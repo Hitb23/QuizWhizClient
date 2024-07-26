@@ -95,7 +95,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
     }
 
     localStorage.removeItem("token");
-    navigate(RoutePaths.Login);
+    navigate(RoutePaths.AdminLogin);
   };
   return (
     <>

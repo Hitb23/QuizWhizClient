@@ -1,3 +1,9 @@
+.live-quiz-div {
+  background-color: #ffffff;
+  min-height: 100vh;
+  min-width: 100vw;
+}
+
 .full-screen {
   min-height: 100vh;
   backdrop-filter: blur(1.8px);
@@ -7,24 +13,24 @@
 }
 
 .black-font{
-  color: #fada65;
+  color: #3d3189;
 }
 
 .log-in-title {
-  color: #fada65;
+  color: #3d3189;
   font-size: 50px;
   padding-top: 1rem;
 }
 
 .form-input {
-  background-color: #fbf5dd !important;
-  border: 1px solid #fada65 !important;
+  background-color: #f4f2ff !important;
+  border: 1px solid #3d3189 !important;
 }
 
 .form-input:focus,
 .form-input:hover {
-    outline: 1px solid #f0c20c !important;
-    border: 1px solid #f0c20c !important;
+    outline: 1px solid #140a55 !important;
+    border: 1px solid #140a55 !important;
     box-shadow: 0 0 16px 0 rgba(228, 55, 55, 0.18), 0 2px 4px 0 rgba(228, 55, 55, 0.12) !important;
 }
 
@@ -32,27 +38,27 @@
 .log-in-label {
   font-size: 18px;
   cursor: pointer;
-  color: #fada65;
+  color: #3d3189;
 }
 
 .log-in-label-selected {
-  color: #fada65;
+  color: #3d3189;
   text-decoration: underline;
 }
 
 .log-in-button {
   padding: 0.8rem 2.5rem 0.8rem 2.5rem;
   font-size: 20px;
-  background-color: #fada65;
-  color: #000000;
+  background-color: #3d3189;
+  color: #ffffff;
   border-radius: 0.5rem;
-  border: 1px solid #fada65;
+  border: 1px solid #3d3189;
 }
 
 .log-in-button:hover {
-  background-color: #6F41DB;
-  color: #fada65;
-  border: 1px solid #fada65;
+  background-color: #ffffff;
+  color: #3d3189;
+  border: 1px solid #3d3189;
 }
 
 .disabled-button{
@@ -66,7 +72,7 @@
 .visibility-toggle {
   position: absolute;
   right: 10px;
-  background: #fbf5dd;
+  background: none;
   border: none;
   cursor: pointer;
 }
@@ -79,11 +85,11 @@
 
 .error-message {
   font-size: 17px;
-  color: #fada65 !important;
+  color: #3d3189 !important;
 }
 
 .link-message {
-  color: #fada65;
+  color: #3d3189;
   padding-top: 0.15rem;
 }
 

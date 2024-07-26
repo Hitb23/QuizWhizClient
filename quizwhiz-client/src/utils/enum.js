@@ -11,7 +11,7 @@ export const RoutePaths = {
   Quizzes: "/quizzes",
   PageNotFound: "/page-not-found",
   MyProfile: "/my-profile",
-  AdminLogin: "/admin-login",
+  AdminLogin: "/admin/login",
   CreateNewQuiz:"/create-new-quiz",
   GetQuizDetails:"/get-quiz-details",
   AddQuizQuestions:"/add-quiz-questions",

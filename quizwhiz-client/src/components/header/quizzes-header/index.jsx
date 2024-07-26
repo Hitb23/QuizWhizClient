@@ -56,11 +56,10 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setFullImagePath(
-      `${
-        import.meta.env.VITE_PUBLIC_URL
-      }ProfilePhoto/${userName}/${userName}.jpg?${uploadCount}`
-    );
+    const imgPath = `${
+      import.meta.env.VITE_PUBLIC_URL
+    }ProfilePhoto/${username}/${username}.jpg?t=${new Date().getTime()}`;
+    setFullImagePath(imgPath);
   }, [uploadCount]);
 
   const handleDrawerOpen = () => {

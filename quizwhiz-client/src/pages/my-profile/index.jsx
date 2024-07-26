@@ -162,7 +162,6 @@ const MyProfile = () => {
     if (roleName == "Admin") {
       setIsAdmin(true);
     }
-    console.log("Username in dashboard: " + username);
     setUserName(username);
     setEmail(data.Email);
 
@@ -172,7 +171,6 @@ const MyProfile = () => {
         import.meta.env.VITE_PUBLIC_URL
       }/ProfilePhoto/${username}/${username}.jpg`;
       setFullImagePath(imgPath);
-      console.log("Fetched path : " + imgPath);
       try {
         const response = await getUserDetails(username);
         setFirstName(response.data.data.FirstName);
@@ -204,30 +202,37 @@ const MyProfile = () => {
 
   const handleImageUpload = async (event) => {
     const ProfilePhoto = event.target.files[0];
-    if (ProfilePhoto) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        console.log("FileReader onload called");
-        setImage(e.target.result); // Update state
-        console.log("Count", uploadCount);
-        setUploadKey(Date.now());
-      };
-      reader.readAsDataURL(ProfilePhoto);
-      const data = jwtDecoder();
-      const Username = data.Username;
-      const imgPath = `${
-        import.meta.env.VITE_PUBLIC_URL
-      }ProfilePhoto/${Username}/${Username}.jpg`;
-      setFullImagePath(imgPath);
-    }
-
+  
     try {
       const data = jwtDecoder();
       const Username = data.Username;
       const response = await uploadProfilePhoto(ProfilePhoto, Username);
       setUploadCount(uploadCount + 1);
+      console.log(response.status);
+      if (ProfilePhoto && response.status == 200) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setImage(e.target.result); // Update state
+          setUploadKey(Date.now());
+        };
+        reader.readAsDataURL(ProfilePhoto);
+        const data = jwtDecoder();
+        const Username = data.Username;
+        const imgPath = `${
+          import.meta.env.VITE_PUBLIC_URL
+        }ProfilePhoto/${Username}/${Username}.jpg`;
+        setFullImagePath(imgPath);
+        toast.success("Profile Photo Changed Successfully.", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+      }
     } catch (error) {
       console.log(error);
+      toast.error("Only JPGs are allowed.", {
+        position: "top-right",
+        autoClose: 5000,
+      });
     }
   };
 
@@ -258,9 +263,13 @@ const MyProfile = () => {
     }
   };
 
-  const handleCancelClick = ({ resetForm }) => {
+  const handleCancelClick = () => {
     formik.setTouched([]);
     setIsEditable(false);
+    formik.values.firstName = firstName;
+    formik.values.lastName = lastName;
+    formik.values.phoneNumber = phoneNumber;
+    formik.values.country = country;
   };
 
   // const theme = useTheme();
@@ -302,7 +311,7 @@ const MyProfile = () => {
   };
 
   return (
-    <main className={`${isAdmin ? classes["admin-profile"] : ""} container`} >
+    <main className={`${isAdmin ? classes["admin-profile"] : ""} container`}>
       <Box
         sx={{
           display: "flex",
@@ -328,7 +337,9 @@ const MyProfile = () => {
             userName={jwtDecoder().userName}
           />
         )}
-        <div className={`row container-fluid px-0 ${classes["main-box"]} min-vh-100`}>
+        <div
+          className={`row container-fluid px-0 ${classes["main-box"]} min-vh-100`}
+        >
           <div
             className={`col-lg-6 col-12 d-flex flex-column align-items-center justify-content-center ${classes["profile-photo-div"]}`}
           >
@@ -360,7 +371,7 @@ const MyProfile = () => {
           >
             <form
               onSubmit={formik.handleSubmit}
-              onReset={formik.resetForm}
+              onReset={formik.handleReset}
               className={`col-lg-8 col-md-6 col-sm-8 col-10`}
             >
               {/* <Field
@@ -402,7 +413,7 @@ const MyProfile = () => {
 
               <div className={`col-md-12`}>
                 <label
-                  htmlFor="firstName"
+                  htmlFor="email"
                   className={`mt-3 form-label w-100 fw-bold ${
                     isAdmin
                       ? classes["admin-label-font"]
@@ -417,7 +428,7 @@ const MyProfile = () => {
                       ? classes["admin-input-field"]
                       : classes["input-field"]
                   } form-control`}
-                  name="firstName"
+                  name="email"
                   variant="outlined"
                   value={email}
                   onChange={formik.handleChange}

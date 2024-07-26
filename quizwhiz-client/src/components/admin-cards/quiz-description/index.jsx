@@ -110,7 +110,8 @@ const QuizDescription = ({ quizLink, modalClose }) => {
           fontWeight="lg"
           mb={1}
         >
-          {title}
+          {title.substring(0, 30) } 
+          {title.length > 30 && '...'}
         </Typography>
         <div className="m-2">
           <div className="row p-0">
@@ -123,7 +124,8 @@ const QuizDescription = ({ quizLink, modalClose }) => {
                   textColor="#fada65"
                   className="col-md-10 w-100"
                 >
-                  {description}
+                  {description.substring(0, 280) } 
+                  {description.length > 280 && '...'}
                 </Typography>
               </div>
             </div>

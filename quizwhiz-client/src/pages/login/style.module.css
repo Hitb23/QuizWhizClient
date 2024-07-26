@@ -68,7 +68,7 @@
 .visibility-toggle {
   position: absolute;
   right: 10px;
-  background: #fbf5dd;
+  background: none;
   border: none;
   cursor: pointer;
 }

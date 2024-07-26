@@ -12,8 +12,9 @@ import { PacmanLoader } from "react-spinners";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import LiveQuestions from "../../components/live-questions";
 import jwtDecoder from "../../services/jwtDecoder";
-import useSound from 'use-sound';
-import {Theme} from "../../assets/index";
+import useSound from "use-sound";
+import { Theme } from "../../assets/index";
+import UserScoreModal from "../user-score";
 
 const LiveQuiz = () => {
   const [datetime, setDateTime] = useState();
@@ -36,6 +37,10 @@ const LiveQuiz = () => {
   const [redirect, setRedirect] = useState(false);
   const [sendAnswers, setSendAnswers] = useState([]);
   const [isQuizCompleted, setIsQuizCompleted] = useState(false);
+  const [score, setScore] = useState(0);
+  const [totalScore, setTotalScore] = useState(0);
+  const [winningAmount, setWinningAmount] = useState(0);
+  const [rank, setRank] = useState(0);
   const navigate = useNavigate();
   const data = jwtDecoder();
   const username = data["Username"];
@@ -75,11 +80,10 @@ const LiveQuiz = () => {
           setQuestionCountdown(timerSeconds);
           setIsOut(false);
           setIsLoading(false);
-          if(disqualifiedUsers.data.includes(username))
-            {
-              console.log(username);
-              setIsOut(true);
-            }
+          if (disqualifiedUsers.data.includes(username)) {
+            console.log(username);
+            setIsOut(true);
+          }
         }
       }
     );
@@ -91,10 +95,6 @@ const LiveQuiz = () => {
         setIsLoading(false);
         setAnswers(answers);
         setQuestionCountdown(timerSeconds);
-        if(currentQuestion == totalQuestions)
-        {
-          setIsQuizCompleted(true);
-        }
       }
     );
 
@@ -104,12 +104,25 @@ const LiveQuiz = () => {
       setQuestionCountdown(timerSeconds);
     });
 
+    conn.on(`QuizCompleted_${params.quizLink}`, (isTrue) => {
+      setIsQuizCompleted(isTrue);
+    });
+
     conn.start().then(() => {
-      conn
+      var result = conn
         .invoke("RegisterUser", params.quizLink, username)
         .catch(function (err) {
           return console.error(err.toString());
         });
+    });
+
+    conn.on(`ResponseOfUserScoreboard_${username}`, (data) => {
+      console.log(data);
+      setScore(data.data.score);
+      setTotalScore(data.data.totalScore);
+      setWinningAmount(data.data.winningAmount);
+      setRank(data.data.rank);
+      setIsLoading(false);
     });
 
     // conn.invoke(`UpdateScore`, (params.quizLink, username, currentQuestion, ))
@@ -124,13 +137,27 @@ const LiveQuiz = () => {
     setCountdownStart(0);
   };
 
+  const scoreboard = async () => {
+    try {
+      if (connections) {
+        await connections
+          .invoke("UserScoreboard", params.quizLink, username)
+          .catch(function (err) {
+            return console.error(err.toString());
+          });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     playSound();
 
     return () => {
       stop();
     };
-  },[playSound, stop]);
+  }, [playSound, stop]);
 
   useEffect(() => {
     const setData = async () => {
@@ -156,13 +183,19 @@ const LiveQuiz = () => {
   }, [answers]);
 
   useEffect(() => {
+    if (isQuizCompleted) {
+      scoreboard();
+    }
+  }, [isQuizCompleted]);
+
+  useEffect(() => {
     const handleBeforeUnload = (event) => {
       event.preventDefault();
-      event.returnValue = '';
+      event.returnValue = "";
     };
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
 
@@ -210,11 +243,10 @@ const LiveQuiz = () => {
           </div>
         </div>
       )}
-      {isClock == false && isLoading == false && (
+      {isClock == false && isLoading == false && isQuizCompleted == false && (
         <div className="d-flex justify-content-center align-items-center row-gap-2 row min-vh-100 m-0">
           <div className="d-flex justify-content-center align-items-center row row-gap-5">
             <>
-              
               <LiveQuestions
                 questionDetail={questionDetails}
                 questionNo={currentQuestion}
@@ -227,6 +259,15 @@ const LiveQuiz = () => {
                 }}
                 getAnswer={getAnswersHandler}
               />
+            </>
+          </div>
+        </div>
+      )}
+      {rank && rank != 0 && (
+        <div className="d-flex justify-content-center align-items-center row-gap-2 row min-vh-100 m-0">
+          <div className="d-flex justify-content-center align-items-center row row-gap-5">
+            <>
+            <UserScoreModal score={score} totalScore={totalScore} winningAmount={winningAmount} rank={rank} />
             </>
           </div>
         </div>
