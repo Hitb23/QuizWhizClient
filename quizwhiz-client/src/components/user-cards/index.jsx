@@ -9,9 +9,7 @@ import { IoTimeOutline } from "react-icons/io5";
 import { LuFileSpreadsheet } from "react-icons/lu";
 import { FaListCheck } from "react-icons/fa6";
 const QuizCard = ({ title, description, date, categoryName, time,Link,onClickHandler }) => {
-  console.log(description);
   var name = categoryName.toLowerCase();
-  console.log("Category name : " + name);
   var imageUrl = `${import.meta.env.VITE_PUBLIC_URL}src/assets/${name}.jpg`;
   if(name == "general knowledge"){
     imageUrl = `${import.meta.env.VITE_PUBLIC_URL}src/assets/gk.jpg`;

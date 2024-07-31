@@ -98,7 +98,7 @@ const AdminDashboard = () => {
         SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
         setRecords(allData?.data?.data?.Pagination?.RecordSize);
       } catch (error) {
-        console.error("Error fetching data", error);
+        //console.error("Error fetching data", error);
       }
     };
 
@@ -123,7 +123,7 @@ const AdminDashboard = () => {
   
   const navigateToCategory = (id) => {
     if (id === "upcoming") navigate(`/admin-dashboard`);
-    else navigate(`/admin-dashboard/${id}`);
+    else navigate(`/admin-dashboard`);
   };
 
   const handlePageSize = async (event) => {
@@ -145,7 +145,6 @@ const AdminDashboard = () => {
       });
       const filteredData = result.data.data.GetQuizzes;
       SetFilteredData(filteredData);
-      console.log(result);
     } catch (error) {
       SetFilteredData([]);
     }
@@ -174,7 +173,6 @@ const AdminDashboard = () => {
         SearchValue: searchedWord,
       });
       SetFilteredData(result.data.data.GetQuizzes);
-      console.log("Result is : ", result);
     } catch (error) {
       console.log("error:", error);
       SetFilteredData([]);
@@ -191,7 +189,6 @@ const AdminDashboard = () => {
         SearchValue: searchedWord,
       });
       const filteredData = result.data.data.GetQuizzes;
-      console.log("In Main Method", filteredData);
       SetFilteredData(filteredData);
     } catch (error) {
       SetFilteredData([]);

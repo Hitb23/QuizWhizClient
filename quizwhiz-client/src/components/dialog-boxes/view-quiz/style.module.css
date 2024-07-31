@@ -1,0 +1,10 @@
+.save-quiz-btn {
+  color: #fff !important;
+  background-color: #3d3189 !important;
+  border: 1px solid #3d3189 !important;
+}
+
+.save-quiz-btn:hover {
+  color: #3d3189 !important;
+  background-color: #fff !important;
+}

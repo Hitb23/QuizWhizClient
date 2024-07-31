@@ -1,7 +1,8 @@
-import { React, useEffect, useRef, useState } from "react";
+import { React, useEffect, useState } from "react";
 import {
   Box,
   FormControl,
+  Input,
   InputLabel,
   MenuItem,
   Select,
@@ -42,6 +43,8 @@ import ViewQuizModal from "../../components/dialog-boxes/view-quiz";
 import EditQuizModal from "../../components/dialog-boxes/edit-quiz-details";
 import QuizEditTable from "../../components/admin-quiz-edit";
 import { HashLoader } from "react-spinners";
+import { ToastContainer } from "react-toastify";
+import Quiz from "../QuizHub";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -69,51 +72,84 @@ const AdminDashboard = () => {
   const [countOfUpcoming, SetCountOfUpcoming] = useState(null);
   const [countOfActive, SetCountOfActive] = useState(null);
   const [countOfCompleted, SetCountOfCompleted] = useState(null);
+  const [currentState, setCurrentState] = useState("upcoming");
+  const [IsModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAscending, setIsAscending] = useState(true);
   const navigate = useNavigate();
   const params = useParams();
-  const childRef = useRef(null);
   var username = "";
 
   useEffect(() => {
+    setIsLoading(true);
     const fetchData = async () => {
       try {
         setDifficulty(0);
         setCategory(0);
         SetCurrentPage(1);
         SetSearchedWord("");
-
         setUploadCount(uploadCount + 1);
-
-        const difficulties = await getDifficulties();
-        const categories = await getCategories();
+        var checkIsAscending = true;
+        if(statusEnum[currentState] == 4)
+        {
+          checkIsAscending = false;
+        }
+        setIsAscending(checkIsAscending);
         const allData = await filterByCategory({
-          StatusId: statusEnum[params.id],
+          StatusId: statusEnum[currentState],
           DifficultyId: 0,
           CategoryId: 0,
           CurrentPage: 1,
           SearchValue: "",
+          IsAscending: checkIsAscending,
         });
         const data = allData.data.data.GetQuizzes;
+        SetFilteredData(data);
+        setIsLoading(false);
+        SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
+        setRecords(allData?.data?.data?.Pagination?.RecordSize);
+      } catch (error) {
+        SetFilteredData([]);
+        //console.error("Error fetching data", error);
+        setIsLoading(false);
+      }
+
+      try{
+        const difficulties = await getDifficulties();
+        const categories = await getCategories();
         setDifficultyList(difficulties.data.data);
         setCategoryList(categories.data.data);
-        SetFilteredData(data);
-        console.log(data);
+      } catch(error) {
+        
+      }
+
+      try {
         const status = await getAllStatusCount();
         SetCountOfPending(status?.data?.data?.PendingCount);
         SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
         SetCountOfActive(status?.data?.data?.ActiveCount);
         SetCountOfCompleted(status?.data?.data?.CompletedCount);
-        SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
-        setRecords(allData?.data?.data?.Pagination?.RecordSize);
       } catch (error) {
-        SetFilteredData([]);
-        console.error("Error fetching data", error);
+        //console.error("Error fetching data", error);
+        setIsLoading(false);
       }
     };
 
     fetchData();
-  }, [Records, params]);
+  }, [Records, currentState, IsModalOpen]);
 
+  const ModalOpenHandler = () => {
+    setIsModalOpen(true);
+  };
+
+  const onCloseHandler = () => {
+    setIsModalOpen(false);
+    setRecords(1);
+    SetPageSize(1);
+    setCurrentState(currentState);
+    // navigateToCategory(1);
+  };
+  
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
@@ -123,18 +159,21 @@ const AdminDashboard = () => {
         setFirstName(response.data.data.FirstName);
         setLastName(response.data.data.LastName);
       } catch (error) {
-        console.log(error);
+        //console.log(error);
       }
     };
     fetchUserDetails();
   }, []);
 
   const navigateToCategory = (id) => {
-    SetFilteredData([]);
-    navigate(`/admin-dashboard/${id}`);
+    setIsLoading(true);
+    // SetFilteredData([]);
+    setCurrentState(id);
+    // navigate(`/admin-dashboard`);
   };
 
   const handlePageSize = async (event) => {
+    setIsLoading(true);
     setRecords(event.target.value);
     try {
       const result = await changeRecordsSize({
@@ -143,46 +182,53 @@ const AdminDashboard = () => {
     } catch (error) {
       SetFilteredData([]);
     }
+    setIsLoading(false);
   };
 
   const handleDifficulty = async (event) => {
+    setIsLoading(true);
     setDifficulty(event.target.value);
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: event.target.value,
         CategoryId: category,
-        CurrentPage: currentPage,
+        CurrentPage: 1,
         SearchValue: searchedWord,
+        IsAscending: isAscending,
       });
       const filteredData = result.data.data.GetQuizzes;
+      SetCurrentPage(1);
       SetFilteredData(filteredData);
       SetPageSize(result?.data?.data?.Pagination?.TotalPages);
     } catch (error) {
       SetFilteredData([]);
     }
+    setIsLoading(false);
   };
 
   const handlePageChange = async (event, value) => {
-    SetCurrentPage(currentPage);
+    SetCurrentPage(value);
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: value,
         SearchValue: searchedWord,
+        IsAscending: isAscending,
       });
       SetFilteredData(result.data.data.GetQuizzes);
     } catch (error) {
       SetFilteredData([]);
     }
+    setIsLoading(false);
   };
 
   const changeOrderOnClick = async (name, isDataAscending) => {
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: currentPage,
@@ -194,6 +240,7 @@ const AdminDashboard = () => {
     } catch (error) {
       SetFilteredData([]);
     }
+    setIsLoading(false);
   };
 
   const searchHandler = async (e) => {
@@ -201,82 +248,75 @@ const AdminDashboard = () => {
     SetSearchedWord(searchedWord);
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: category,
-        CurrentPage: currentPage,
+        CurrentPage: 1,
         SearchValue: searchedWord,
+        IsAscending: isAscending,
       });
+      SetCurrentPage(1);
       SetFilteredData(result.data.data.GetQuizzes);
       SetPageSize(result?.data?.data?.Pagination?.TotalPages);
     } catch (error) {
-      console.log("error:", error);
+      //console.log("error:", error);
       SetFilteredData([]);
     }
+    setIsLoading(false);
   };
 
-  const ViewDetailsHandler = (e) => {
-    navigate(`/admin-dashboard/${params.id}/${e}`);
-  };
   const onDeleteHandler = async () => {
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: category,
-        CurrentPage: currentPage,
+        CurrentPage: 1,
         SearchValue: searchedWord,
-        IsAscending: true,
-        FilterBy: "",
+        IsAscending: isAscending,
       });
+      SetCurrentPage(1);
       SetFilteredData(result.data.data.GetQuizzes);
     } catch (error) {
-      console.log("error:", error);
+      //console.log("error:", error);
       SetFilteredData([]);
     }
+
     try {
       const status = await getAllStatusCount();
       SetCountOfPending(status?.data?.data?.PendingCount);
       SetCountOfUpcoming(status?.data?.data?.UpcomingCount);
       SetCountOfActive(status?.data?.data?.ActiveCount);
       SetCountOfCompleted(status?.data?.data?.CompletedCount);
-      SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
-      setRecords(allData?.data?.data?.Pagination?.RecordSize);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
+    setIsLoading(false);
   };
+
   const handleCategory = async (e) => {
     setCategory(e.target.value);
     try {
       const result = await filterByCategory({
-        StatusId: statusEnum[params.id],
+        StatusId: statusEnum[currentState],
         DifficultyId: difficulty,
         CategoryId: e.target.value,
-        CurrentPage: currentPage,
+        CurrentPage: 1,
         SearchValue: searchedWord,
+        IsAscending: isAscending,
       });
       const filteredData = result.data.data.GetQuizzes;
+      SetCurrentPage(1);
       SetPageSize(result?.data?.data?.Pagination?.TotalPages);
       SetFilteredData(filteredData);
     } catch (error) {
       SetFilteredData([]);
     }
-  };
-  const menuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: 200,
-        overflow: "auto",
-      },
-    },
-    disablePortal: true,
+    setIsLoading(false);
   };
 
   return (
-    <div
-      className={`${classes["bgimage"]} ${classes["specific-page"]} d-flex m-0 bg-white`}
-    >
+    <div className={`${classes["bgimage"]} d-flex m-0 bg-white`}>
       <CssBaseline />
       {/* Admin offcanvas with navbar */}
       <AdminSlider
@@ -287,7 +327,7 @@ const AdminDashboard = () => {
       />
       {/* Main Content */}
       <Box
-        className={`container ${classes["h-100vh"]}`}
+        className={`container ${classes["content"]}`}
         component="main"
         sx={{ boxSizing: "border-box", p: 3 }}
         style={{ background: "white" }}
@@ -299,28 +339,28 @@ const AdminDashboard = () => {
             text="Upcoming"
             icon={faCalendarAlt}
             onClickHandler={navigateToCategory}
-            active={params.id}
+            active={currentState}
           />
           <CardComponent
             count={countOfActive}
             text="Active"
             icon={faPlay}
             onClickHandler={navigateToCategory}
-            active={params.id}
+            active={currentState}
           />
           <CardComponent
             count={countOfCompleted}
             text="Completed"
             icon={faCheckCircle}
             onClickHandler={navigateToCategory}
-            active={params.id}
+            active={currentState}
           />
           <CardComponent
             count={countOfPending}
             text="Pending"
             icon={faQuestionCircle}
             onClickHandler={navigateToCategory}
-            active={params.id}
+            active={currentState}
           />
         </div>
         <div className="row">
@@ -335,38 +375,35 @@ const AdminDashboard = () => {
               sx={{
                 width: "100%",
                 backgroundColor: "#fffff",
-                color: "#3d3189 !important",
+                color: "#21201e !important",
                 boxShadow: "none",
                 "& .MuiOutlinedInput-root": {
                   "& fieldset": {
-                    border: "1px solid #3d3189",
-                    color: "#3d3189",
-                    borderColor: "#3d3189",
+                    border: "1px solid #21201e",
+                    color: "#21201e",
+                    borderColor: "#21201e",
                   },
                   "&:hover fieldset": {
-                    border: "1px solid #3d3189",
-                    color: "#3d3189",
-                    borderColor: "#3d3189",
+                    border: "1px solid #21201e",
+                    color: "#21201e",
+                    borderColor: "#21201e",
                   },
                   "&.Mui-focused fieldset": {
-                    border: "1px solid #3d3189",
-                    borderColor: "#3d3189",
-                  },
-                  "& .MuiInputBase-input": {
-                    color: "#3d3189",
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e",
                   },
                 },
               }}
               InputLabelProps={{
                 sx: {
-                  color: "#3d3189", // Set initial label color
+                  color: "#21201e",
                   paddingLeft: "0.2rem",
                   paddingRight: "0.2rem",
                   "&:hover": {
-                    color: "#3d3189", // Set hover label color
+                    color: "#21201e",
                   },
                   "&.Mui-focused": {
-                    color: "#3d3189", // Set focused label color
+                    color: "#21201e",
                   },
                 },
               }}
@@ -396,58 +433,34 @@ const AdminDashboard = () => {
                 value={difficulty}
                 onChange={handleDifficulty}
                 label="Difficulty"
+                MenuProps={MenuProps}
                 sx={{
-                  backgroundColor: "#ffffff",
+                  backgroundColor: "#fffff",
                   color: "#21201e",
                   boxShadow: "none",
                   "& .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #3d3189",
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Always set the border color to #21201e
                   },
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #3d3189",
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Maintain the border color on focus
                   },
                   "&:hover .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #3d3189",
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Maintain the border color on hover
                   },
                   "& .MuiSvgIcon-root": {
-                    color: "#3d3189",
-                  },
-                }}
-                MenuProps={{
-                  MenuListProps: {
-                    sx: {
-                      backgroundColor: "#ffffff",
-                    },
+                    color: "#21201e",
                   },
                 }}
               >
-                <MenuItem
-                  key={0}
-                  value={0}
-                  sx={{
-                    backgroundColor: difficulty === 0 ? "#a89ee9" : "#ffffff",
-                    "&:hover": {
-                      backgroundColor: "#a89ee9",
-                    },
-                  }}
-                >
+                <MenuItem key={0} value={0}>
                   All
                 </MenuItem>
                 {difficultyList &&
                   difficultyList.map((ele) => (
-                    <MenuItem
-                      key={ele.DifficultyId}
-                      value={ele.DifficultyId}
-                      sx={{
-                        backgroundColor:
-                          difficulty === ele.DifficultyId
-                            ? "#a89ee9"
-                            : "#ffffff",
-                        "&:hover": {
-                          backgroundColor: "#a89ee9",
-                        },
-                      }}
-                    >
+                    <MenuItem key={ele.DifficultyId} value={ele.DifficultyId}>
                       {ele.DifficultyName}
                     </MenuItem>
                   ))}
@@ -484,19 +497,19 @@ const AdminDashboard = () => {
                   color: "#21201e",
                   boxShadow: "none",
                   "& .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #3d3189",
-                    borderColor: "#3d3189", // Always set the border color to #21201e
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Always set the border color to #21201e
                   },
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #3d3189",
-                    borderColor: "#3d3189", // Maintain the border color on focus
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Maintain the border color on focus
                   },
                   "&:hover .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid #3d3189",
-                    borderColor: "#3d3189", // Maintain the border color on hover
+                    border: "1px solid #21201e",
+                    borderColor: "#21201e", // Maintain the border color on hover
                   },
                   "& .MuiSvgIcon-root": {
-                    color: "#3d3189",
+                    color: "#21201e",
                   },
                 }}
               >
@@ -512,14 +525,16 @@ const AdminDashboard = () => {
               </Select>
             </FormControl>
           </div>
+
           <div className="col-lg-6 mb-4 col-sm-6 col-12 d-flex justify-content-end">
-            <CreateQuizModal />
+            <CreateQuizModal onClose={onCloseHandler} />
           </div>
         </div>
 
         <h4 className="ms-2 text-black my-3">
-          {params.id.substring(0, 1).toUpperCase() + params.id.substring(1)}{" "}
-          Contest
+          {currentState.substring(0, 1).toUpperCase() +
+            currentState.substring(1)}{" "}
+          Quiz
         </h4>
         <div className="row">
           {filteredData.length > 0 ? (
@@ -533,10 +548,10 @@ const AdminDashboard = () => {
             //   Link={ele.QuizLink}
             // />
             <QuizEditTable
-              parentFunction={changeOrderOnClick}
               data={filteredData}
-              Status={params.id}
+              Status={currentState}
               reload={onDeleteHandler}
+              onClose={onCloseHandler}
             />
           ) : (
             // <img
@@ -545,13 +560,16 @@ const AdminDashboard = () => {
             //   style={{height:'500px',width:'500px'}}
             // />
             <div className="d-flex justify-content-center align-items-center">
-              {difficultyList.length <= 0 || filteredData.length<=0 ? (
+              {isLoading == true ? (
                 <HashLoader
                   className="text-center me-2 mt-5"
                   style={{ color: "#a89ee9" }}
                 />
               ) : (
-                <h2 style={{ color: "#3d3189" }}>No Data Found</h2>
+                isLoading == false &&
+                filteredData.length == 0 && (
+                  <h2 style={{ color: "#3d3189" }}>No Data Found</h2>
+                )
               )}
             </div>
           )}
@@ -588,7 +606,6 @@ const AdminDashboard = () => {
                 onChange={handlePageSize}
                 autoWidth
                 label="Records"
-                MenuProps={menuProps}
                 sx={{
                   backgroundColor: "#fffff",
                   color: "#21201e",
@@ -639,49 +656,56 @@ const AdminDashboard = () => {
           <MenuItem value={15}>15</MenuItem>
         </Select>
       </FormControl> */}
-            <Pagination
-              defaultPage={1}
-              siblingCount={1}
-              count={PageSize}
-              variant="outlined"
-              onChange={handlePageChange}
-              sx={{
-                "& .MuiButtonBase-root": {
-                  backgroundColor: "#fffff",
-                  color: "#21201e",
-                  border: "1px solid #21201e",
-                  marginTop: "10px",
-                  marginBottom: "10px",
-                  "&:hover": {
+            {PageSize > 0 && (
+              <Pagination
+                defaultPage={1}
+                siblingCount={1}
+                page={currentPage}
+                count={PageSize}
+                variant="outlined"
+                onChange={handlePageChange}
+                sx={{
+                  "& .MuiButtonBase-root": {
+                    backgroundColor: "#fffff",
+                    color: "#21201e",
+                    border: "1px solid #21201e",
+                    marginTop: "10px",
+                    marginBottom: "10px",
+                    "&:hover": {
+                      backgroundColor: "#3d3189",
+                      color: "white",
+                    },
+                  },
+                  "& .MuiPaginationItem-root.Mui-selected": {
                     backgroundColor: "#3d3189",
                     color: "white",
+                    border: "1px solid #21201e",
+                    "&:hover": {
+                      backgroundColor: "#a89ee9",
+                      color: "#000000",
+                    },
                   },
-                },
-                "& .MuiPaginationItem-root.Mui-selected": {
-                  backgroundColor: "#3d3189",
-                  color: "white",
-                  border: "1px solid #21201e",
-                  "&:hover": {
-                    backgroundColor: "#a89ee9",
-                    color: "#000000",
-                  },
-                },
-                "& .MuiPaginationItem-ellipsis": {
-                  fontWeight: "bolder",
-                  color: "#21201e",
-                  "&:hover": {
+                  "& .MuiPaginationItem-ellipsis": {
+                    fontWeight: "bolder",
                     color: "#21201e",
+                    "&:hover": {
+                      color: "#21201e",
+                    },
                   },
-                },
-                "@media (max-width: 600px)": {
-                  flexDirection: "column",
-                  rowGap: "10px",
-                },
-              }}
-            />
+                  "@media (max-width: 600px)": {
+                    flexDirection: "column",
+                    rowGap: "10px",
+                  },
+                }}
+              />
+            )}
           </div>
         )}
       </Box>
+      <ToastContainer />
+      {IsModalOpen ? (
+        <Quiz IsOpen={false} onCloseHandler={onCloseHandler} />
+      ) : null}
     </div>
   );
 };

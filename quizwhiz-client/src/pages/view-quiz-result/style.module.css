@@ -1,7 +1,8 @@
 .live-quiz-div {
     background-color: white;
     min-height: 100vh;
-    min-width: 100vw;
+    min-width: 100%;
+    padding-top: 120px;
   }
 
   .title-div{
@@ -32,13 +33,13 @@
         color: #070033;
         
     }
+    .live-quiz-div {
+      padding-top: 100px;
+    }
     
 
   }
-  .vitthal{
-    background-color: aqua;
-    height: 90px;
-  }
+ 
   @media (max-width:720px) {
     .main-content-div{
         display: flex;

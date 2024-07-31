@@ -65,19 +65,17 @@ export default function LifelineGift(isVisible) {
         startVelocity: 45,
       });
     } else {
-      console.error("Canvas is not available");
+      //console.error("Canvas is not available");
     }
   };
 
   useEffect(() => {
-    console.log("Use effect of modal");
     if (isVisible) {
-      console.log("Is modal opened : " + openBox);
       setOpen(true);
     } else {
       setOpen(false);
     }
-  }, [isVisible]);
+  },[]);
 
   useEffect(() => {
     if (open) {

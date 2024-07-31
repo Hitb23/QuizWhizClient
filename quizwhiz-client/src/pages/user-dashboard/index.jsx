@@ -21,8 +21,6 @@ const UserDashboard = () => {
   useEffect(() => {
     async function fetchQuizData() {
       const response = await getQuizDetailsByLink(quizLink);
-      console.log("Data");
-      console.log(response.data);
       setTotalQuestions(response.data.TotalQuestion);
     }
 
@@ -34,29 +32,23 @@ const UserDashboard = () => {
     setConnection(connection);
 
     connection.on("ReceiveQuestion", (question) => {
-      console.log("Question : ");
-      console.log(question);
       setCurrentQuestion(question);
       setQuestionCount((prevCount) => prevCount + 1);
       setQuestionId(question.questionId);
-      console.log("QuestionId : " + typeof(question.questionId));
     });
 
     connection.on("ReceiveCorrectAnswer", (answer) => {
-      console.log("Correct ans : " + answer);
       setCorrectAnswer(answer);
     });
 
     connection.on("ReceiveError", (message) => {
-      console.log(message);
     });
 
     connection.on("GetTitleOfQuiz", (data) =>  {
-      console.log(data);
     });
 
     connection.start().catch((error) => {
-      console.error(error);
+      //console.error(error);
     });
 
     // fetchQuestion(0);
@@ -74,12 +66,11 @@ const UserDashboard = () => {
 
 
   const getCorrectAnswer = async (quizLink, questionCount) => {
-    console.log("Quizlink and its type: " + quizLink + typeof(quizLink));
     if (questionCount <= totalQuestions) {
       await connection
         .invoke("GetCorrectAnswer", quizLink, questionCount)
         .catch((error) => {
-          console.log(error);
+          //console.log(error);
         });
     }
   };

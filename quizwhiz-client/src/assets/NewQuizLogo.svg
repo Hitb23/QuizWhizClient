@@ -15,7 +15,7 @@
       }
 
       .cls-3 {
-        fill: #6F41DB;
+        fill: none;
       }
 
       .cls-4 {
@@ -31,7 +31,7 @@
       }
 
       .cls-7 {
-        fill: #6F41DB;
+        fill: none;
       }
 
       .cls-8 {

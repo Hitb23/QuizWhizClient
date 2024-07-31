@@ -79,7 +79,7 @@ const Login = () => {
       actions.changeUserRole(data["Role"]);
       actions.changeUserName(data["Username"]);
       actions.changeUserEmail(data["Email"]);
-
+      toast.dismiss();
       if (userRole === "Admin") {
         navigate(RoutePaths.AdminDashboard, {
           state: { IsSuccessMessage: true, Message: response.data.message },
@@ -250,7 +250,7 @@ const Login = () => {
             </div>
           </div>
         </main>
-        {/* <ToastContainer /> */}
+        <ToastContainer />
       </div>
     </Fragment>
   );

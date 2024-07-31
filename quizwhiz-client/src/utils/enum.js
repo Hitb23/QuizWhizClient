@@ -7,17 +7,17 @@ export const RoutePaths = {
   SignUp: "/sign-up",
   ForgotPassword: "/forgot-password",
   ResetPassword: "/reset-password",
-  AdminDashboard: "/admin-dashboard/upcoming",
+  AdminDashboard: "/admin-dashboard",
   Quizzes: "/quizzes",
   PageNotFound: "/page-not-found",
   MyProfile: "/my-profile",
   AdminLogin: "/admin/login",
   CreateNewQuiz:"/create-new-quiz",
   GetQuizDetails:"/get-quiz-details",
-  AddQuizQuestions:"/add-quiz-questions",
   LiveQuiz:"/live-quiz",
   UpdateQuizQuestions:"/update-quiz-question",
-  ViewQuizResult:"/admin-dashboard/view-quiz-result"
+  ViewQuizResult:"/admin-dashboard/view-quiz-result",
+  ContestantDashboard:"/leaderboard"
 };
 
 export const Role = {
@@ -42,7 +42,6 @@ export const API_URLS = {
   QUIZ_FILTER:'/quiz/get-quizzes-filter',
   CREATE_NEW_QUIZ:'/quiz/create-new-quiz',
   GET_QUIZ_DETAILS_BY_LINK :`/quiz/get-quiz-details?quizLink=`,
-  ADD_QUIZ_QUESTIONS:'/quiz/add-quiz-questions',
   QUIZ_RECORDS:'/auth/change-record-size',
   QUIZ_STATUS:'/quiz/get-quiz-status-count',
   GET_QUIZ_QUESTIONS : `/quiz/get-quiz-questions?quizLink=`,
@@ -54,6 +53,7 @@ export const API_URLS = {
   QUIZ_DETAILS:'/quiz/get-quiz-details?quizLink=',
   DELETE_QUIZ:'/quiz/delete-quiz?quizLink=',
   PUBLISH_QUIZ:'/quiz/publish-quiz?quizLink=',
+  COINS_LIFELINE_URL:'quiz/get-coins-lifeline?userName=',
   GET_QUIZ_RANK: '/quiz/get-quiz-rank',
 };
 export const statusEnum={

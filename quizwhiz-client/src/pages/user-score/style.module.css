@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap");
 .coin-btn {
   padding: 0.1rem 0.5rem 0.1rem 0.5rem;
-  background-color: #6f41db !important;
+  background-color: #3d3189 !important;
   border-radius: 0.5rem;
   color: white;
   border: none;
@@ -15,7 +15,7 @@
 }
 .count-of-lifeline {
   padding: 0.3rem 1.3rem 0.3rem 1.3rem;
-  background-color: #6f41db !important;
+  background-color: #3d3189 !important;
   border-radius: 0.5rem;
   color: white;
 }
@@ -125,10 +125,11 @@
 }
 /* .coin-btn:hover
  {
-    background-color: #6F41DB;
+    background-color: #3d3189;
     color: #fada65;
     border: 1px solid #fada65;
   } */
+
 @media (max-width: 450px) {
   .Shoptext {
     font-size: 30px !important;
@@ -145,7 +146,6 @@
   .text-bg {
     font-size: 30px !important;
   }
-
 }
 
 @media (max-width: 600px) {

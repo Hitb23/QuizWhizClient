@@ -15,6 +15,7 @@ import jwtDecoder from "../../services/jwtDecoder";
 import useSound from "use-sound";
 import { Theme } from "../../assets/index";
 import UserScoreModal from "../user-score";
+import { jwtDecode } from "jwt-decode";
 
 const LiveQuiz = () => {
   const [datetime, setDateTime] = useState();
@@ -49,7 +50,7 @@ const LiveQuiz = () => {
   useEffect(() => {
     setIsLoading(true);
     const conn = new HubConnectionBuilder()
-      .withUrl("https://localhost:44361/quizhub")
+      .withUrl(`https://localhost:44361/quizhub`)
       .withAutomaticReconnect()
       .build();
 
@@ -68,8 +69,8 @@ const LiveQuiz = () => {
     conn.on(
       `ReceiveQuestion_${params.quizLink}`,
       (questionNo, question, timerSeconds, disqualifiedUsers) => {
+        
         if (questionNo) {
-          console.log(username);
           setQuestionId(question?.question?.questionId);
           localStorage.setItem("questionId", question?.question?.questionId);
           setIsClock(false);
@@ -81,7 +82,6 @@ const LiveQuiz = () => {
           setIsOut(false);
           setIsLoading(false);
           if (disqualifiedUsers.data.includes(username)) {
-            console.log(username);
             setIsOut(true);
           }
         }
@@ -112,12 +112,11 @@ const LiveQuiz = () => {
       var result = conn
         .invoke("RegisterUser", params.quizLink, username)
         .catch(function (err) {
-          return console.error(err.toString());
+          //return console.error(err.toString());
         });
     });
 
     conn.on(`ResponseOfUserScoreboard_${username}`, (data) => {
-      console.log(data);
       setScore(data.data.score);
       setTotalScore(data.data.totalScore);
       setWinningAmount(data.data.winningAmount);
@@ -202,9 +201,7 @@ const LiveQuiz = () => {
   const getAnswersHandler = async (answerIds) => {
     setSendAnswers(answerIds);
     const tempQuestionId = parseInt(localStorage.getItem("questionId"));
-    console.log(tempQuestionId);
     if (questionCountdown >= 17 && connections && tempQuestionId) {
-      console.log(answerIds);
       await connections
         .invoke(
           "UpdateScore",
@@ -228,10 +225,10 @@ const LiveQuiz = () => {
         />
       )}
       {countdownStart == 1 && isClock == true && (
-        <div className="d-flex justify-content-center align-items-center row-gap-2 row min-vh-100 m-0">
-          <div className="d-flex justify-content-center align-items-center row row-gap-5">
+        <div className={` ${classes["live-quiz"]} d-flex justify-content-center align-items-center row-gap-2 row min-vh-100 m-0 p-0`}>
+          <div className="d-flex justify-content-center align-items-center row row-gap-5 m-0 p-0">
             <div
-              className={`${classes["timer-header"]} d-flex justify-content-center align-items-center`}
+              className={`${classes["timer-header"]} d-flex justify-content-center align-items-center m-0 p-0`}
             >
               <h1>Quiz Starts In</h1>
             </div>
@@ -245,7 +242,7 @@ const LiveQuiz = () => {
       )}
       {isClock == false && isLoading == false && isQuizCompleted == false && (
         <div className="d-flex justify-content-center align-items-center row-gap-2 row min-vh-100 m-0">
-          <div className="d-flex justify-content-center align-items-center row row-gap-5">
+          <div className="d-flex justify-content-center align-items-center row row-gap-5 m-0 p-0">
             <>
               <LiveQuestions
                 questionDetail={questionDetails}
@@ -263,9 +260,9 @@ const LiveQuiz = () => {
           </div>
         </div>
       )}
-      {rank && rank != 0 && (
+      {(rank != null) && (rank != 0) && (
         <div className="d-flex justify-content-center align-items-center row-gap-2 row min-vh-100 m-0">
-          <div className="d-flex justify-content-center align-items-center row row-gap-5">
+          <div className="d-flex justify-content-center align-items-center row row-gap-5 m-0 p-0">
             <>
             <UserScoreModal score={score} totalScore={totalScore} winningAmount={winningAmount} rank={rank} />
             </>

@@ -2,26 +2,44 @@
   padding: 0.9rem 2.1rem;
   font-size: 20px;
   height: 58px;
-  background-color: #fada65;
-  color: #000000;
+  font-weight: 600;
+  background-color: #3d3189;
+  color: #fff; 
   border-radius: 0.5rem;
-  border: 1px solid #fada65;
+  border: 1px solid #3d3189;
 }
 
 .add-quiz-btn:hover {
-  background: none;
-  color: #fada65;
+  color: #3d3189;
+  background-color: #fff;
 }
-.dialog-title {
-  background-color: #fada65;
-  color: #6f41db;
-  text-align: center;
 
+.dialog-title {
+  background-color: #3d3189;
+  color: #fff;
+  text-align: center;
 }
 
 .save-quiz-btn {
-  color: #6f41db;
-  background-color: #fada65;
+  color: #fff !important;
+  background-color: #3d3189 !important;
+  border: 1px solid #3d3189 !important;
+}
+
+.save-quiz-btn:hover {
+  color: #3d3189 !important;
+  background-color: #fff !important;
+}
+
+.cancel-quiz-btn {
+  color: #3d3189 !important;
+  background-color: #fff !important;
+  border: 1px solid #3d3189 !important;
+}
+
+.cancel-quiz-btn:hover {
+  color: #fff !important;
+  background-color: #3d3189 !important;
 }
 
 @media (max-width: 450px) {

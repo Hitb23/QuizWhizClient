@@ -32,7 +32,7 @@ const SignUp = () => {
   const validationSchema = yup.object().shape({
     username: yup
       .string()
-      .required("UserName is required")
+      .required("Username is required")
       .matches(
         /^[a-z][a-z0-9._-]{2,19}$/,
         "Username must start with a lowercase letter, be 3-20 characters, and contain only lowercase letters, numbers, _, ., or -."
@@ -85,6 +85,7 @@ const SignUp = () => {
         password,
         confirmPassword,
       });
+      toast.dismiss();
       navigate(RoutePaths.Login);
     } catch (error) {
       const message = error?.response?.data?.message

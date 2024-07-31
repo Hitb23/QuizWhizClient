@@ -111,6 +111,8 @@ const MyProfile = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(null);
+  const data = jwtDecoder();
+  var username = data.Username;
 
   const formik = useFormik({
     initialValues: {
@@ -152,8 +154,6 @@ const MyProfile = () => {
       }
     },
   });
-
-  var username = "";
 
   useEffect(() => {
     const data = jwtDecoder();
@@ -202,13 +202,12 @@ const MyProfile = () => {
 
   const handleImageUpload = async (event) => {
     const ProfilePhoto = event.target.files[0];
-  
+
     try {
       const data = jwtDecoder();
       const Username = data.Username;
       const response = await uploadProfilePhoto(ProfilePhoto, Username);
       setUploadCount(uploadCount + 1);
-      console.log(response.status);
       if (ProfilePhoto && response.status == 200) {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -249,6 +248,7 @@ const MyProfile = () => {
   });
 
   const handleEditClick = () => {
+    formik.setTouched([]);
     setIsEditable(true);
     setClickOnSave(false);
   };
@@ -263,13 +263,23 @@ const MyProfile = () => {
     }
   };
 
-  const handleCancelClick = () => {
-    formik.setTouched([]);
+  const handleCancelClick = async () => {
     setIsEditable(false);
-    formik.values.firstName = firstName;
-    formik.values.lastName = lastName;
-    formik.values.phoneNumber = phoneNumber;
-    formik.values.country = country;
+    setClickOnSave(false);
+    try {
+      const response = await getUserDetails(username);
+      setFirstName(response.data.data.FirstName);
+      setLastName(response.data.data.LastName);
+      setPhoneNumber(response.data.data.PhoneNumber);
+      setCountry(response.data.data.Country);
+      formik.values.firstName = response.data.data.FirstName;
+      formik.values.lastName = response.data.data.LastName;
+      formik.values.phoneNumber = response.data.data.PhoneNumber;
+      formik.values.country = response.data.data.Country;
+      console.log(username);
+    } catch (error) {
+    }
+    formik.setTouched([]);
   };
 
   // const theme = useTheme();
@@ -311,7 +321,11 @@ const MyProfile = () => {
   };
 
   return (
-    <main className={`${isAdmin ? classes["admin-profile"] : ""} container`}>
+    <main
+      className={`${
+        isAdmin ? classes["admin-profile"] : classes["user-profile"]
+      } container p-0 m-0`}
+    >
       <Box
         sx={{
           display: "flex",
@@ -338,7 +352,7 @@ const MyProfile = () => {
           />
         )}
         <div
-          className={`row container-fluid px-0 ${classes["main-box"]} min-vh-100`}
+          className={`row container-fluid px-0 ${classes["main-box"]} min-vh-100 m-0 p-0`}
         >
           <div
             className={`col-lg-6 col-12 d-flex flex-column align-items-center justify-content-center ${classes["profile-photo-div"]}`}
@@ -473,7 +487,7 @@ const MyProfile = () => {
                 />
                 {formik.touched.firstName && formik.errors.firstName ? (
                   <span
-                    className={`mt-2 ${
+                    className={`mt-1 ${
                       isAdmin
                         ? classes["admin-error-message"]
                         : classes["error-message"]
@@ -626,7 +640,7 @@ const MyProfile = () => {
                 ) : null}
               </div>
 
-              <div className="d-flex flex-row">
+              <div className="d-flex flex-row mb-3">
                 {isEditable ? (
                   <>
                     <Button

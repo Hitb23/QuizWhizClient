@@ -14,7 +14,21 @@ export const getSingleQuestion = async (data) => {
     throw error; // rethrow the error to handle it in the calling function
   }
 };
-
+export const fetchUserCoinsAndLifeline = async (userName) => {
+  try {
+    const response = await axios.get(
+      API_URLS.COINS_LIFELINE_URL+userName,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const GetQuizRank = async(data)=>{
   try{
     const response = await axios.get(API_URLS.GET_QUIZ_RANK, {
@@ -24,11 +38,9 @@ export const GetQuizRank = async(data)=>{
      },
      params: JSON.stringify(data)
     })
-    
-    console.log(response);
     return response.data;
    }
    catch(error){
-     console.log(error)
+     //console.log(error)
    }
 };

@@ -1,7 +1,7 @@
 .live-quiz-div {
   background-color: #ffffff;
   min-height: 100vh;
-  min-width: 100vw;
+  min-width: 100%;
 }
 
 .full-screen {

@@ -16,6 +16,7 @@ import { userActions } from "../../redux/action-creators";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import AdminAuthHeader from "../../components/header/admin-auth-header";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -56,7 +57,6 @@ const AdminLogin = () => {
 
     try {
       const response = await adminLogin({ email, password });
-      console.log(response);
       localStorage.setItem("token", response.data.data);
       localStorage.setItem("token-expiry", new Date().getTime() + 7200 * 1000);
 
@@ -67,7 +67,7 @@ const AdminLogin = () => {
         actions.changeUserName(data["Username"]);
         actions.changeUserEmail(data["Email"]);
       }
-
+      toast.dismiss();
       if (userRole === "Admin") {
         navigate(RoutePaths.AdminDashboard, { replace: true });
       } else {
@@ -98,7 +98,7 @@ const AdminLogin = () => {
     <Fragment>
       <main className={classes["live-quiz-div"]}>
         <div className={`${classes["full-screen"]}`}>
-          <AuthHeader />
+          <AdminAuthHeader />
           <main className={`${classes["main-component"]} container-fluid`}>
             <div className={`row justify-content-center`}>
               <div

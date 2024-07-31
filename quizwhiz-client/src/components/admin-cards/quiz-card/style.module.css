@@ -1,5 +1,6 @@
 .quiz-card {
   color: #fada65;
+  box-shadow: 5px 5px 0px #fada65;
 }
 
 .join-now-button {

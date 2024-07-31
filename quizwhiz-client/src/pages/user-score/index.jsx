@@ -33,6 +33,7 @@ import {
 } from "../../assets/index";
 import { useNavigate } from "react-router-dom";
 import jwtDecoder from "../../services/jwtDecoder";
+import CoinsCard from "../../components/admin-cards/coins-card";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -54,10 +55,6 @@ const UserScoreModal = ({ score, totalScore, winningAmount, rank }) => {
   const data = jwtDecoder();
   const username = data["Username"];
   const navigate = useNavigate();
-
-  useEffect(() => {
-
-  },[]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -130,7 +127,7 @@ const UserScoreModal = ({ score, totalScore, winningAmount, rank }) => {
 
         <DialogContent
           dividers
-          sx={{  width: "100%", background: "#6F41DB" }}
+          sx={{  width: "100%", background: "#6F41DB", overflow: "hidden" }}
         >
           <canvas ref={confettiRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}></canvas>
           <div className="d-flex justify-content-center gap-2 align-items-center">

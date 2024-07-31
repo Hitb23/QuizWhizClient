@@ -2,7 +2,6 @@ import axios from "./axios";
 import { API_URLS } from "../utils/enum";
 import { addYears } from "date-fns";
 
-const CurrentToken = localStorage.getItem("token");
 
 export const filterByCategory = async (data) => {
   return await axios.post(API_URLS.QUIZ_FILTER, JSON.stringify(data), {
@@ -33,20 +32,19 @@ export const getCategories = async () => {
 
 export const createNewQuiz = async (data) => {
   try {
-    debugger;
     const response = await axios.post(
       API_URLS.CREATE_NEW_QUIZ,
       JSON.stringify(data),
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${CurrentToken}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
     );
     return response.data;
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 };
 
@@ -57,29 +55,29 @@ export const getQuizDetailsByLink = async (quizLink) => {
     );
     return response.data;
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 };
 
-export const addQuizQuestions = async (data) => {
-  try {
-    console.log("token", CurrentToken);
-    const response = await axios.post(
-      API_URLS.ADD_QUIZ_QUESTIONS,
-      JSON.stringify(data),
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${CurrentToken}`,
-        },
-      }
-    );
-    console.log(response.data);
-    return response.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
+// export const addQuizQuestions = async (data) => {
+//   try {
+//     console.log("token", CurrentToken);
+//     const response = await axios.post(
+//       API_URLS.ADD_QUIZ_QUESTIONS,
+//       JSON.stringify(data),
+//       {
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${CurrentToken}`,
+//         },
+//       }
+//     );
+//     console.log(response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 export const changeRecordsSize = async (data) => {
   return await axios.get(API_URLS.QUIZ_RECORDS, {
@@ -104,27 +102,25 @@ export const getQuizQuestions = async (quizLink) => {
     const response = await axios.get(API_URLS.GET_QUIZ_QUESTIONS + quizLink);
     return response.data;
   } catch (error) {
-    console.log(error);
+    //console.log("errrrrr");
   }
 };
 
 export const updateQuizQuestions = async (data) => {
   try {
-    console.log("token", CurrentToken);
     const response = await axios.post(
       API_URLS.UPDATE_QUIZ_QUESTION,
       JSON.stringify(data),
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${CurrentToken}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
     );
-    console.log(response.data);
     return response.data;
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 };
 
@@ -134,13 +130,13 @@ export const deleteQuizQuestion = async (questionId) => {
       API_URLS.DELETE_QUIZ_QUESTION + questionId,
       {
         headers: {
-          Authorization: `Bearer ${CurrentToken}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
     );
     return response.data;
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 };
 
@@ -152,13 +148,14 @@ export const updateQuizDetails = async (data) => {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${CurrentToken}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
     );
+    
     return response.data;
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 };
 export const getQuizDetails = async (Link) => {
@@ -175,7 +172,7 @@ export const DeleteQuiz = async (quizLink) => {
     const response = await axios.get(API_URLS.DELETE_QUIZ + quizLink, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${CurrentToken}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
     return response.data;
@@ -185,19 +182,19 @@ export const DeleteQuiz = async (quizLink) => {
 };
 
 export const PublishQuiz = async (quizLink)=>{
+  debugger;
   try{
    const response = await axios.get(API_URLS.PUBLISH_QUIZ + quizLink, {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${CurrentToken}`,
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     }
    })
    
-   console.log(response);
    return response.data;
   }
   catch(error){
-    console.log(error)
+    return error.response.data;
   }
 }
 

@@ -31,6 +31,7 @@ import { HubConnectionBuilder } from "@microsoft/signalr";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import LifelineGift from "../../components/dialog-boxes/lifeline-gift";
+import { NoDataFound } from "../../assets";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -61,6 +62,7 @@ const Quizzes = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [connection, setConnection] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAscending, setIsAscending] = useState(true);
   const navigate = useNavigate();
   const params = useParams();
   var username = "";
@@ -72,31 +74,33 @@ const Quizzes = () => {
         setCategory(0);
         SetCurrentPage(1);
         SetSearchedWord("");
-
         setUploadCount(uploadCount + 1);
-
-        const difficulties = await getDifficulties();
-        const categories = await getCategories();
         const allData = await filterByCategory({
           StatusId: tabStatus,
           DifficultyId: 0,
           CategoryId: 0,
           CurrentPage: 1,
           SearchValue: "",
+          IsAscending : isAscending,
         });
         const data = allData.data.data.GetQuizzes;
-        setDifficultyList(difficulties.data.data);
-        setCategoryList(categories.data.data);
         SetFilteredData(data);
-
-        const status = await getAllStatusCount();
         SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
         setRecords(allData?.data?.data?.Pagination?.RecordSize);
         setIsLoading(false);
+        setIsModalVisible(false);
       } catch (error) {
         SetFilteredData([]);
-        console.error("Error fetching data", error);
+        //console.error("Error fetching data", error);
+        setIsLoading(false);
       }
+
+      try {
+        const difficulties = await getDifficulties();
+        const categories = await getCategories();
+        setDifficultyList(difficulties.data.data);
+        setCategoryList(categories.data.data);
+      } catch (error) {}
     };
     fetchData();
   }, [Records, params]);
@@ -104,14 +108,13 @@ const Quizzes = () => {
   var userFirstName = "";
 
   useEffect(() => {
+    const nameOfLoggedInUser = jwtDecoder();
     const conn = new HubConnectionBuilder()
-      .withUrl("https://localhost:44361/quizhub")
+      .withUrl(`https://localhost:44361/quizhub`)
       .withAutomaticReconnect()
       .build();
 
     setConnection(conn);
-
-    console.log(params.quizLink);
 
     conn.on(`ReceiveRemainingTime_${params.quizLink}`, (minutes, seconds) => {
       setRemainingMinutes(minutes);
@@ -125,7 +128,7 @@ const Quizzes = () => {
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
-    
+
     const fetchUserDetails = async () => {
       try {
         const response = await getUserDetails(data["Username"]);
@@ -136,20 +139,26 @@ const Quizzes = () => {
         console.log(error);
       }
     };
+    // conn.on(
+    //   `IsDisqualified_${params.quizLink}`,
+    //   (IsDisaqualified) => {
+    //    console.log("Disqualified_user:");
+    //   }
+    // );
 
     fetchUserDetails();
-    var isLoggedInEarlier = data["IsLoggedInEarlier"];
-    console.log("Logged in earlier : " + isLoggedInEarlier);
-    if(isLoggedInEarlier === "False"){
-      console.log(isModalVisible);
-      setIsModalVisible(true);
-    }
+    // var isLoggedInEarlier = data["f"];
+    // console.log("Logged in earlier : " + isLoggedInEarlier);
+    // if(isLoggedInEarlier === "False"){
+    //   console.log(isModalVisible);
+    //   setIsModalVisible(true);
+    // }
   }, []);
 
   const handlePageSize = async (event) => {
     SetCurrentPage(1);
     setRecords(event.target.value);
-
+    setIsLoading(false);
     try {
       const result1 = await changeRecordsSize({
         recordSize: event.target.value,
@@ -169,10 +178,12 @@ const Quizzes = () => {
         CategoryId: category,
         CurrentPage: currentPage,
         SearchValue: searchedWord,
+        IsAscending : isAscending,
       });
       const filteredData = result.data.data.GetQuizzes;
       SetFilteredData(filteredData);
       SetPageSize(result?.data?.data?.Pagination?.TotalPages);
+      setIsLoading(false);
     } catch (error) {
       SetFilteredData([]);
     }
@@ -188,6 +199,7 @@ const Quizzes = () => {
         CategoryId: category,
         CurrentPage: value,
         SearchValue: searchedWord,
+        IsAscending : isAscending,
       });
       SetFilteredData(result.data.data.GetQuizzes);
     } catch (error) {
@@ -205,6 +217,7 @@ const Quizzes = () => {
         CategoryId: category,
         CurrentPage: currentPage,
         SearchValue: searchedWord,
+        IsAscending : isAscending,
       });
       SetFilteredData(result.data.data.GetQuizzes);
       SetPageSize(result?.data?.data?.Pagination?.TotalPages);
@@ -216,7 +229,7 @@ const Quizzes = () => {
   };
 
   const ViewDetailsHandler = (e) => {
-    navigate(`/admin-dashboard/${params.id}/${e}`);
+    navigate(`/admin-dashboard`);
   };
 
   const handleCategory = async (e) => {
@@ -228,10 +241,12 @@ const Quizzes = () => {
         CategoryId: e.target.value,
         CurrentPage: currentPage,
         SearchValue: searchedWord,
+        IsAscending : isAscending,
       });
       const filteredData = result.data.data.GetQuizzes;
       SetPageSize(result?.data?.data?.Pagination?.TotalPages);
       SetFilteredData(filteredData);
+      setIsLoading(false);
       SetCurrentPage(1);
     } catch (error) {
       SetFilteredData([]);
@@ -239,18 +254,16 @@ const Quizzes = () => {
   };
   var username = "";
 
-  
-
   const toggleTabsChange = async (index) => {
     setToggleTabs(index);
     SetCurrentPage(1);
+    var checkIsAscending = true;
     var quizStatus = 1;
     index === 0 ? (setTabStatus(3), (quizStatus = 3)) : null;
     index === 1 ? (setTabStatus(2), (quizStatus = 2)) : null;
-    index === 2 ? (setTabStatus(4), (quizStatus = 4)) : null;
-    index === 3 ? (setTabStatus(4), (quizStatus = 4)) : null;
-
-    console.log(quizStatus);
+    index === 2 ? (setTabStatus(4), (quizStatus = 4), (checkIsAscending = false)) : null;
+    index === 3 ? (setTabStatus(4), (quizStatus = 4), (checkIsAscending = false)) : null;
+    setIsAscending(checkIsAscending);
     try {
       const result = await filterByCategory({
         StatusId: quizStatus,
@@ -258,12 +271,13 @@ const Quizzes = () => {
         CategoryId: category,
         CurrentPage: 1,
         SearchValue: searchedWord,
+        IsAscending : checkIsAscending,
       });
+      setIsLoading(false);
       const filteredData = result.data.data.GetQuizzes;
       SetFilteredData(filteredData);
       SetPageSize(result?.data?.data?.Pagination?.TotalPages);
       SetCurrentPage(1);
-      
     } catch (error) {
       SetFilteredData([]);
     }
@@ -272,7 +286,7 @@ const Quizzes = () => {
   return (
     <Fragment>
       <Box sx={{ display: "flex" }} className={`${classes["bgimage"]}`}>
-        {isModalVisible ? <LifelineGift isVisible={true}/> : null}
+        {/* {isModalVisible ? <LifelineGift isVisible={isModalVisible}/> : null} */}
         <CssBaseline />
         {/* Admin offcanvas with navbar */}
         <QuizHeader
@@ -321,7 +335,7 @@ const Quizzes = () => {
                   Completed
                 </button>
               </li>
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <button
                   id="participatedQuizzes"
                   className={`nav-link ${
@@ -331,7 +345,7 @@ const Quizzes = () => {
                 >
                   Participated
                 </button>
-              </li>
+              </li> */}
             </ul>
             <div className="col-lg-2 p-2 col-sm-6 col-12">
               <TextField
@@ -498,9 +512,10 @@ const Quizzes = () => {
               </FormControl>
             </div>
           </div>
-          <div className="row p-0 ms-2">
-            {filteredData.length > 0 ? (
-              filteredData.map((ele, idx) => (
+
+          {filteredData.length > 0 ? (
+            filteredData.map((ele, idx) => (
+              <div className="row p-0 ms-2">
                 <QuizCard
                   title={ele.Title}
                   description={ele.Description}
@@ -514,16 +529,24 @@ const Quizzes = () => {
                   statusId={tabStatus}
                   quizLink={ele.QuizLink}
                 />
-              ))
-            ) : isLoading == true ? (
-              <PacmanLoader
-                className="position-absolute top-50 start-50 translate-middle p-0"
-                color="#fada65"
-              />
-            ) : (
-              <h2 className="text-center text-white my-5">No Data Available</h2>
-            )}
-          </div>
+              </div>
+            ))
+          ) : isLoading == true ? (
+            <PacmanLoader
+              className="position-absolute top-50 start-50 translate-middle p-0"
+              color="#fada65"
+            />
+          ) : (
+            <div className="row p-0">
+              <div className="d-flex justify-content-center align-items-center flex-column">
+                <h2 className={`${classes["no-data-found"]} text-center mt-5`}>
+                  No Quiz Available
+                </h2>
+                <img src={NoDataFound} width="300px" height="300px" />
+              </div>
+            </div>
+          )}
+
           {filteredData.length > 0 && (
             <div className={`${classes["pagination"]} mt-3`}>
               <FormControl

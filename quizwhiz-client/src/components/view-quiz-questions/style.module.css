@@ -1,0 +1,31 @@
+.darkPurpleColor{
+ color: #070033;
+}
+
+.save-quiz-btn {
+  color: #fff !important;
+  background-color: #070033 !important;
+  border: 1px solid #070033 !important;
+}
+
+.save-quiz-btn:hover {
+  color: #070033 !important;
+  background-color: #fff !important;
+}
+
+.save-quiz-btn:disabled {
+  color: gray !important;
+  background-color: lightgray !important;
+  border-color: lightgray !important;
+}
+
+.cancel-quiz-btn {
+  color: #070033 !important;
+  background-color: #fff !important;
+  border: 1px solid #070033 !important;
+}
+
+.cancel-quiz-btn:hover {
+  color: #fff !important;
+  background-color: #070033 !important;
+}

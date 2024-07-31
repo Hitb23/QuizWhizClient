@@ -34,7 +34,6 @@ const QuizDescription = ({ quizLink, modalClose }) => {
       try {
         const allData = await getQuizDetailsByLink(quizLink);
         const data = allData.data;
-        console.log(data);
         setTitle(data.Title);
         setDescription(data.Description);
         setCategoryName(CATEGORIES[data.CategoryId]);
@@ -44,7 +43,7 @@ const QuizDescription = ({ quizLink, modalClose }) => {
         setScheduledDate(data.ScheduledDate);
         setOpen(true);
       } catch (error) {
-        console.error("Error fetching data", error);
+        //console.error("Error fetching data", error);
       }
     };
 

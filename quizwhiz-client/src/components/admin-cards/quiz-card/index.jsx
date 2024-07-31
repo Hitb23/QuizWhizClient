@@ -114,7 +114,7 @@ const QuizCard = ({
               <div className="d-none d-lg-inline d-flex justify-content-center align-items-center flex-wrap">
                 {" "}
                 <IoTimeOutline color="#fada65" size={25} />
-                <small className="m-2">{totalQuestions / 2} Minutes</small>{" "}
+                <small className="m-2">{Math.ceil(totalQuestions / 3)} Minutes</small>{" "}
               </div>
               <div className="d-none d-lg-inline d-flex justify-content-center align-items-center flex-wrap">
                 {" "}
@@ -141,13 +141,13 @@ const QuizCard = ({
               </button>
             </div>
           ) : null}
-          {statusId == 4 ? (
+          {/* {statusId == 4 ? (
             <div className="d-none d-xl-inline">
               <button type="submit" className={classes["join-now-button"]}>
                 Leaderboard
               </button>
             </div>
-          ) : null}
+          ) : null} */}
           <div className="d-none d-xl-inline">
             <button
               type="submit"
@@ -197,13 +197,13 @@ const QuizCard = ({
               </button>
             </div>
           ) : null}
-          {statusId == 4 ? (
+          {/* {statusId == 4 ? (
             <div>
               <button type="submit" className={classes["join-now-button"]}>
                 Leaderboard
               </button>
             </div>
-          ) : null}
+          ) : null} */}
           <div>
             <button
               type="submit"

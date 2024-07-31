@@ -72,11 +72,10 @@ const QuizDescription = () => {
     const QuizDetailsHandler=async()=>{
     try{
        const data=await getQuizDetails(params.quizLink);
-       console.log(data?.data.data);
        SetQuizData(data?.data.data);
     }
     catch(error){
-       console.log(error);
+       //console.log(error);
     }
   }
   QuizDetailsHandler();

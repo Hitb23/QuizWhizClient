@@ -15,13 +15,14 @@ import { useState, Fragment, forwardRef, useEffect } from "react";
 import ViewQuizQuestions from "../../view-quiz-questions";
 import { getQuizDetailsByLink } from "../../../services/admindashboard.service";
 import { ToastContainer, toast } from "react-toastify";
+import classes from "./style.module.css";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ViewQuizModal({ currentQuizLink , closeEditDialog}) {
-  const [open, setOpen] = useState(false);
+export default function ViewQuizModal({ currentQuizLink , closeEditDialog, openViewQuiz, addQueChange  }) {
+  const [open, setOpen] = useState(openViewQuiz);
   const [quizDetail, setQuizDetail] = useState({});
 
   const handleClickOpen = () => {
@@ -31,6 +32,9 @@ export default function ViewQuizModal({ currentQuizLink , closeEditDialog}) {
   const handleClose = () => {
     setOpen(false);
     closeEditDialog();
+   if(addQueChange != null) {
+    addQueChange();
+   } 
   };
 
   useEffect(() => {
@@ -45,7 +49,7 @@ export default function ViewQuizModal({ currentQuizLink , closeEditDialog}) {
   return (
     <Fragment>
       <Button
-        sx={{ backgroundColor: "#6f41db" }}
+        className={`${classes["save-quiz-btn"]}`}
         variant="contained"
         onClick={handleClickOpen}
       >
@@ -57,7 +61,7 @@ export default function ViewQuizModal({ currentQuizLink , closeEditDialog}) {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: "fixed", backgroundColor: "#6F41DB" }}>
+        <AppBar sx={{ position: "fixed", backgroundColor: "#3d3189" }}>
           <Toolbar>
             <IconButton
               edge="start"
@@ -71,10 +75,10 @@ export default function ViewQuizModal({ currentQuizLink , closeEditDialog}) {
               {quizDetail.Title} ({quizDetail.CategoryName})
             </Typography>
             
-            <Button
+            {/* <Button
               autoFocus
               sx={{
-                color: "#6F41DB",
+                color: "#3d3189",
                 backgroundColor: "#fada65",
                 "&:hover": {
                   color: "#fada65",
@@ -83,10 +87,12 @@ export default function ViewQuizModal({ currentQuizLink , closeEditDialog}) {
               onClick={handleClose}
             >
                Dashboard
-            </Button>
+            </Button> */}
           </Toolbar>
         </AppBar>
+        <div className="mt-5">
         <ViewQuizQuestions currentQuizLink={currentQuizLink}  />
+        </div>
       </Dialog>
     </Fragment>
   );

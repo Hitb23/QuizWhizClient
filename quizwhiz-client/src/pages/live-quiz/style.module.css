@@ -1,9 +1,10 @@
 .live-quiz-div {
   background-color: #3d3189;
   min-height: 100vh;
-  min-width: 100vw;
 }
-
+/* .live-quiz{
+  height:100% ;
+} */
 .timer-header {
   color: #fada65;
 }

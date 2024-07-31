@@ -1,6 +1,6 @@
 .full-screen {
   min-height: 100vh;
-  backdrop-filter: blur(1.8px);
+  background-color: #3d3189;
 }
 .main-component {
   padding: 3rem 1rem 3rem 1rem;
@@ -40,7 +40,7 @@
 }
 
 .forgot-password-button:hover {
-  background-color: #6F41DB;
+  background-color: #3d3189;
   color: #fada65;
   border: 1px solid #fada65;
 }

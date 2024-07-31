@@ -1,7 +1,29 @@
+.header {
+  display: flex !important;
+  justify-content: space-between !important;
+  padding: 0rem 1rem 0rem 1rem !important;
+  align-items: center !important;
+  background-color: #a89ee9 !important;
+}
+
+.logo-div {
+  padding: 0.5rem 1rem 0.5rem 1rem;
+}
+
+.web-logo {
+  width: 120px;
+  height: 84px;
+}
+
 @media (max-width: 450px) {
-  .logo-image {
-    height: 3rem;
+  .web-logo {
+    width: 100px;
+    height: 70px;
   }
+  .header {
+    padding: 0 !important;
+  }
+  
   .title-size {
     font-size: 1rem;
   }
@@ -9,11 +31,53 @@
     font-size: 0.93rem !important;
   }
 }
-.nav-color {
-  background-color: #a89ee9 !important;
-  box-shadow: none !important;
+
+
+/* styles.css */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.username {
-  color: #3d3189;
+@keyframes swing {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(10deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.rotate {
+  animation: rotate 2s linear infinite;
+}
+
+.swing {
+  animation: swing 2s ease-in-out infinite;
+}
+/* styles.css */
+@keyframes spin {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+.spin {
+  animation: spin 3s linear infinite;
 }

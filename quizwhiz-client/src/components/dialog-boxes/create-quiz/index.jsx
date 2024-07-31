@@ -13,7 +13,7 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import { useState, useEffect  } from "react";
+import { useState, useEffect } from "react";
 import * as yup from "yup";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
@@ -23,7 +23,6 @@ import { CREATE_QUIZ_VALIDATIONS } from "../../../validations/createQuizValidati
 import { Formik, Form, Field } from "formik";
 import { styled } from "@mui/material/styles";
 import { Style } from "@mui/icons-material";
-import AddQuestions from "../add-questions";
 import Typography from "@mui/material/Typography";
 import classes from "./style.module.css";
 import { resolvePath, useNavigate } from "react-router-dom";
@@ -32,25 +31,34 @@ import dayjs from "dayjs";
 import {
   getCategories,
   getDifficulties,
-  createNewQuiz
+  createNewQuiz,
 } from "../../../services/admindashboard.service";
 import Swal from "sweetalert2";
-import ReactDOM from 'react-dom';
+import ReactDOM from "react-dom";
+import ViewQuizModal from "../view-quiz";
 
-export default function CreateQuizModal() {
+export default function CreateQuizModal({ onClose }) {
   const [open, setOpen] = React.useState(false);
   const [categoryDetails, setCategoryDetails] = useState([]);
   const [difficultyDetails, setDifficultyDetails] = useState([]);
   const navigate = useNavigate();
-  const [addQuestionsOpen, setAddQuestionsOpen] = useState(false); 
-  const [quizLink, setQuizLink]= useState("")
-
+  const [addQuestionsOpen, setAddQuestionsOpen] = useState(false);
+  const [quizLink, setQuizLink] = useState("");
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+    if (addQuestionsOpen != true) {
+      onClose();
+      navigate(`/admin-dashboard`);
+    }
+    onClose();
+  };
+
+  const ChangeAddQuestionState = () => {
+    setAddQuestionsOpen(false);
   };
 
   const validationSchema = yup.object().shape(CREATE_QUIZ_VALIDATIONS);
@@ -63,27 +71,27 @@ export default function CreateQuizModal() {
         setCategoryDetails(categoryData.data.data);
         setDifficultyDetails(difficultyData.data.data);
       } catch (error) {
-        console.error("Error fetching data", error);
+        //console.error("Error fetching data", error);
       }
     };
 
     fetchData();
   }, []);
 
-  const handleSubmit = async (values, {resetForm}) => {
+  const handleSubmit = async (values, { resetForm }) => {
     const formattedDate = dayjs(values.scheduledDateTime).format(
       "YYYY-MM-DD HH:mm:ss.SSSSSS"
     );
     const sendData = {
-      Title: values.quizTitle,
-      Description: values.quizDescription,
+      Title: values.quizTitle.trim(),
+      Description: values.quizDescription.trim(),
       CategoryId: values.category,
       DifficultyId: values.difficulty,
       TotalQuestion: values.totalQuestions,
       MarksPerQuestion: values.marksPerQuestion,
       NegativePerQuestion: values.negativeMarksPerQuestion,
       TotalMarks: values.marksPerQuestion * values.totalQuestions,
-      MinMarks: values.minMarks,
+      MinMarks: 0,
       WinningAmount: values.winningAmount,
       ScheduleDate: formattedDate,
     };
@@ -92,31 +100,26 @@ export default function CreateQuizModal() {
       var response = await createNewQuiz(sendData);
       if (response && response.statusCode === 200) {
         Swal.fire({
-          title: 'Quiz Created Successfully',
-          text: 'You can either go to the dashboard or add questions.',
-          icon: 'success',
+          title: "Quiz Created Successfully",
+          text: "You can either go to the dashboard or add questions.",
+          icon: "success",
           showCancelButton: true,
-          confirmButtonText: 'Add Questions',
-          cancelButtonText: 'Go to Dashboard'
+          confirmButtonText: "Add Questions",
+          cancelButtonText: "Go to Dashboard",
         }).then((result) => {
-          
           if (result.isConfirmed) {
             setAddQuestionsOpen(true);
-            console.log(response.data);
             setQuizLink(response.data);
           } else {
-            navigate(`/admin-dashboard/pending`);
+            navigate(`/admin-dashboard`);
           }
         });
         resetForm();
         handleClose();
       }
     } catch (error) {
-      alert("error in submitting quiz")
-      console.error("Error creating quiz", error);
+      //console.error("Error creating quiz", error);
     }
-
-
   };
   return (
     <React.Fragment>
@@ -143,9 +146,8 @@ export default function CreateQuizModal() {
             quizTitle: "",
             quizDescription: "",
             totalQuestions: null,
-            minMarks: null,
             difficulty: "",
-            scheduledDateTime: null,
+            scheduledDateTime: dayjs().add(1, "hour"),
             totalMarks: null,
           }}
           validationSchema={validationSchema}
@@ -163,7 +165,10 @@ export default function CreateQuizModal() {
             setFieldValue,
           }) => (
             <Form>
-              <DialogTitle id="alert-dialog-title" className={`${classes["dialog-title"]}`}>
+              <DialogTitle
+                id="alert-dialog-title"
+                className={`${classes["dialog-title"]}`}
+              >
                 <strong>Create New Quiz</strong>
               </DialogTitle>
               <DialogContent>
@@ -178,6 +183,9 @@ export default function CreateQuizModal() {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   error={touched.quizTitle && Boolean(errors.quizTitle)}
+                  sx={{
+                    "& .MuiFormHelperText-root": { marginLeft: "0px" },
+                  }}
                   helperText={touched.quizTitle ? errors.quizTitle : ""}
                 />
 
@@ -229,15 +237,11 @@ export default function CreateQuizModal() {
                               {ele.CategoryName}
                             </MenuItem>
                           ))}
-
                       </Field>
                       {touched.category && errors.category && (
-                        <span
-                          className="text-danger "
-                          style={{ fontSize: "12px" }}
-                        >
+                        <Typography variant="caption" color="error">
                           {errors.category}
-                        </span>
+                        </Typography>
                       )}
                     </FormControl>
                   </Grid>
@@ -269,18 +273,15 @@ export default function CreateQuizModal() {
                           ))}
                       </Field>
                       {touched.difficulty && errors.difficulty && (
-                        <span
-                          className="text-danger "
-                          style={{ fontSize: "12px" }}
-                        >
+                        <Typography variant="caption" color="error">
                           {errors.difficulty}
-                        </span>
+                        </Typography>
                       )}
                     </FormControl>
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                  <Grid item sm={4} xs={12}>
+                  <Grid item sm={8} xs={12}>
                     <Field
                       as={TextField}
                       fullWidth
@@ -294,6 +295,9 @@ export default function CreateQuizModal() {
                       error={
                         touched.totalQuestions && Boolean(errors.totalQuestions)
                       }
+                      sx={{
+                        "& .MuiFormHelperText-root": { marginLeft: "0px" },
+                      }}
                       helperText={
                         touched.totalQuestions ? errors.totalQuestions : ""
                       }
@@ -314,30 +318,11 @@ export default function CreateQuizModal() {
                         touched.marksPerQuestion &&
                         Boolean(errors.marksPerQuestion)
                       }
+                      sx={{
+                        "& .MuiFormHelperText-root": { marginLeft: "0px" },
+                      }}
                       helperText={
                         touched.marksPerQuestion ? errors.marksPerQuestion : ""
-                      }
-                    />
-                  </Grid>
-                  <Grid item sm={4} xs={12}>
-                    <Field
-                      as={TextField}
-                      fullWidth
-                      margin="normal"
-                      label="Negative Marks per Question"
-                      type="number"
-                      value={values.negativeMarksPerQuestion}
-                      name="negativeMarksPerQuestion"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={
-                        touched.negativeMarksPerQuestion &&
-                        Boolean(errors.negativeMarksPerQuestion)
-                      }
-                      helperText={
-                        touched.negativeMarksPerQuestion
-                          ? errors.negativeMarksPerQuestion
-                          : ""
                       }
                     />
                   </Grid>
@@ -360,22 +345,7 @@ export default function CreateQuizModal() {
                       helperText={touched.totalMarks ? errors.totalMarks : ""}
                     />
                   </Grid>
-                  <Grid item sm={4} xs={12}>
-                    <Field
-                      as={TextField}
-                      fullWidth
-                      margin="normal"
-                      label="Minimum Marks For Qualify"
-                      name="minMarks"
-                      type="number"
-                      value={values.minMarks}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={touched.minMarks && Boolean(errors.minMarks)}
-                      helperText={touched.minMarks ? errors.minMarks : ""}
-                    />
-                  </Grid>
-                  <Grid item sm={4} xs={12}>
+                  <Grid item sm={8} xs={12}>
                     <Field
                       as={TextField}
                       fullWidth
@@ -388,6 +358,9 @@ export default function CreateQuizModal() {
                       error={
                         touched.winningAmount && Boolean(errors.winningAmount)
                       }
+                      sx={{
+                        "& .MuiFormHelperText-root": { marginLeft: "0px" },
+                      }}
                       helperText={
                         touched.winningAmount ? errors.winningAmount : ""
                       }
@@ -406,7 +379,7 @@ export default function CreateQuizModal() {
                       setFieldValue("scheduledDateTime", value)
                     }
                     onBlur={handleBlur}
-                    minDateTime={dayjs().add(1, 'hour')}
+                    minDateTime={dayjs().add(1, "hour")}
                     slots={{
                       textField: (props) => (
                         <TextField
@@ -430,24 +403,36 @@ export default function CreateQuizModal() {
                 </LocalizationProvider>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose} variant="outlined" sx={{color:"#6f41db",borderColor:"#6f41db"}} >
+                <Button
+                  onClick={handleClose}
+                  variant="contained"
+                  sx={{ backgroundColor: "#fff", borderColor: "#3d3189" }}
+                  className={`${classes["cancel-quiz-btn"]}`}
+                >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleSubmit}
                   variant="contained"
                   type="submit"
-                  sx={{backgroundColor:"#6f41db"}}
+                  sx={{ backgroundColor: "#3d3189", borderColor: "#3d3189" }}
+                  className={`${classes["save-quiz-btn"]}`}
                 >
                   Create
                 </Button>
-             
               </DialogActions>
             </Form>
           )}
         </Formik>
       </Dialog>
-      {addQuestionsOpen && quizLink !== "" && <AddQuestions openDialog={true} currentQuizLink={quizLink} />}
+      {addQuestionsOpen && quizLink !== "" && (
+        <ViewQuizModal
+          currentQuizLink={quizLink}
+          closeEditDialog={handleClose}
+          openViewQuiz={true}
+          addQueChange={ChangeAddQuestionState}
+        />
+      )}
     </React.Fragment>
   );
 }

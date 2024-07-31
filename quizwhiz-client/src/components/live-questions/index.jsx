@@ -51,7 +51,6 @@ const LiveQuestions = ({
       setTotalQuestions(total);
       localStorage.setItem("totalQuestions", total);
       setIsOutCheck(isOut);
-      console.log("IsOut? ", isOut);
       localStorage.setItem("isOutCheck", JSON.stringify(isOut));
     } else {
       setQuestionText(localStorage.getItem("questionText"));
@@ -73,7 +72,6 @@ const LiveQuestions = ({
 
   useEffect(() => {
     setAnswersList(answers);
-    console.log("Answers:", answers);
     var correctList = [];
     var incorrectList = [];
     var selectedList = [];
@@ -105,7 +103,6 @@ const LiveQuestions = ({
 
   useEffect(() => {
     setCountdownTimer(questionCountdown);
-    console.log(questionCountdown);
     if (questionCountdown == 20) {
       setOptions();
       localStorage.removeItem("options");
@@ -125,7 +122,6 @@ const LiveQuestions = ({
   }, [questionCountdown]);
 
   useEffect(() => {
-    console.log("Sent", sendAnswersList);
     getAnswer(sendAnswersList);
   }, [sendAnswersList]);
 
