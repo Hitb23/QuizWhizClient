@@ -3,12 +3,21 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import LandingHeader from "../../components/header/landing-header";
 import LandingFooter from "../../components/footer/landing-footer";
 import classes from "./style.module.css";
-import { AttemptQuizMobile, AttemptQuizPc, JoinQuizMobile, JoinQuizPc, SummaryQuizMobile, SummaryQuizPc, WelcomePoster } from "../../assets";
+import {
+  AttemptQuizMobile,
+  AttemptQuizPc,
+  JoinQuizMobile,
+  JoinQuizPc,
+  SummaryQuizMobile,
+  SummaryQuizPc,
+  WelcomePoster,
+} from "../../assets";
 import { Button } from "bootstrap";
 import { Link } from "react-router-dom";
 import { RoutePaths } from "../../utils/enum";
 import { LandingImage } from "../../assets";
 import Typed from "typed.js";
+import { color } from "@mui/system";
 const Welcome = () => {
   const el = React.useRef(null);
   React.useEffect(() => {
@@ -65,80 +74,84 @@ const Welcome = () => {
           <div className={classes["lines"]}></div>
         </div>
         <div className="container p-5">
-          <div className="row mb-5">
-            <div className="col-lg-6 col-12 d-none d-lg-flex justify-content-center justify-content-lg-end mb-4 mb-lg-0">
-              <img
-                src={JoinQuizPc}
-                className={`${classes["image-in-step"]}`}
-              />
+          <div className="row px-0 py-5 d-flex justify-content-center align-items-center gx-5">
+            <div className="col-lg-6 col-12 d-none d-lg-flex justify-content-center justify-content-lg-end">
+              <img src={JoinQuizPc} className={`${classes["image-in-step"]}`} />
             </div>
-            <div className="col-lg-6 col-10 d-flex d-lg-none justify-content-center align-items-center mb-4 mb-lg-0 mx-auto">
+            <div className="col-lg-6 col-10 d-flex d-lg-none justify-content-center align-items-center mx-auto">
               <img
                 src={JoinQuizMobile}
                 className={`img-fluid ${classes["image-in-step-mobile"]}`}
               />
             </div>
             <div
-              className={`col-lg-6 col-12 p-5 my-auto text-center text-lg-start ${classes["text-of-steps"]}`}
+              className={`col-lg-6 col-12 py-5 my-auto text-center text-lg-start ${classes["text-of-steps"]}`}
             >
-              <h3 className="text-white fw-bold fs-2 mb-4">
+              <h3 className="fw-bold fs-2 p-0 m-0 py-3">
                 Find Your Perfect Quiz
               </h3>
-              <p className="text-white fs-5">
+              <p className="text-white fs-5 m-0 py-3">
                 Browse through our collection of quizzes after Login. If you
-                don't have an account, register now to join. Click "Join Now" to
-                start the quiz of your choice.
+                don't have an account, register now to join. Click{" "}
+                <strong
+                  style={{
+                    color: "#fada65",
+                    whiteSpace: "nowrap",
+                    fontWeight: "bold",
+                  }}
+                >
+                  "Join Now"
+                </strong>{" "}
+                to start the quiz of your choice.
               </p>
             </div>
           </div>
-
-          <div className="row mb-5">
+          <div className="row  px-0 py-5 d-flex justify-content-center align-items-center flex-md-column-reverse flex-sm-column-reverse flex-column-reverse flex-lg-row gx-5">
             <div
-              className={`col-lg-6 col-12 order-2 order-lg-1 p-5 my-auto text-center text-lg-end ${classes["text-of-steps"]}`}
+              className={`col-lg-6 col-12 py-5 my-auto text-center text-lg-start ${classes["text-of-steps"]}`}
             >
-              <h3 className="text-white fw-bold fs-2 mb-4">
+              <h3 className="fw-bold fs-2 p-0 m-0 py-3">
                 Conquer the Quiz Challenge
               </h3>
-              <p className="text-white fs-5">
+              <p className="text-white fs-5 m-0 py-3">
                 Tackle the questions head-on. Precision is key so answer
                 correctly to stay in the game. Even if you stumble, don't worry;
                 you still have a shot at victory!
               </p>
             </div>
-            <div className="col-lg-6 col-12 order-1 order-lg-2 d-none d-lg-flex justify-content-center justify-content-lg-end mb-4 mb-lg-0">
+            <div className="col-lg-6 col-12 d-none d-lg-flex justify-content-center justify-content-lg-end">
               <img
                 src={AttemptQuizPc}
                 className={`${classes["image-in-step"]}`}
               />
             </div>
-            <div className="col-lg-6 col-10 d-flex d-lg-none justify-content-center align-items-center mb-4 mb-lg-0 mx-auto">
+            <div className="col-lg-6 col-10 d-flex d-lg-none justify-content-center align-items-center mx-auto">
               <img
                 src={AttemptQuizMobile}
                 className={`img-fluid ${classes["image-in-step-mobile"]}`}
               />
             </div>
           </div>
-
-          <div className={`row ${classes["last-item"]}`}>
-            <div className="col-lg-6 col-12 d-none d-lg-flex justify-content-center justify-content-lg-end mb-4 mb-lg-0">
+          <div className="row px-0 py-5 d-flex justify-content-center align-items-center gx-5">
+            <div className="col-lg-6 col-12 d-none d-lg-flex justify-content-center justify-content-lg-end">
               <img
                 src={SummaryQuizPc}
                 className={`${classes["image-in-step"]}`}
               />
             </div>
-            <div className="col-lg-6 col-10 d-flex d-lg-none justify-content-center align-items-center mb-4 mb-lg-0 mx-auto">
+            <div className="col-lg-6 col-10 d-flex d-lg-none justify-content-center align-items-center mx-auto">
               <img
                 src={SummaryQuizMobile}
                 className={`img-fluid ${classes["image-in-step-mobile"]}`}
               />
             </div>
             <div
-              className={`col-lg-6 col-12 my-auto p-5 text-center text-lg-start ${classes["text-of-steps"]}`}
+              className={`col-lg-6 col-12 py-5 my-auto text-center text-lg-start ${classes["text-of-steps"]}`}
             >
-              <h3 className="text-white fw-bold fs-2 mb-4">
+              <h3 className="fw-bold fs-2 p-0 m-0 py-3">
                 Celebrate Your Success
               </h3>
-              <p className="text-white fs-5">
+              <p className="text-white fs-5 m-0 py-3">
                 Once you finish, get instant access to your score, rank, and
                 winnings. See how you fared and celebrate your success!
               </p>

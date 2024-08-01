@@ -543,7 +543,7 @@ const ViewQuizQuestions = ({ currentQuizLink }) => {
   return (
     <Container>
       <Grid container spacing={2} className="mt-4">
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={6}>
           <Card sx={{ color: "#070033" }}>
             <CardContent>
               <Typography variant="h6" component="div">
@@ -555,27 +555,14 @@ const ViewQuizQuestions = ({ currentQuizLink }) => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Card sx={{ color: "#070033" }}>
-            <CardContent>
-              <Typography variant="h6" component="div">
-                Mark per Question
-              </Typography>
-              <Typography variant="body1">
-                {quizdetail.MarksPerQuestion}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={6}>
           <Card sx={{ color: "#070033" }}>
             <CardContent>
               <Typography variant="h6" component="div">
                 Total Marks
               </Typography>
               <Typography variant="body1">
-                {totalCurrentQuestions * quizdetail.MarksPerQuestion} /{" "}
+                {totalCurrentQuestions} /{" "}
                 {quizdetail.TotalMarks}
               </Typography>
             </CardContent>

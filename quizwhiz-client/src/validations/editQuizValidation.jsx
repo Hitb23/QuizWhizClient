@@ -2,7 +2,7 @@ import * as yup from "yup";
 
 const now = new Date();
 
-export const CREATE_QUIZ_VALIDATIONS = {
+export const EDIT_QUIZ_VALIDATIONS = {
   quizTitle: yup
     .string()
     .min(3, "Title must be at least 3 characters")
@@ -32,15 +32,6 @@ export const CREATE_QUIZ_VALIDATIONS = {
     .max(25, "Total questions must be at most 25"),
 
   difficulty: yup.number().required("Difficulty level is required"),
-
-  scheduledDateTime: yup
-    .date()
-    .typeError("Scheduled date and time must be a valid date")
-    .required("Scheduled date and time is required")
-    .min(
-      new Date(now.getTime() + 60 * 60 * 1000),
-      "Scheduled date and time must be at least one hour greater than current date and time"
-    ),
 
   // totalMarks: yup.number().nullable(),
 

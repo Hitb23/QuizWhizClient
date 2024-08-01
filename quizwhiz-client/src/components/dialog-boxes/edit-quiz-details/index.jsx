@@ -21,7 +21,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { CREATE_QUIZ_VALIDATIONS } from "../../../validations/createQuizValidation";
+import { EDIT_QUIZ_VALIDATIONS } from "../../../validations/editQuizValidation";
 import { Formik, Form, Field } from "formik";
 import { styled } from "@mui/material/styles";
 import { Edit, Style } from "@mui/icons-material";
@@ -64,7 +64,7 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
     onClose();
   };
 
-  const validationSchema = yup.object().shape(CREATE_QUIZ_VALIDATIONS);
+  const validationSchema = yup.object().shape(EDIT_QUIZ_VALIDATIONS);
   const fetchData = async () => {
     try {
       const difficultyData = await getDifficulties();
@@ -141,8 +141,8 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
         <Formik
           initialValues={{
             category: quizDetail.CategoryId,
-            marksPerQuestion: quizDetail.MarksPerQuestion,
-            negativeMarksPerQuestion: quizDetail.NegativePerQuestion,
+            marksPerQuestion: 1,
+            negativeMarksPerQuestion: 0,
             winningAmount: quizDetail.WinningAmount,
             quizTitle: quizDetail.Title,
             quizDescription: quizDetail.Description,
@@ -184,6 +184,9 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
                   value={values.quizTitle}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiFormHelperText-root": { marginLeft: "0px" },
+                  }}
                   error={touched.quizTitle && Boolean(errors.quizTitle)}
                   helperText={touched.quizTitle ? errors.quizTitle : ""}
                 />
@@ -200,6 +203,9 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
                   value={values.quizDescription}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  sx={{
+                    "& .MuiFormHelperText-root": { marginLeft: "0px" },
+                  }}
                   error={
                     touched.quizDescription && Boolean(errors.quizDescription)
                   }
@@ -225,6 +231,9 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
                         value={values.category}
                         onChange={handleChange}
                         onBlur={handleBlur}
+                        sx={{
+                          "& .MuiFormHelperText-root": { marginLeft: "0px" },
+                        }}
                         name="category"
                       >
                         {categoryDetails &&
@@ -262,6 +271,9 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
                         value={values.difficulty}
                         onChange={handleChange}
                         onBlur={handleBlur}
+                        sx={{
+                          "& .MuiFormHelperText-root": { marginLeft: "0px" },
+                        }}
                         name="difficulty"
                       >
                         {difficultyDetails &&
@@ -286,7 +298,7 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                  <Grid item sm={8} xs={12}>
+                  <Grid item sm={4} xs={12}>
                     <Field
                       as={TextField}
                       disabled
@@ -298,75 +310,15 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
                       value={values.totalQuestions}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      sx={{
+                        "& .MuiFormHelperText-root": { marginLeft: "0px" },
+                      }}
                       error={
                         touched.totalQuestions && Boolean(errors.totalQuestions)
                       }
                       helperText={
                         touched.totalQuestions ? errors.totalQuestions : ""
                       }
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <Field
-                      as={TextField}
-                      fullWidth
-                      margin="normal"
-                      label="Marks per Question"
-                      disabled
-                      value={values.marksPerQuestion}
-                      type="number"
-                      name="marksPerQuestion"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={
-                        touched.marksPerQuestion &&
-                        Boolean(errors.marksPerQuestion)
-                      }
-                      helperText={
-                        touched.marksPerQuestion ? errors.marksPerQuestion : ""
-                      }
-                    />
-                  </Grid>
-                  {/* <Grid item sm={4} xs={12}>
-                    <Field
-                      as={TextField}
-                      fullWidth
-                      margin="normal"
-                      label="Negative Marks per Question"
-                      disabled
-                      type="number"
-                      value={values.negativeMarksPerQuestion}
-                      name="negativeMarksPerQuestion"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={
-                        touched.negativeMarksPerQuestion &&
-                        Boolean(errors.negativeMarksPerQuestion)
-                      }
-                      helperText={
-                        touched.negativeMarksPerQuestion
-                          ? errors.negativeMarksPerQuestion
-                          : ""
-                      }
-                    />
-                  </Grid> */}
-                </Grid>
-
-                <Grid container spacing={2}>
-                  <Grid item sm={4} xs={12}>
-                    <Field
-                      as={TextField}
-                      fullWidth
-                      disabled
-                      margin="normal"
-                      label="Total Marks"
-                      type="number"
-                      name="totalMarks"
-                      value={values.totalQuestions * values.marksPerQuestion}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={touched.totalMarks && Boolean(errors.totalMarks)}
-                      helperText={touched.totalMarks ? errors.totalMarks : ""}
                     />
                   </Grid>
                   <Grid item sm={8} xs={12}>
@@ -379,6 +331,9 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
                       value={values.winningAmount}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      sx={{
+                        "& .MuiFormHelperText-root": { marginLeft: "0px" },
+                      }}
                       error={
                         touched.winningAmount && Boolean(errors.winningAmount)
                       }
@@ -401,6 +356,9 @@ export default function EditQuizModal({ currentQuizLink, onClose }) {
                       setFieldValue("scheduledDateTime", value)
                     }
                     onBlur={handleBlur}
+                    sx={{
+                      "& .MuiFormHelperText-root": { marginLeft: "0px" },
+                    }}
                     minDateTime={dayjs().add(1, "hour")}
                     slots={{
                       textField: (props) => (

@@ -39,7 +39,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 1rem 2rem 1rem 2rem;
+  padding:0.5rem 2rem 0.5rem 2rem;
   row-gap: 1rem;
   margin-bottom: 1rem;
 }
@@ -52,19 +52,19 @@
 .lines {
   height: 2px !important;
   width: 10rem;
-  background-color: #ffffff;
+  background-color: #fada65;
 }
 
 .circle {
   height: 10px !important;
   width: 10px !important;
   border-radius: 100% !important;
-  background-color: white;
+  background-color: #fada65;
 }
 
 .image-in-step {
   border: 1px solid #fada65;
-  box-shadow: 1px -1px 13px 5px #6f41db;
+  box-shadow: 5px 5px 0px #fada65;
   border-radius: 10px;
   height: 300px;
   width: 600px;
@@ -72,18 +72,18 @@
 
 .image-in-step-mobile {
   border: 1px solid #fada65;
-  box-shadow: 1px -1px 13px 5px #6f41db;
+  box-shadow: 1px 5px 0px 0px #6f41db;
   border-radius: 10px;
 }
 
 .heading-of-list {
   font-family: "Pacifico", cursive;
   font-size: 2.5rem;
-  color: #f7de87;
+  color: #fada65;
 }
 
-.last-item {
-  margin-bottom: 80px !important;
+.text-of-steps {
+  color: #fada65;
 }
 
 @media (max-width: 1300px) {
@@ -130,7 +130,7 @@
   }
 
   .poster {
-    padding: 5rem 1rem 5rem 1rem;
+    padding: 2rem 1rem 2rem 1rem;
   }
 
   .poster-img {
@@ -157,7 +157,7 @@
   }
 
   .poster {
-    padding: 4rem 1rem 5rem 1rem;
+    padding: 2rem 1rem 2rem 1rem;
   }
 
   .poster-img {
@@ -195,8 +195,8 @@
   .image-in-step {
     height: 225px;
     width: 450px;
-    margin-top: 3rem;
   }
+
   .heading-of-list {
     font-size: 2rem;
   }

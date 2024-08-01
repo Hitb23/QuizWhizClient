@@ -114,7 +114,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
         }}
         className={`${classes["header"]}`}
       >
-        <Link to="/" className={`${classes["logo-div"]}`}>
+        <Link to="/admin-dashboard" className={`${classes["logo-div"]}`}>
           <img className={classes["web-logo"]} src={Logo} />
         </Link>
         <Box

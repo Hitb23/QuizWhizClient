@@ -88,9 +88,9 @@ export default function CreateQuizModal({ onClose }) {
       CategoryId: values.category,
       DifficultyId: values.difficulty,
       TotalQuestion: values.totalQuestions,
-      MarksPerQuestion: values.marksPerQuestion,
-      NegativePerQuestion: values.negativeMarksPerQuestion,
-      TotalMarks: values.marksPerQuestion * values.totalQuestions,
+      MarksPerQuestion: 1,
+      NegativePerQuestion: 0,
+      TotalMarks: values.totalQuestions,
       MinMarks: 0,
       WinningAmount: values.winningAmount,
       ScheduleDate: formattedDate,
@@ -140,15 +140,12 @@ export default function CreateQuizModal({ onClose }) {
         <Formik
           initialValues={{
             category: "",
-            marksPerQuestion: null,
-            negativeMarksPerQuestion: null,
             winningAmount: null,
             quizTitle: "",
             quizDescription: "",
             totalQuestions: null,
             difficulty: "",
             scheduledDateTime: dayjs().add(1, "hour"),
-            totalMarks: null,
           }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
@@ -199,6 +196,9 @@ export default function CreateQuizModal({ onClose }) {
                   type="text"
                   name="quizDescription"
                   value={values.quizDescription}
+                  sx={{
+                    "& .MuiFormHelperText-root": { marginLeft: "0px" },
+                  }}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   error={
@@ -281,7 +281,7 @@ export default function CreateQuizModal({ onClose }) {
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                  <Grid item sm={8} xs={12}>
+                  <Grid item sm={4} xs={12}>
                     <Field
                       as={TextField}
                       fullWidth
@@ -301,48 +301,6 @@ export default function CreateQuizModal({ onClose }) {
                       helperText={
                         touched.totalQuestions ? errors.totalQuestions : ""
                       }
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <Field
-                      as={TextField}
-                      fullWidth
-                      margin="normal"
-                      label="Marks per Question"
-                      value={values.marksPerQuestion}
-                      type="number"
-                      name="marksPerQuestion"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={
-                        touched.marksPerQuestion &&
-                        Boolean(errors.marksPerQuestion)
-                      }
-                      sx={{
-                        "& .MuiFormHelperText-root": { marginLeft: "0px" },
-                      }}
-                      helperText={
-                        touched.marksPerQuestion ? errors.marksPerQuestion : ""
-                      }
-                    />
-                  </Grid>
-                </Grid>
-
-                <Grid container spacing={2}>
-                  <Grid item sm={4} xs={12}>
-                    <Field
-                      as={TextField}
-                      fullWidth
-                      disabled
-                      margin="normal"
-                      label="Total Marks"
-                      type="number"
-                      name="totalMarks"
-                      value={values.totalQuestions * values.marksPerQuestion}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={touched.totalMarks && Boolean(errors.totalMarks)}
-                      helperText={touched.totalMarks ? errors.totalMarks : ""}
                     />
                   </Grid>
                   <Grid item sm={8} xs={12}>
@@ -380,6 +338,9 @@ export default function CreateQuizModal({ onClose }) {
                     }
                     onBlur={handleBlur}
                     minDateTime={dayjs().add(1, "hour")}
+                    sx={{
+                      "& .MuiFormHelperText-root": { marginLeft: "0px" },
+                    }}
                     slots={{
                       textField: (props) => (
                         <TextField

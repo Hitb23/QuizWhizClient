@@ -90,8 +90,7 @@ const AdminDashboard = () => {
         SetSearchedWord("");
         setUploadCount(uploadCount + 1);
         var checkIsAscending = true;
-        if(statusEnum[currentState] == 4)
-        {
+        if (statusEnum[currentState] == 4) {
           checkIsAscending = false;
         }
         setIsAscending(checkIsAscending);
@@ -114,14 +113,12 @@ const AdminDashboard = () => {
         setIsLoading(false);
       }
 
-      try{
+      try {
         const difficulties = await getDifficulties();
         const categories = await getCategories();
         setDifficultyList(difficulties.data.data);
         setCategoryList(categories.data.data);
-      } catch(error) {
-        
-      }
+      } catch (error) {}
 
       try {
         const status = await getAllStatusCount();
@@ -149,7 +146,7 @@ const AdminDashboard = () => {
     setCurrentState(currentState);
     // navigateToCategory(1);
   };
-  
+
   useEffect(() => {
     const data = jwtDecoder();
     username = data["Username"];
@@ -166,7 +163,10 @@ const AdminDashboard = () => {
   }, []);
 
   const navigateToCategory = (id) => {
-    setIsLoading(true);
+    if(currentState != id)
+    {
+      setIsLoading(true);
+    }
     // SetFilteredData([]);
     setCurrentState(id);
     // navigate(`/admin-dashboard`);
