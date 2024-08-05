@@ -16,8 +16,8 @@ export const RoutePaths = {
   GetQuizDetails:"/get-quiz-details",
   LiveQuiz:"/live-quiz",
   UpdateQuizQuestions:"/update-quiz-question",
-  ViewQuizResult:"/admin-dashboard/view-quiz-result",
-  ContestantDashboard:"/leaderboard"
+  ViewQuizResult:"/admin-dashboard/leaderboard",
+  ContestantDashboard:"/leaderboard",
 };
 
 export const Role = {
@@ -55,7 +55,12 @@ export const API_URLS = {
   PUBLISH_QUIZ:'/quiz/publish-quiz?quizLink=',
   COINS_LIFELINE_URL:'quiz/get-coins-lifeline?userName=',
   GET_QUIZ_RANK: '/quiz/get-quiz-rank',
+  GET_ADMIN_QUIZ_LEADERBOARD:'/quiz/get-admin-leaderboard',
+  QUIZ_LEADERBOARD_RECORDS:'/auth/change-leaderboard-record-size',
+  GET_QUIZ_PARTICIPANT_COUNT:'/quiz/get-quiz-participants-count?quizLink=',
+  GET_USER_QUIZ_LEADERBOARD: '/quiz/get-user-leaderboard',
 };
+
 export const statusEnum={
   "pending": 1,
   "upcoming": 2,

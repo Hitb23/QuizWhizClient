@@ -45,6 +45,7 @@ import QuizEditTable from "../../components/admin-quiz-edit";
 import { HashLoader } from "react-spinners";
 import { ToastContainer } from "react-toastify";
 import Quiz from "../QuizHub";
+import { NoDataFound } from "../../assets";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -163,8 +164,7 @@ const AdminDashboard = () => {
   }, []);
 
   const navigateToCategory = (id) => {
-    if(currentState != id)
-    {
+    if (currentState != id) {
       setIsLoading(true);
     }
     // SetFilteredData([]);
@@ -568,7 +568,17 @@ const AdminDashboard = () => {
               ) : (
                 isLoading == false &&
                 filteredData.length == 0 && (
-                  <h2 style={{ color: "#3d3189" }}>No Data Found</h2>
+                  <div className="row p-0">
+                    <div className="d-flex justify-content-center align-items-center flex-column">
+                      <h2
+                        className={`${classes["no-data-found"]} text-center mt-5 fw-bold`}
+                        style={{ color: "#3d3189" }}
+                      >
+                        No Data Available
+                      </h2>
+                      <img src={NoDataFound} width="300px" height="300px" />
+                    </div>
+                  </div>
                 )
               )}
             </div>

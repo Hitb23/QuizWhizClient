@@ -1,12 +1,121 @@
-.LeaderBoard-table{
-    background-color: transparent !important;
-}
+@import url("https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap");
+
 .full-screen {
-    min-height: 100vh;
-    background-image: none !important;
-    background-color: aliceblue !important;
-    /* backdrop-filter: blur(1.8px); */
+  min-height: 100vh;
+  background-color: #3d3189;
+}
+
+.user-details {
+  width: 100%;
+  /* background: rgb(180,60,249);
+background: linear-gradient(190deg, rgba(180,60,249,1) 0%, rgba(140,120,162,1) 45%, rgba(87,36,255,1) 86%); */
+}
+
+.container-box {
+  margin-top: 6.5rem;
+}
+
+.table {
+  background: black !important;
+}
+
+.table-design {
+  background: #3d3189 !important;
+  color: #fada65 !important;
+  font-size: 1.5rem;
+}
+
+.user-data {
+  font-size: 1.2rem !important;
+  padding: 1rem;
+  font-weight: 600 !important;
+}
+
+.score {
+  font-weight: 700;
+}
+
+.participants {
+  font-weight: 700;
+}
+
+.participants-numbers {
+  font-size: 1.4rem;
+}
+.rank{
+    font-size: 30px;
+    font-weight: 600;
+}
+@media (max-width: 900px) {
+  .trophy-image {
+    height: 7rem;
+    width: 7.5rem;
   }
-  .bg-transparent{
-    background-color: aliceblue !important;
+}
+.score-no {
+  font-size: 1.1rem;
+}
+@media (max-width: 600px) {
+  .trophy-image {
+    height: 5.5rem;
+    width: 6.5rem;
   }
+
+  .participants {
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+
+  .participants-numbers {
+    font-size: 1.1rem;
+  }
+
+  .score {
+    font-size: 1.3rem;
+  }
+
+
+
+  .rank-title {
+    font-size: 1.3rem;
+  }
+
+  .rank {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  .table-design {
+    font-size: 1.1rem;
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
+    overflow: hidden; /* Hide the overflowing text */
+    text-overflow: ellipsis;
+  }
+
+  .user-data {
+    font-size: 1rem !important;
+    padding: 0.2rem;
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
+    overflow: hidden; /* Hide the overflowing text */
+    text-overflow: ellipsis;
+  }
+}
+@media (max-width: 406px) {
+  .trophy-image {
+    height: 4.1rem;
+    width: 5.1rem;
+  }
+}
+
+@media (max-width: 330px) {
+  .trophy-image {
+    height: 4.1rem;
+    width: 4.1rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .trophy-image {
+    display: none;
+  }
+}

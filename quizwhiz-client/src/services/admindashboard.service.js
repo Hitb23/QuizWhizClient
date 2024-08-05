@@ -198,4 +198,42 @@ export const PublishQuiz = async (quizLink)=>{
   }
 }
 
+export const getQuizLeaderboard = async (data) => {
+  try {
+    const res = await axios.post(API_URLS.GET_ADMIN_QUIZ_LEADERBOARD, JSON.stringify(data), {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+  console.log(res);
+    return res.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const changeLeaderboardRecordsSize = async (data) => {
+  return await axios.get(API_URLS.QUIZ_LEADERBOARD_RECORDS, {
+    headers: {
+      "Content-Type": "application/json",
+      // token: "Bearer " + localStorage.getItem("token")
+    },
+    params: data,
+  });
+};
+
+export const getQuizParticipantsCount = async (quizLink) => {
+  try {
+    const res = await axios.get(API_URLS.GET_QUIZ_PARTICIPANT_COUNT + quizLink, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    return error.response.data
+  }
+};
+
 

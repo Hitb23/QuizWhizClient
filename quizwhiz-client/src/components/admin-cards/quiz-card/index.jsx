@@ -81,6 +81,10 @@ const QuizCard = ({
     navigate(`/live-quiz/${quizLink}`);
   };
 
+  const leaderboardHandler = () => {
+    navigate(`/quizzes/leaderboard/${quizLink}`);
+  }
+
   return (
     <>
       <div
@@ -141,13 +145,13 @@ const QuizCard = ({
               </button>
             </div>
           ) : null}
-          {/* {statusId == 4 ? (
+          {statusId == 4 ? (
             <div className="d-none d-xl-inline">
-              <button type="submit" className={classes["join-now-button"]}>
+              <button type="submit" className={classes["join-now-button"]} onClick={leaderboardHandler}>
                 Leaderboard
               </button>
             </div>
-          ) : null} */}
+          ) : null}
           <div className="d-none d-xl-inline">
             <button
               type="submit"
@@ -197,13 +201,13 @@ const QuizCard = ({
               </button>
             </div>
           ) : null}
-          {/* {statusId == 4 ? (
+          {statusId == 4 ? (
             <div>
-              <button type="submit" className={classes["join-now-button"]}>
+              <button type="submit" className={classes["join-now-button"]} onClick={leaderboardHandler}>
                 Leaderboard
               </button>
             </div>
-          ) : null} */}
+          ) : null}
           <div>
             <button
               type="submit"

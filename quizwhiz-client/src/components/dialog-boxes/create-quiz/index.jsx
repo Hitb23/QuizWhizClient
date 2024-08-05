@@ -80,7 +80,7 @@ export default function CreateQuizModal({ onClose }) {
 
   const handleSubmit = async (values, { resetForm }) => {
     const formattedDate = dayjs(values.scheduledDateTime).format(
-      "YYYY-MM-DD HH:mm:ss.SSSSSS"
+      "YYYY-MM-DD HH:mm:00"
     );
     const sendData = {
       Title: values.quizTitle.trim(),
@@ -95,7 +95,6 @@ export default function CreateQuizModal({ onClose }) {
       WinningAmount: values.winningAmount,
       ScheduleDate: formattedDate,
     };
-
     try {
       var response = await createNewQuiz(sendData);
       if (response && response.statusCode === 200) {

@@ -21,6 +21,7 @@ import LiveQuestions from "../components/live-questions";
 import ViewQuizResult from "../pages/view-quiz-result";
 import ContestantLeaderboard from "../pages/contestant-leaderboard";
 import UserScoreModal from "../pages/user-score";
+import UserSideLeaderboard from "../pages/user-leaderboard";
 
 export const ROUTES = [
   {
@@ -141,8 +142,13 @@ export const ROUTES = [
     roles: [Role.Admin, Role.Contestant],
   },
   {
-    path: "/leaderboard/:quizLink",
-    element: <ContestantLeaderboard />,
+    path: "/admin-dashboard/leaderboard/:quizLink",
+    element: <ViewQuizResult />,
+    roles: [Role.Admin],
+  },
+  {
+    path: "/quizzes/leaderboard/:quizLink",
+    element: <UserSideLeaderboard />,
     roles: [Role.Contestant],
   },
 ];
