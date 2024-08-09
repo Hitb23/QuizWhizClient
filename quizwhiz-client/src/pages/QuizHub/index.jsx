@@ -89,13 +89,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import Typography from "@mui/material/Typography";
-import { Badge } from "@mui/material";
-import LifeLineIcons from "../../../src/assets/lifeline.svg";
 import {
   Skip,
   Shield,
-  Time,
   Priceicon,
   Heart,
   CoinIcon,
@@ -331,7 +327,7 @@ const Quiz = ({ isOpen, closeHandler, coinsAndLifelinesDetails }) => {
               NotEnoughCoinsHandler={NotEnoughCoinsHandler}
             />
             <CoinsCard
-              imageUrl={Time}
+              //imageUrl={Time}
               value={lifelines[2].Value}
               priceIcon={Priceicon}
               totalLifeline={1}

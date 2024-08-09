@@ -1,7 +1,7 @@
 import React from "react";
 import classes from '../profile-photo/style.module.css';
 const ImageComponent = ({ alter, widthVal, heightVal, objFit, userName }) => {
-  const fullImagePath = `${import.meta.env.VITE_PUBLIC_URL}ProfilePhoto/${userName}/${userName}.jpg`;
+  const fullImagePath = `192.168.1.20:8002/ProfilePhoto/${userName}/${userName}.jpg`;
 
   return (
     <div>

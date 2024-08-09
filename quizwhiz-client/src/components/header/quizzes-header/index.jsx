@@ -65,9 +65,7 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const imgPath = `${
-      import.meta.env.VITE_PUBLIC_URL
-    }ProfilePhoto/${username}/${username}.jpg?t=${new Date().getTime()}`;
+    const imgPath = `192.168.1.20:8002/ProfilePhoto/${username}/${username}.jpg?t=${new Date().getTime()}`;
     setFullImagePath(imgPath);
   }, [uploadCount]);
 
@@ -169,7 +167,7 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
                 Open dialog
           </Button> */}
 
-          {/* <Badge  badgeContent={'+'}
+          <Badge  badgeContent={'+'}
           sx={{
             '.MuiBadge-badge':{
               background:'#FADA65',
@@ -190,7 +188,7 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
               />
               <small className="mx-2 fw-bold fs-5">{userCoinsAndLifeline?.data?.UserLifelines.length}</small>
             </div>
-          </Badge> */}
+          </Badge>
           <p
             className={`${classes["username"]} fs-5 mt-3 px-3 fw-semibold d-sm-inline d-none`}
           >

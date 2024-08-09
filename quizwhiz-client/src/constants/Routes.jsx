@@ -22,6 +22,8 @@ import ViewQuizResult from "../pages/view-quiz-result";
 import ContestantLeaderboard from "../pages/contestant-leaderboard";
 import UserScoreModal from "../pages/user-score";
 import UserSideLeaderboard from "../pages/user-leaderboard";
+import HeartLifelineModal from "../components/heart-lifeline";
+import LiveQuestionsCopy from "../components/live-questions copy";
 
 export const ROUTES = [
   {
@@ -99,13 +101,11 @@ export const ROUTES = [
     element: <ViewQuizModal />,
     roles: [Role.Admin],
   },
-
   {
     path: "/update-quiz-questions:token",
     element: <ViewQuizModal />,
     roles: [Role.Admin],
   },
- 
   {
     path: "/live-quiz/:quizLink",
     element: <LiveQuiz />,
@@ -151,4 +151,14 @@ export const ROUTES = [
     element: <UserSideLeaderboard />,
     roles: [Role.Contestant],
   },
+  {
+    path: "/quizzes/heart-lifeline",
+    element: <HeartLifelineModal />,
+    roles: [Role.Contestant],
+  },
+  {
+    path: "/quizzes/live-questions",
+    element: <LiveQuestionsCopy />,
+    roles: [Role.Contestant]
+  }
 ];

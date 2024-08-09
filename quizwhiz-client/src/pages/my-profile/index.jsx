@@ -166,10 +166,8 @@ const MyProfile = () => {
     setEmail(data.Email);
 
     const fetchUserDetails = async () => {
-      `${import.meta.env.VITE_PUBLIC_URL}src/assets/gk.jpg`;
-      const imgPath = `${
-        import.meta.env.VITE_PUBLIC_URL
-      }/ProfilePhoto/${username}/${username}.jpg`;
+      const imgPath = `
+        /ProfilePhoto/${username}/${username}.jpg`;
       setFullImagePath(imgPath);
       try {
         const response = await getUserDetails(username);
@@ -194,9 +192,8 @@ const MyProfile = () => {
   useEffect(() => {
     const data = jwtDecoder();
     const Username = data.Username;
-    const imgPath = `${
-      import.meta.env.VITE_PUBLIC_URL
-    }/ProfilePhoto/${Username}/${Username}.jpg`;
+    const imgPath = `
+      http://192.168.1.20:8001/ProfilePhoto/${Username}/${Username}.jpg`;
     setFullImagePath(imgPath);
   }, [image]);
 
@@ -217,9 +214,7 @@ const MyProfile = () => {
         reader.readAsDataURL(ProfilePhoto);
         const data = jwtDecoder();
         const Username = data.Username;
-        const imgPath = `${
-          import.meta.env.VITE_PUBLIC_URL
-        }ProfilePhoto/${Username}/${Username}.jpg`;
+        const imgPath = `http://192.168.1.20:8001/ProfilePhoto/${Username}/${Username}.jpg`;
         setFullImagePath(imgPath);
         toast.success("Profile Photo Changed Successfully.", {
           position: "top-right",

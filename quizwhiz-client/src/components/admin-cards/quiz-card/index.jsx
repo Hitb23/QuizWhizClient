@@ -11,6 +11,11 @@ import QuizDescription from "../quiz-description";
 import CountdownTimer from "../../countdown-timer";
 import QuizCompletion from "../../quiz-completion";
 import jwtDecoder from "../../../services/jwtDecoder";
+import gk from "../../../assets/gk.jpg";
+import sports from "../../../assets/sports.jpg";
+import education from "../../../assets/education.jpg";
+import entertainment from "../../../assets/entertainment.jpg";
+import technology from "../../../assets/technology.jpg";
 
 const QuizCard = ({
   title,
@@ -30,13 +35,13 @@ const QuizCard = ({
   const username = data["Username"];
 
   useEffect(() => {
-    setMinutes(Math.round((quizDate.getTime() - new Date().getTime()) / 60000));
+    setMinutes(Math.ceil((quizDate.getTime() - new Date().getTime()) / 60000));
   });
 
   var categoryName = CATEGORIES[categoryId];
-  var imageUrl = `/src/assets/${categoryName.toLowerCase()}.jpg`;
+  var imageUrl = categoryName;
   if (categoryName == "General Knowledge") {
-    imageUrl = `/src/assets/gk.jpg`;
+    imageUrl = gk;
   }
 
   const formattedDate = new Date(scheduledDate).toLocaleDateString("en-US", {

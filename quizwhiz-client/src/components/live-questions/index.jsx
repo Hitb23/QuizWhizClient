@@ -7,6 +7,8 @@ import { Gauge, gaugeClasses } from "@mui/x-charts";
 import { GiEntryDoor } from "react-icons/gi";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { FiftyPY, SkipPY } from "../../assets";
+import { Tooltip } from "@mui/material";
 
 const LiveQuestions = ({
   questionDetail,
@@ -17,6 +19,9 @@ const LiveQuestions = ({
   isOut,
   isLoading,
   getAnswer,
+  onSkipClick,
+  onFiftyClick,
+  sendWrongAnswers,
 }) => {
   const [questionText, setQuestionText] = useState();
   const [options, setOptions] = useState([]);
@@ -25,11 +30,13 @@ const LiveQuestions = ({
   const [totalQuestions, setTotalQuestions] = useState();
   const [countdownTimer, setCountdownTimer] = useState(0);
   const [questionTypeId, setQuestionTypeId] = useState();
+  const [questionId, setQuestionId] = useState();
   const [sendAnswersList, setSendAnswersList] = useState([]);
   const [answersList, setAnswersList] = useState([]);
   const [isCorrect, setIsCorrect] = useState([-1]);
   const [isIncorrect, setIsIncorrect] = useState([-1]);
   const [isOutCheck, setIsOutCheck] = useState(false);
+  const [disableOptions, setDisableOptions] = useState(sendWrongAnswers);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,11 +59,14 @@ const LiveQuestions = ({
       localStorage.setItem("totalQuestions", total);
       setIsOutCheck(isOut);
       localStorage.setItem("isOutCheck", JSON.stringify(isOut));
+      setQuestionId(questionDetail?.question?.questionId);
+      localStorage.setItem("questionId", questionDetail?.question?.questionId);
     } else {
       setQuestionText(localStorage.getItem("questionText"));
       setOptions(JSON.parse(localStorage.getItem("options")));
       setQuestionTypeId(localStorage.getItem("questionTypeId"));
       setCurrent(localStorage.getItem("current"));
+      setQuestionId(localStorage.getItem("questionId"));
       setTotalQuestions(localStorage.getItem("totalQuestions"));
       setIsOutCheck(JSON.parse(localStorage.getItem("isOutCheck")));
     }
@@ -69,6 +79,18 @@ const LiveQuestions = ({
         : optionsRef[index].classList.remove(classes["option-box-disabled"]);
     });
   }, [isOutCheck]);
+
+  useEffect(() => {
+    console.log("Outside", sendWrongAnswers);
+    if (sendWrongAnswers.length > 0) {
+      console.log("Inside", sendWrongAnswers);
+      options?.map((element, index) => {
+        if (sendWrongAnswers.includes(index + 1)) {
+          optionsRef[index].classList.add(classes["option-box-disabled"]);
+        }
+      });
+    }
+  }, [sendWrongAnswers]);
 
   useEffect(() => {
     setAnswersList(answers);
@@ -127,7 +149,7 @@ const LiveQuestions = ({
 
   const onLeaveHandler = () => {
     navigate("/quizzes");
-  }
+  };
 
   const onOptionSelect = (e) => {
     if (questionCountdown < 17 && questionTypeId == 1) {
@@ -175,6 +197,15 @@ const LiveQuestions = ({
     }
   };
 
+  const onSkipHandler = () => {
+    onSkipClick();
+    localStorage.setItem("isSkipUsed", "true");
+  };
+
+  const onFiftyHandler = () => {
+    onFiftyClick(questionId);
+  };
+
   return (
     <main className={`${classes["live-questions-div"]} row row-gap-1`}>
       <div
@@ -217,6 +248,35 @@ const LiveQuestions = ({
                 />
               </div>
             </div>
+            {countdownTimer < 17 && (
+              <div className="d-flex align-items-center gap-4">
+                {localStorage.getItem("isSkipUsed") == "false" &&
+                  localStorage.getItem("isOutCheck") == "false" && (
+                    <Tooltip title="Skip a Question">
+                      <div
+                        className={`${classes["coin-box"]} rounded-4 shadow`}
+                        style={{ padding: "10px", border: "1px solid yellow" }}
+                        onClick={onSkipHandler}
+                      >
+                        <img src={SkipPY} height={50} />
+                      </div>
+                    </Tooltip>
+                  )}
+                {localStorage.getItem("isFiftyUsed") == "false" &&
+                  localStorage.getItem("questionTypeId") == 1 &&
+                  localStorage.getItem("isOutCheck") == "false" && (
+                    <Tooltip title="50-50">
+                      <div
+                        className={`${classes["coin-box"]} rounded-4 shadow`}
+                        style={{ padding: "4px", border: "1px solid yellow" }}
+                        onClick={onFiftyHandler}
+                      >
+                        <img src={FiftyPY} height={60} />
+                      </div>
+                    </Tooltip>
+                  )}
+              </div>
+            )}
             <div className={`${classes["countdown"]}`}>
               <div
                 className={`${classes["countdown-text"]} d-flex justify-content-center align-items-center`}
@@ -261,7 +321,11 @@ const LiveQuestions = ({
             ))}
           {isOutCheck == true && (
             <div className={`d-flex justify-content-center p-0`}>
-              <FaSignOutAlt size={70} className={`${classes["leave-btn"]}`} onClick={onLeaveHandler}/>
+              <FaSignOutAlt
+                size={70}
+                className={`${classes["leave-btn"]}`}
+                onClick={onLeaveHandler}
+              />
             </div>
           )}
 
