@@ -96,7 +96,7 @@ import {
   LifeLineBG,
   SkipPY,
   FiftyPY,
-  HeartPY,
+  HeartPY
 } from "../../assets/index";
 import withReactContent from "sweetalert2-react-content";
 import classes from "./style.module.css";
@@ -115,10 +115,18 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 const BuyLifelines = ({ isOpen, closeHandler, coinsAndLifelinesDetails }) => {
   const [open, setOpen] = React.useState(false);
   const [coins, setCoins] = useState(0);
-  const [lifeLines, setLifeLines] = useState(0);
-  const [skipLifeline, setSkipLifeline] = useState(0);
-  const [anotherChanceLifeline, setAnotherChanceLifeline] = useState(0);
-  const [fiftyLifeline, setFiftyLifeline] = useState(0);
+  const [lifeLines, setLifeLines] = useState(
+    coinsAndLifelinesDetails?.Lifelines
+  );
+  const [skipLifeline, setSkipLifeline] = useState(
+    0
+  );
+  const [anotherChanceLifeline, setAnotherChanceLifeline] = useState(
+    0
+  );
+  const [fiftyLifeline, setFiftyLifeline] = useState(
+    0
+  );
   const MySwal = withReactContent(Swal);
   const NotEnoughCoinsHandler = async () => {
     await Swal.fire({
@@ -136,11 +144,9 @@ const BuyLifelines = ({ isOpen, closeHandler, coinsAndLifelinesDetails }) => {
     setOpen(isOpen ?? false);
     setCoins(coinsAndLifelinesDetails?.CoinsCount ?? 0);
     setLifeLines(coinsAndLifelinesDetails?.Lifelines);
-    if (coinsAndLifelinesDetails?.UserLifelines) {
-      setSkipLifeline(coinsAndLifelinesDetails?.UserLifelines[0]);
-      setFiftyLifeline(coinsAndLifelinesDetails?.UserLifelines[1]);
-      setAnotherChanceLifeline(coinsAndLifelinesDetails?.UserLifelines[2]);
-    }
+    setSkipLifeline(coinsAndLifelinesDetails?.UserLifelines[0]);
+    setFiftyLifeline(coinsAndLifelinesDetails?.UserLifelines[1]);
+    setAnotherChanceLifeline(coinsAndLifelinesDetails?.UserLifelines[2]);
   }, [coinsAndLifelinesDetails]);
 
   const handleClickOpen = () => {
@@ -160,17 +166,21 @@ const BuyLifelines = ({ isOpen, closeHandler, coinsAndLifelinesDetails }) => {
     try {
       const response = await BuyLifeline(data);
       // console.log(response);
-      if (id == 1) {
-        setSkipLifeline({ LifelineCount: count + 1, LifelineId: id });
-        setCoins((coins) => Math.max(coins - 150, 0));
-      } else if (id == 2) {
-        setFiftyLifeline({ LifelineCount: count + 1, LifelineId: id });
-        setCoins((coins) => Math.max(coins - 100, 0));
-      } else if (id == 3) {
-        setAnotherChanceLifeline({ LifelineCount: count + 1, LifelineId: id });
-        setCoins((coins) => Math.max(coins - 200, 0));
-      }
-    } catch (error) {
+       if (id == 1){
+         setSkipLifeline({ LifelineCount: count + 1, LifelineId: id });
+         setCoins((coins)=> Math.max(coins-150,0))
+       }
+       else if (id == 2){
+         setFiftyLifeline({ LifelineCount: count + 1, LifelineId: id });
+         setCoins((coins)=> Math.max(coins-100,0))
+        }
+        else if (id == 3){
+         setAnotherChanceLifeline({ LifelineCount: count + 1, LifelineId: id });
+         setCoins((coins)=> Math.max(coins-200,0))
+        }
+       
+    } 
+    catch (error) {
       if (error.response.data.isSuccess == false) NotEnoughCoinsHandler();
     }
   };
@@ -212,7 +222,7 @@ const BuyLifelines = ({ isOpen, closeHandler, coinsAndLifelinesDetails }) => {
         className="shadow-lg"
       >
         <DialogTitle
-          sx={{ background: "#3d3189", minWidth: "5rem" }}
+          sx={{ background: "#3d3189" ,minWidth:'5rem'}}
           id="customized-dialog-title"
         >
           <div className="d-flex justify-content-between align-items-center flex-wrap">
@@ -220,11 +230,7 @@ const BuyLifelines = ({ isOpen, closeHandler, coinsAndLifelinesDetails }) => {
               <h2 className={` ${classes["Shoptext"]} text-black mt-2 `}>
                 SHOP
               </h2>
-              <img
-                src={Knapsack}
-                height={65}
-                className={`${classes["knapsack-design"]} `}
-              />
+              <img src={Knapsack} height={65}  className={`${classes['knapsack-design']} `}/>
             </div>
 
             {/* <div
@@ -243,7 +249,7 @@ const BuyLifelines = ({ isOpen, closeHandler, coinsAndLifelinesDetails }) => {
               className={`rounded-4 d-flex  justify-content-between align-items-center p-2 ${classes["lifeLineShadow"]}`}
               style={{ background: "#6F41DB" }}
             >
-              <img src={CoinIcon} height={28} />
+              <img src={CoinIcon} height={28}  />
               <small className={`mx-1  fw-bold  ${classes["text-bg"]}`}>
                 {coins}
               </small>
