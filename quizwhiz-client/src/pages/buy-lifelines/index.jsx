@@ -81,28 +81,29 @@
 
 // export default Quiz;
 import React, { useEffect, useState } from "react";
-import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Skip,
-  Shield,
   Priceicon,
-  Heart,
   CoinIcon,
   Knapsack,
   CrossMoney,
   LifeLineBG,
-} from "../../../src/assets/index";
+  SkipPY,
+  FiftyPY,
+  HeartPY,
+} from "../../assets/index";
 import withReactContent from "sweetalert2-react-content";
 import classes from "./style.module.css";
 import Swal from "sweetalert2";
 import CoinsCard from "../../components/admin-cards/coins-card";
+import { BuyLifeline } from "../../services/quizSocket.service";
+import jwtDecoder from "../../services/jwtDecoder";
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
@@ -111,29 +112,15 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     padding: theme.spacing(1),
   },
 }));
-const Quiz = ({ isOpen, closeHandler, coinsAndLifelinesDetails }) => {
-  const [open, setOpen] = React.useState(isOpen);
-  const [coins, setCoins] = useState(coinsAndLifelinesDetails?.CoinsCount);
-  const [userlifeLines, setUserLifeLines] = useState(
-    coinsAndLifelinesDetails?.UserLifelines
-  );
-  const [lifelines, setLifelines] = useState(
-    coinsAndLifelinesDetails?.Lifelines
-  );
+const BuyLifelines = ({ isOpen, closeHandler, coinsAndLifelinesDetails }) => {
+  const [open, setOpen] = React.useState(false);
+  const [coins, setCoins] = useState(0);
+  const [lifeLines, setLifeLines] = useState(0);
+  const [skipLifeline, setSkipLifeline] = useState(0);
+  const [anotherChanceLifeline, setAnotherChanceLifeline] = useState(0);
+  const [fiftyLifeline, setFiftyLifeline] = useState(0);
   const MySwal = withReactContent(Swal);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    closeHandler();
-  };
-  const incrementHandler = (ele) => {
-    IncrementCount();
-  };
-  const NotEnoughCoinsHandler = async (e) => {
-    e.preventDefault();
+  const NotEnoughCoinsHandler = async () => {
     await Swal.fire({
       // icon: "error",
       imageUrl: CrossMoney,
@@ -145,6 +132,49 @@ const Quiz = ({ isOpen, closeHandler, coinsAndLifelinesDetails }) => {
       confirmButtonColor: "#6F41DB",
     });
   };
+  useEffect(() => {
+    setOpen(isOpen ?? false);
+    setCoins(coinsAndLifelinesDetails?.CoinsCount ?? 0);
+    setLifeLines(coinsAndLifelinesDetails?.Lifelines);
+    if (coinsAndLifelinesDetails?.UserLifelines) {
+      setSkipLifeline(coinsAndLifelinesDetails?.UserLifelines[0]);
+      setFiftyLifeline(coinsAndLifelinesDetails?.UserLifelines[1]);
+      setAnotherChanceLifeline(coinsAndLifelinesDetails?.UserLifelines[2]);
+    }
+  }, [coinsAndLifelinesDetails]);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    closeHandler();
+  };
+  const incrementHandler = async (id, count) => {
+    const userdata = jwtDecoder();
+    const username = userdata["Username"];
+    const data = {
+      UserName: username,
+      LifelineId: id,
+    };
+    try {
+      const response = await BuyLifeline(data);
+      // console.log(response);
+      if (id == 1) {
+        setSkipLifeline({ LifelineCount: count + 1, LifelineId: id });
+        setCoins((coins) => Math.max(coins - 150, 0));
+      } else if (id == 2) {
+        setFiftyLifeline({ LifelineCount: count + 1, LifelineId: id });
+        setCoins((coins) => Math.max(coins - 100, 0));
+      } else if (id == 3) {
+        setAnotherChanceLifeline({ LifelineCount: count + 1, LifelineId: id });
+        setCoins((coins) => Math.max(coins - 200, 0));
+      }
+    } catch (error) {
+      if (error.response.data.isSuccess == false) NotEnoughCoinsHandler();
+    }
+  };
+
   return (
     <React.Fragment>
       {/* <button className="bg-white"  onClick={handleClickOpen}>
@@ -179,21 +209,25 @@ const Quiz = ({ isOpen, closeHandler, coinsAndLifelinesDetails }) => {
             zIndex: 1000,
           },
         }}
+        className="shadow-lg"
       >
         <DialogTitle
-          sx={{ m: 0, p: 2, background: "#3d3189", width: "55rem" }}
+          sx={{ background: "#3d3189", minWidth: "5rem" }}
           id="customized-dialog-title"
         >
-          <div className="d-flex justify-content-between">
-            <div className="d-flex gap-2 align-items-center">
-              <h2 className={` ${classes["Shoptext"]} text-black mt-1`}>
-                Shop
+          <div className="d-flex justify-content-between align-items-center flex-wrap">
+            <div className="d-flex gap-2 align-items-center ">
+              <h2 className={` ${classes["Shoptext"]} text-black mt-2 `}>
+                SHOP
               </h2>
-              <img src={Knapsack} height={45} />
+              <img
+                src={Knapsack}
+                height={65}
+                className={`${classes["knapsack-design"]} `}
+              />
             </div>
 
-            <div className="d-flex">
-              <div
+            {/* <div
                 className={`rounded-4 d-flex  justify-content-between align-items-center m-3 ${classes["lifeLineShadow"]}`}
                 style={{ background: "#6F41DB" }}
               >
@@ -201,150 +235,55 @@ const Quiz = ({ isOpen, closeHandler, coinsAndLifelinesDetails }) => {
                 <small
                   className={`mx-2 fw-bold fs-5  px-2 ${classes["text-bg"]}`}
                 >
-                  {userlifeLines?.length}
+                  {userlifeLines?.length ?? 0}
                 </small>
-              </div>
+              </div> */}
 
-              <div
-                className={`rounded-4 d-flex  justify-content-between align-items-center m-3 ${classes["lifeLineShadow"]}`}
-                style={{ background: "#6F41DB" }}
-              >
-                <img src={CoinIcon} height={28} className={`ms-2 me-3 my-2`} />
-                <small className={`mx-2 fw-bold fs-5 ${classes["text-bg"]}`}>
-                  {coins}
-                </small>
-              </div>
+            <div
+              className={`rounded-4 d-flex  justify-content-between align-items-center p-2 ${classes["lifeLineShadow"]}`}
+              style={{ background: "#6F41DB" }}
+            >
+              <img src={CoinIcon} height={28} />
+              <small className={`mx-1  fw-bold  ${classes["text-bg"]}`}>
+                {coins}
+              </small>
             </div>
           </div>
         </DialogTitle>
 
         <DialogContent
-          dividers
-          sx={{ height: "37rem", width: "100%", background: "#6F41DB" }}
+          sx={{ height: "33rem", width: "100%", background: "#6F41DB" }}
         >
-          <h2 className={` ${classes["Shoptext"]} text-black mt-1`}>
-            Purchase Lifeline
-          </h2>
-          <div className="d-flex justify-content-center my-2 rounded-2">
+          <div className="d-flex justify-content-center my-2 rounded-2 py-4 ">
             <img src={LifeLineBG} height={200} />
           </div>
           <div className="d-flex justify-content-between align-items-center flex-wrap  gap-3 rounded-2">
-            {/* <div
-              className="d-flex flex-column align-items-center rounded-2 gap-3 flex-grow-1  "
-              style={{ background: "#3d3189" }}
-            >
-              <img
-                src={Skip}
-                height={110}
-                className={`${classes["hanging-image"]} mx-5 mt-4`}
-              />
-              <div className="d-flex justify-content-between align-items-center gap-3 bg-gradient px-3 rounded-3">
-                <img src={Priceicon} height={25} />
-                <h5 className={`${classes["text-bg"]} text-white mt-2`}>30</h5>
-              </div>
-              <div className="d-flex justify-content-between align-items-center gap-3 pb-3">
-                <div className={` ${classes["coin-btn"]} `}>
-                  <button
-                    className={` ${classes["coin-btn"]} ${classes["text-bg"]} `}
-                    onClick={() => AddCoinsHandler()}
-                  >
-                    + Add
-                  </button>
-                </div>
-                <div className={`${classes["count-of-lifeline"]}`}>
-                  <span className={` ${classes["text-bg"]}`}>0</span>
-                </div>
-              </div>
-            </div>
-            <div
-              className="d-flex flex-column align-items-center gap-3 rounded-2 flex-grow-1 "
-              style={{ background: "#3d3189" }}
-            >
-              <img
-                src={Shield}
-                height={110}
-                className={`${classes["hanging-image"]} mx-5 mt-4`}
-              />
-              <div className="d-flex justify-content-between align-items-center gap-3 bg-gradient px-3 rounded-3">
-                <img src={priceicon} height={25} />
-                <h5 className={`${classes["text-bg"]} text-white mt-2`}>25</h5>
-              </div>
-              <div className="d-flex justify-content-between align-items-center gap-3 pb-3">
-                <div className={` ${classes["coin-btn"]} `}>
-                  <button
-                    className={` ${classes["coin-btn"]} ${classes["text-bg"]} `}
-                  >
-                    + Add
-                  </button>
-                </div>
-                <div className={`${classes["count-of-lifeline"]}`}>
-                  <span className={` ${classes["text-bg"]}`}>0</span>
-                </div>
-              </div>
-            </div>
-
-            <div
-              className="d-flex flex-column align-items-center gap-3 rounded-2 flex-grow-1 "
-              style={{ background: "#3d3189" }}
-            >
-              <img
-                src={Time}
-                height={110}
-                className={`${classes["hanging-image"]} mx-5 mt-4`}
-              />
-              <div className="d-flex justify-content-between align-items-center gap-3 bg-gradient px-3 rounded-3">
-                <img src={priceicon} height={25} />
-                <h5 className={`${classes["text-bg"]} text-white mt-2`}>95</h5>
-              </div>
-              <div className="d-flex justify-content-between align-items-center gap-3 pb-3">
-                <div className={` ${classes["coin-btn"]} `}>
-                  <button
-                    className={` ${classes["coin-btn"]} ${classes["text-bg"]}`}
-                    onClick={NotEnoughCoinsHandler}
-                  >
-                    + Add
-                  </button>
-                </div>
-                <div className={`${classes["count-of-lifeline"]}`}>
-                  <span className={` ${classes["text-bg"]}`}> 0</span>
-                </div>
-              </div>
-            </div> */}
             <CoinsCard
-              imageUrl={Skip}
-              value={lifelines[0].Value}
+              imageUrl={SkipPY}
+              value={lifeLines[0].Value}
               priceIcon={Priceicon}
-              totalLifeline={userlifeLines[0]?.LifelineCount}
+              totalLifeline={skipLifeline}
               incrementCount={incrementHandler}
-              NotEnoughCoinsHandler={NotEnoughCoinsHandler}
             />
             <CoinsCard
-              imageUrl={Shield}
-              value={lifelines[1].Value}
+              imageUrl={HeartPY}
+              value={lifeLines[2].Value}
               priceIcon={Priceicon}
-              totalLifeline={userlifeLines[1]?.LifelineCount}
+              totalLifeline={anotherChanceLifeline}
               incrementCount={incrementHandler}
-              NotEnoughCoinsHandler={NotEnoughCoinsHandler}
             />
             <CoinsCard
-              //imageUrl={Time}
-              value={lifelines[2].Value}
+              imageUrl={FiftyPY}
+              value={lifeLines[1].Value}
               priceIcon={Priceicon}
-              totalLifeline={1}
+              totalLifeline={fiftyLifeline}
               incrementCount={incrementHandler}
-              NotEnoughCoinsHandler={NotEnoughCoinsHandler}
             />
           </div>
         </DialogContent>
-
-        {/* <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Save changes
-          </Button>
-        </DialogActions> */}
       </BootstrapDialog>
     </React.Fragment>
   );
 };
 
-export default Quiz;
+export default BuyLifelines;

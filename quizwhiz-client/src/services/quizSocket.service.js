@@ -10,7 +10,6 @@ export const getSingleQuestion = async (data) => {
     });
     return response.data;
   } catch (error) {
-    console.log(error);
     throw error; // rethrow the error to handle it in the calling function
   }
 };
@@ -23,7 +22,6 @@ export const fetchUserCoinsAndLifeline = async (userName) => {
     });
     return response.data;
   } catch (error) {
-    console.log(error);
   }
 };
 export const GetQuizRank = async (data) => {
@@ -49,11 +47,20 @@ export const getQuizLeaderboardData = async (data) => {
       {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
     );
     return res.data;
   } catch (error) {
-    console.log(error);
+    return error.response;
   }
+};
+export const BuyLifeline = async (data) => {
+  return await axios.post(API_URLS.BUY_LIFELINE, JSON.stringify(data), {
+    headers: {
+      "Content-Type": "application/json",
+      //  Authorization: `Bearer ${CurrentToken}`,
+    },
+  });
 };

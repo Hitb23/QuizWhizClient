@@ -28,7 +28,7 @@ import { DrawerHeader } from "../../components/admin-components";
 import AdminSlider from "../../components/header/admin-header";
 import QuizCard from "../../components/admin-cards/quiz-card";
 import Pagination from "@mui/material/Pagination";
-import { statusEnum } from "../../utils/enum";
+import { RoutePaths, statusEnum } from "../../utils/enum";
 import { getUserDetails } from "../../services/auth.service";
 import {
   changeRecordsSize,
@@ -44,7 +44,7 @@ import EditQuizModal from "../../components/dialog-boxes/edit-quiz-details";
 import QuizEditTable from "../../components/admin-quiz-edit";
 import { HashLoader } from "react-spinners";
 import { ToastContainer } from "react-toastify";
-import Quiz from "../QuizHub";
+import Quiz from "../buy-lifelines";
 import { NoDataFound } from "../../assets";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -103,12 +103,19 @@ const AdminDashboard = () => {
           SearchValue: "",
           IsAscending: checkIsAscending,
         });
+        if (allData.status == 401) {
+          navigate(RoutePaths.PageNotFound);
+        }
         const data = allData.data.data.GetQuizzes;
         SetFilteredData(data);
         setIsLoading(false);
         SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
         setRecords(allData?.data?.data?.Pagination?.RecordSize);
       } catch (error) {
+        console.log(error);
+        if (error.statusCode == 401) {
+          navigate(RoutePaths.PageNotFound);
+        }
         SetFilteredData([]);
         //console.error("Error fetching data", error);
         setIsLoading(false);
@@ -194,14 +201,20 @@ const AdminDashboard = () => {
         DifficultyId: event.target.value,
         CategoryId: category,
         CurrentPage: 1,
-        SearchValue: searchedWord,
+        SearchValue: searchedWord.trim(),
         IsAscending: isAscending,
       });
+      if (result.status == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       const filteredData = result.data.data.GetQuizzes;
       SetCurrentPage(1);
       SetFilteredData(filteredData);
       SetPageSize(result?.data?.data?.Pagination?.TotalPages);
     } catch (error) {
+      if (error.statusCode == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       SetFilteredData([]);
     }
     setIsLoading(false);
@@ -215,11 +228,17 @@ const AdminDashboard = () => {
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: value,
-        SearchValue: searchedWord,
+        SearchValue: searchedWord.trim(),
         IsAscending: isAscending,
       });
+      if (result.status == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       SetFilteredData(result.data.data.GetQuizzes);
     } catch (error) {
+      if (error.statusCode == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       SetFilteredData([]);
     }
     setIsLoading(false);
@@ -232,12 +251,18 @@ const AdminDashboard = () => {
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: currentPage,
-        SearchValue: searchedWord,
+        SearchValue: searchedWord.trim(),
         IsAscending: isDataAscending,
         FilterBy: name,
       });
+      if (result.status == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       SetFilteredData(result.data.data.GetQuizzes);
     } catch (error) {
+      if (error.statusCode == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       SetFilteredData([]);
     }
     setIsLoading(false);
@@ -252,13 +277,19 @@ const AdminDashboard = () => {
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: 1,
-        SearchValue: searchedWord,
+        SearchValue: searchedWord.trim(),
         IsAscending: isAscending,
       });
+      if (result.status == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       SetCurrentPage(1);
       SetFilteredData(result.data.data.GetQuizzes);
       SetPageSize(result?.data?.data?.Pagination?.TotalPages);
     } catch (error) {
+      if (error.statusCode == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       //console.log("error:", error);
       SetFilteredData([]);
     }
@@ -272,12 +303,18 @@ const AdminDashboard = () => {
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: 1,
-        SearchValue: searchedWord,
+        SearchValue: searchedWord.trim(),
         IsAscending: isAscending,
       });
+      if (result.status == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       SetCurrentPage(1);
       SetFilteredData(result.data.data.GetQuizzes);
     } catch (error) {
+      if (error.statusCode == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       //console.log("error:", error);
       SetFilteredData([]);
     }
@@ -302,14 +339,20 @@ const AdminDashboard = () => {
         DifficultyId: difficulty,
         CategoryId: e.target.value,
         CurrentPage: 1,
-        SearchValue: searchedWord,
+        SearchValue: searchedWord.trim(),
         IsAscending: isAscending,
       });
+      if (result.status == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       const filteredData = result.data.data.GetQuizzes;
       SetCurrentPage(1);
       SetPageSize(result?.data?.data?.Pagination?.TotalPages);
       SetFilteredData(filteredData);
     } catch (error) {
+      if (error.statusCode == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       SetFilteredData([]);
     }
     setIsLoading(false);

@@ -1,0 +1,145 @@
+@import url("https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap");
+.coin-btn {
+  padding: 0.1rem 0.5rem 0.1rem 0.5rem;
+  background-color: #6f41db !important;
+  border-radius: 0.5rem;
+  color: white;
+  border: none;
+  transition: transform 120ms;
+}
+
+.coin-btn:hover {
+  box-shadow: inset;
+  color: white;
+  transform: scale(0.9);
+}
+.count-of-lifeline {
+  padding: 0.3rem 1.3rem 0.3rem 1.3rem;
+  background-color: #6f41db !important;
+  border-radius: 0.5rem;
+  color: white;
+}
+.Shoptext {
+ 
+  font-weight: 400;
+  font-style: normal;
+  color: #fada65 !important;
+  /* background: linear-gradient(
+      81deg,
+      rgba(35, 219, 164, 1) 0%,
+      rgb(209, 230, 28) 62%
+    ); */
+  width: 100%;
+  font-weight: 800;
+  font-size: 50px;
+  text-align: center;
+}
+.hanging-image {
+  position: relative;
+  animation: float 3s ease-in-out infinite;
+}
+
+.hanging-image::after {
+  content: "";
+  position: absolute;
+  bottom: -10px; 
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 10px; 
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0.8;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+.text-bg {
+ 
+  color: #fada65 !important;
+  /* background: linear-gradient(
+    81deg,
+    rgba(35, 219, 164, 1) 0%,
+    rgb(209, 230, 28) 62%
+  ); */
+  font-size: 1.3rem;
+  font-weight: 900 !important;
+}
+.lifeLineShadow {
+  box-shadow: inset -1px -2px 14px black;
+}
+/* .coin-btn:hover
+ {
+    background-color: #6F41DB;
+    color: #fada65;
+    border: 1px solid #fada65;
+  } */
+@media (min-width:570px){
+  .knapsack-design {
+    height: 50px !important;
+  }
+}
+@media (max-width: 550px) {
+  .Shoptext {
+    font-size: 40px !important;
+  }
+  .knapsack-design {
+    height: 40px !important;
+  }
+  .text-bg {
+    font-size: 19px !important;
+  }
+}
+@media (max-width: 500px) {
+  .Shoptext {
+    font-size: 35px !important;
+  }
+  .knapsack-design {
+    height: 35px !important;
+  }
+  .text-bg {
+    font-size: 19px !important;
+  }
+}
+@media (max-width: 450px) {
+  .Shoptext {
+    font-size: 36px !important;
+  }
+  .knapsack-design {
+    height: 37px !important;
+  }
+  .text-bg {
+    font-size: 19px !important;
+  }
+}
+@media (max-width: 411px) {
+  .Shoptext {
+    font-size: 32px !important;
+  }
+  .knapsack-design {
+    height: 35px !important;
+  }
+  .text-bg {
+    font-size: 19px !important;
+  }
+  .log-in-title {
+    padding-top: 0rem;
+  }
+}
+
+@media (max-width: 390px) {
+  .Shoptext {
+    font-size: 29px !important;
+  }
+  .knapsack-design {
+    height: 32px !important;
+  }
+}

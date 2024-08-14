@@ -2,14 +2,18 @@ import axios from "./axios";
 import { API_URLS } from "../utils/enum";
 import { addYears } from "date-fns";
 
-
 export const filterByCategory = async (data) => {
-  return await axios.post(API_URLS.QUIZ_FILTER, JSON.stringify(data), {
-    headers: {
-      "Content-Type": "application/json",
-      // token: "Bearer " + localStorage.getItem("token")
-    },
-  });
+  try {
+    return await axios.post(API_URLS.QUIZ_FILTER, JSON.stringify(data), {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        // token: "Bearer " + localStorage.getItem("token")
+      },
+    });
+  } catch (error) {
+    return error.response;
+  }
 };
 export const getDifficulties = async () => {
   const response = await axios.get(API_URLS.QUIZ_DIFFICULTIES, {
@@ -152,7 +156,7 @@ export const updateQuizDetails = async (data) => {
         },
       }
     );
-    
+
     return response.data;
   } catch (error) {
     //console.log(error);
@@ -169,46 +173,48 @@ export const getQuizDetails = async (Link) => {
 
 export const DeleteQuiz = async (quizLink) => {
   // try {
-    const response = await axios.get(API_URLS.DELETE_QUIZ + quizLink, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-    return response.data;
+  const response = await axios.get(API_URLS.DELETE_QUIZ + quizLink, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+  return response.data;
   // } catch (error) {
   //   console.log(error);
   // }
 };
 
-export const PublishQuiz = async (quizLink)=>{
-  debugger;
-  try{
-   const response = await axios.get(API_URLS.PUBLISH_QUIZ + quizLink, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    }
-   })
-   
-   return response.data;
-  }
-  catch(error){
+export const PublishQuiz = async (quizLink) => {
+  try {
+    const response = await axios.get(API_URLS.PUBLISH_QUIZ + quizLink, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
     return error.response.data;
   }
-}
+};
 
 export const getQuizLeaderboard = async (data) => {
   try {
-    const res = await axios.post(API_URLS.GET_ADMIN_QUIZ_LEADERBOARD, JSON.stringify(data), {
-      headers: {
-        'Content-Type': 'application/json',
+    const res = await axios.post(
+      API_URLS.GET_ADMIN_QUIZ_LEADERBOARD,
+      JSON.stringify(data),
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       }
-    });
-  console.log(res);
+    );
     return res.data;
   } catch (error) {
-    return error.response.data;
+    return error.response;
   }
 };
 
@@ -224,16 +230,17 @@ export const changeLeaderboardRecordsSize = async (data) => {
 
 export const getQuizParticipantsCount = async (quizLink) => {
   try {
-    const res = await axios.get(API_URLS.GET_QUIZ_PARTICIPANT_COUNT + quizLink, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    const res = await axios.get(
+      API_URLS.GET_QUIZ_PARTICIPANT_COUNT + quizLink,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
     return res.data;
   } catch (error) {
-    return error.response.data
+    return error.response.data;
   }
 };
-
-

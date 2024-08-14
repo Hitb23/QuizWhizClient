@@ -188,7 +188,6 @@ const ViewQuizQuestions = ({ currentQuizLink }) => {
         }
       }
     } catch (error) {
-      console.log("Error fetching quiz details:");
     }
   };
 

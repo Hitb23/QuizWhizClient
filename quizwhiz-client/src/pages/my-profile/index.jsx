@@ -54,6 +54,7 @@ import { ToastContainer, toast } from "react-toastify";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Flag from "react-world-flags";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 const ITEM_HEIGHT = 48;
@@ -113,6 +114,7 @@ const MyProfile = () => {
   const [preview, setPreview] = useState(null);
   const data = jwtDecoder();
   var username = data.Username;
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -149,7 +151,6 @@ const MyProfile = () => {
           if (!clickOnSave) {
             toast.error("Unable to edit the details");
           }
-          console.log(error);
         }
       }
     },
@@ -166,11 +167,14 @@ const MyProfile = () => {
     setEmail(data.Email);
 
     const fetchUserDetails = async () => {
-      const imgPath = `
-        /ProfilePhoto/${username}/${username}.jpg`;
+      const imgPath = `http://192.168.1.20:8001/ProfilePhoto/${username}/${username}.jpg`;
       setFullImagePath(imgPath);
+      setImage(null);
       try {
         const response = await getUserDetails(username);
+        if (response.status == 401) {
+          navigate(RoutePaths.PageNotFound);
+        }
         setFirstName(response.data.data.FirstName);
         setLastName(response.data.data.LastName);
         setPhoneNumber(response.data.data.PhoneNumber);
@@ -182,7 +186,9 @@ const MyProfile = () => {
         const photoUrl = response.data.data.ProfilePhotoUrl;
         setProfilePhotoUrl(photoUrl);
       } catch (error) {
-        console.log(error);
+        if (error.statusCode == 401) {
+          navigate(RoutePaths.PageNotFound);
+        }
       }
     };
 
@@ -192,9 +198,9 @@ const MyProfile = () => {
   useEffect(() => {
     const data = jwtDecoder();
     const Username = data.Username;
-    const imgPath = `
-      http://192.168.1.20:8001/ProfilePhoto/${Username}/${Username}.jpg`;
+    const imgPath = `http://192.168.1.20:8001/ProfilePhoto/${Username}/${Username}.jpg?t=${new Date().getTime()}`;
     setFullImagePath(imgPath);
+    setImage(null);
   }, [image]);
 
   const handleImageUpload = async (event) => {
@@ -222,7 +228,6 @@ const MyProfile = () => {
         });
       }
     } catch (error) {
-      console.log(error);
       toast.error("Only JPGs are allowed.", {
         position: "top-right",
         autoClose: 5000,
@@ -243,9 +248,10 @@ const MyProfile = () => {
   });
 
   const handleEditClick = () => {
-    formik.setTouched([]);
     setIsEditable(true);
     setClickOnSave(false);
+    formik.setTouched([]);
+    formik.setErrors([]);
   };
 
   const handleSaveClick = () => {
@@ -271,9 +277,7 @@ const MyProfile = () => {
       formik.values.lastName = response.data.data.LastName;
       formik.values.phoneNumber = response.data.data.PhoneNumber;
       formik.values.country = response.data.data.Country;
-      console.log(username);
-    } catch (error) {
-    }
+    } catch (error) {}
     formik.setTouched([]);
   };
 
@@ -684,6 +688,7 @@ const MyProfile = () => {
                     }`}
                     sx={{ minWidth: 10, maxWidth: 50 }}
                     onClick={handleEditClick}
+                    type="button"
                   >
                     Edit
                   </Button>

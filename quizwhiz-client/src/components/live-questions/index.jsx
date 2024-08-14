@@ -81,9 +81,7 @@ const LiveQuestions = ({
   }, [isOutCheck]);
 
   useEffect(() => {
-    console.log("Outside", sendWrongAnswers);
     if (sendWrongAnswers.length > 0) {
-      console.log("Inside", sendWrongAnswers);
       options?.map((element, index) => {
         if (sendWrongAnswers.includes(index + 1)) {
           optionsRef[index].classList.add(classes["option-box-disabled"]);

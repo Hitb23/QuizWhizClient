@@ -110,7 +110,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
           justifyContent: "space-between",
           alignItems: "center",
           padding: "0rem 1rem 0rem 1rem",
-          boxShadow: "none"
+          boxShadow: "none",
         }}
         className={`${classes["header"]}`}
       >
@@ -123,7 +123,8 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             justifyContent: "end",
             alignItems: "center",
             padding: "1rem",
-            columnGap: "1rem"
+            columnGap: "1rem",
+            // width: "100%"
           }}
         >
           <p
@@ -155,8 +156,8 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             PaperProps={{
               elevation: 0,
               sx: {
-                overflow: "visible",
-                
+                overflow: "",
+
                 mt: 1.5,
                 "& .MuiAvatar-root": {
                   width: 32,
@@ -180,6 +181,7 @@ const AdminSlider = ({ firstName, lastName, uploadCount, userName }) => {
             }}
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+            disableScrollLock={true}
           >
             <MenuItem onClick={clickOnProfile}>
               <Avatar src={fullImagePath} /> Profile

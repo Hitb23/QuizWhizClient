@@ -60,7 +60,7 @@ const LiveQuiz = () => {
   useEffect(() => {
     setIsLoading(true);
     const conn = new HubConnectionBuilder()
-      .withUrl(`http://localhost:7234/quizhub`)
+      .withUrl(`http://192.168.1.20:8002/quizhub`)
       .withAutomaticReconnect()
       .build();
 
@@ -82,7 +82,6 @@ const LiveQuiz = () => {
     conn.on(
       `ReceiveQuestion_${params.quizLink}`,
       (questionNo, question, timerSeconds, disqualifiedUsers) => {
-        console.log(disqualifiedUsers.data);
         if (questionNo) {
           setQuestionId(question?.question?.questionId);
           localStorage.setItem("questionId", question?.question?.questionId);
@@ -181,12 +180,10 @@ const LiveQuiz = () => {
         setIsFiftyUsed(true);
         localStorage.setItem("isFiftyUsed", true);
         var list = [];
-        console.log(data.data);
         data.data.map((element, index) => {
           var number = element.optionNo;
           list = list.concat(number);
         });
-        console.log(list);
         setWrongAnswers(list);
       } else {
         toast.error("You don't have Lifeline!");
@@ -195,11 +192,10 @@ const LiveQuiz = () => {
 
     // conn.invoke(`UpdateScore`, (params.quizLink, username, currentQuestion, ))
 
-    conn.start().catch((error) => console.error("Connection failed: ", error));
+    conn.start().catch((error) => {});
   }, []);
 
   useEffect(() => {
-    console.log("Hello");
     const registerUser = async () => {
       try {
         if (isCountdownOn == true && connections) {
@@ -210,7 +206,6 @@ const LiveQuiz = () => {
             });
         }
       } catch (err) {
-        console.log(err);
       }
     };
 
@@ -218,7 +213,6 @@ const LiveQuiz = () => {
 
     if (isCountdownOn != null) {
       var checkRegister = localStorage.getItem("isRegistered");
-      console.log(checkRegister);
       if (checkRegister != "true" && isCountdownOn != true) {
         navigate("/quizzes");
       }
@@ -242,7 +236,6 @@ const LiveQuiz = () => {
           });
       }
     } catch (err) {
-      console.log(err);
     }
   };
 
@@ -262,7 +255,6 @@ const LiveQuiz = () => {
         setDateTime(data.ScheduledDate);
         setCountdownStart(1);
       } catch (error) {
-        console.error("Error fetching data", error);
       }
     };
     setData();
@@ -362,7 +354,6 @@ const LiveQuiz = () => {
                 });
             }
           } catch (err) {
-            console.log(err);
           }
         } else if (result.isDismissed) {
         }
@@ -405,7 +396,6 @@ const LiveQuiz = () => {
           });
       }
     } catch (err) {
-      console.log(err);
     }
   };
 

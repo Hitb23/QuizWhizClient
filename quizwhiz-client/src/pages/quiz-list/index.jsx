@@ -32,6 +32,7 @@ import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import LifelineGift from "../../components/dialog-boxes/lifeline-gift";
 import { NoDataFound } from "../../assets";
+import { RoutePaths } from "../../utils/enum";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -81,8 +82,11 @@ const Quizzes = () => {
           CategoryId: 0,
           CurrentPage: 1,
           SearchValue: "",
-          IsAscending : isAscending,
+          IsAscending: isAscending,
         });
+        if (allData.status == 401) {
+          navigate(RoutePaths.PageNotFound);
+        }
         const data = allData.data.data.GetQuizzes;
         SetFilteredData(data);
         SetPageSize(allData?.data?.data?.Pagination?.TotalPages);
@@ -90,6 +94,9 @@ const Quizzes = () => {
         setIsLoading(false);
         setIsModalVisible(false);
       } catch (error) {
+        if (error.statusCode == 401) {
+          navigate(RoutePaths.PageNotFound);
+        }
         SetFilteredData([]);
         //console.error("Error fetching data", error);
         setIsLoading(false);
@@ -136,7 +143,10 @@ const Quizzes = () => {
         setFirstName(response.data.data.FirstName);
         setLastName(response.data.data.LastName);
       } catch (error) {
-        console.log(error);
+        if (error.statusCode == 401) {
+          navigate(RoutePaths.PageNotFound);
+        }
+        //console.log(error);
       }
     };
     // conn.on(
@@ -177,14 +187,20 @@ const Quizzes = () => {
         DifficultyId: event.target.value,
         CategoryId: category,
         CurrentPage: currentPage,
-        SearchValue: searchedWord,
-        IsAscending : isAscending,
+        SearchValue: searchedWord.trim(),
+        IsAscending: isAscending,
       });
+      if (result.status == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       const filteredData = result.data.data.GetQuizzes;
       SetFilteredData(filteredData);
       SetPageSize(result?.data?.data?.Pagination?.TotalPages);
       setIsLoading(false);
     } catch (error) {
+      if (error.statusCode == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       SetFilteredData([]);
     }
   };
@@ -198,11 +214,17 @@ const Quizzes = () => {
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: value,
-        SearchValue: searchedWord,
-        IsAscending : isAscending,
+        SearchValue: searchedWord.trim(),
+        IsAscending: isAscending,
       });
+      if (result.status == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       SetFilteredData(result.data.data.GetQuizzes);
     } catch (error) {
+      if (error.statusCode == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       SetFilteredData([]);
     }
   };
@@ -216,14 +238,19 @@ const Quizzes = () => {
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: currentPage,
-        SearchValue: searchedWord,
-        IsAscending : isAscending,
+        SearchValue: searchedWord.trim(),
+        IsAscending: isAscending,
       });
+      if (result.status == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       SetFilteredData(result.data.data.GetQuizzes);
       SetPageSize(result?.data?.data?.Pagination?.TotalPages);
       SetCurrentPage(1);
     } catch (error) {
-      console.log("error:", error);
+      if (error.statusCode == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       SetFilteredData([]);
     }
   };
@@ -240,15 +267,21 @@ const Quizzes = () => {
         DifficultyId: difficulty,
         CategoryId: e.target.value,
         CurrentPage: currentPage,
-        SearchValue: searchedWord,
-        IsAscending : isAscending,
+        SearchValue: searchedWord.trim(),
+        IsAscending: isAscending,
       });
+      if (result.status == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       const filteredData = result.data.data.GetQuizzes;
       SetPageSize(result?.data?.data?.Pagination?.TotalPages);
       SetFilteredData(filteredData);
       setIsLoading(false);
       SetCurrentPage(1);
     } catch (error) {
+      if (error.statusCode == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       SetFilteredData([]);
     }
   };
@@ -261,8 +294,12 @@ const Quizzes = () => {
     var quizStatus = 1;
     index === 0 ? (setTabStatus(3), (quizStatus = 3)) : null;
     index === 1 ? (setTabStatus(2), (quizStatus = 2)) : null;
-    index === 2 ? (setTabStatus(4), (quizStatus = 4), (checkIsAscending = false)) : null;
-    index === 3 ? (setTabStatus(4), (quizStatus = 4), (checkIsAscending = false)) : null;
+    index === 2
+      ? (setTabStatus(4), (quizStatus = 4), (checkIsAscending = false))
+      : null;
+    index === 3
+      ? (setTabStatus(4), (quizStatus = 4), (checkIsAscending = false))
+      : null;
     setIsAscending(checkIsAscending);
     try {
       const result = await filterByCategory({
@@ -270,15 +307,21 @@ const Quizzes = () => {
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: 1,
-        SearchValue: searchedWord,
-        IsAscending : checkIsAscending,
+        SearchValue: searchedWord.trim(),
+        IsAscending: checkIsAscending,
       });
+      if (result.status == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       setIsLoading(false);
       const filteredData = result.data.data.GetQuizzes;
       SetFilteredData(filteredData);
       SetPageSize(result?.data?.data?.Pagination?.TotalPages);
       SetCurrentPage(1);
     } catch (error) {
+      if (error.statusCode == 401) {
+        navigate(RoutePaths.PageNotFound);
+      }
       SetFilteredData([]);
     }
   };
@@ -419,7 +462,7 @@ const Quizzes = () => {
                   value={difficulty}
                   onChange={handleDifficulty}
                   label="Difficulty"
-                  MenuProps={MenuProps}
+                  MenuProps={(MenuProps, { disableScrollLock: true })}
                   sx={{
                     backgroundColor: "#3d3189",
                     color: "#fada65",

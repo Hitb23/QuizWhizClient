@@ -105,7 +105,6 @@ const HeartLifelineModal = ({ score, totalScore, winningAmount, rank }) => {
         //await DeleteQuiz(QuizLink);
         reload();
       } catch (error) {
-        console.log(error);
       }
       //MySwal.fire("Deleted!", "Your item has been deleted.", "success");
     } else if (result.isDismissed) {

@@ -45,9 +45,10 @@ import jwtDecoder from "../../../services/jwtDecoder";
 import { bindActionCreators } from "redux";
 import { useDispatch } from "react-redux";
 import { userActions } from "../../../redux/action-creators";
-import Quiz from "../../../pages/QuizHub";
+import Quiz from "../../../pages/buy-lifelines";
 import { Button } from "@mui/joy";
 import { fetchUserCoinsAndLifeline } from "../../../services/quizSocket.service";
+import BuyLifelines from "../../../pages/buy-lifelines";
 
 const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
   const [open, setOpen] = React.useState(false);
@@ -65,13 +66,13 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const imgPath = `192.168.1.20:8002/ProfilePhoto/${username}/${username}.jpg?t=${new Date().getTime()}`;
+    const imgPath = `http://192.168.1.20:8001/ProfilePhoto/${username}/${username}.jpg?t=${new Date().getTime()}`;
     setFullImagePath(imgPath);
   }, [uploadCount]);
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [isOpen]);
 
   const getData = async () => {
     const userData = jwtDecoder();
@@ -141,7 +142,7 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
             justifyContent: "end",
             alignItems: "center",
             padding: "1rem",
-            columnGap: "1rem"
+            columnGap: "1rem",
           }}
         >
           {/* <Badge  badgeContent={'+'}
@@ -167,28 +168,14 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
                 Open dialog
           </Button> */}
 
-          <Badge  badgeContent={'+'}
-          sx={{
-            '.MuiBadge-badge':{
-              background:'#FADA65',
-              color:'black',
-              fontWeight:'900',
-              '&:hover':{
-                boxShadow:'inset 1px -1px 14px 0px black'
-              }
-            },
-          }}
-          >
-            <div className={`${classes['coin-box']} rounded-4 d-flex align-items-center justify-content-between`} style={{background:'#3d3189'}} onClick={ModalHandler}>
-              <img
-                src={LifeLineIcons}
-                height={28}
-                sx={{ color: "yellow" }}
-                className={`ms-2 me-3 my-2`}
-              />
-              <small className="mx-2 fw-bold fs-5">{userCoinsAndLifeline?.data?.UserLifelines.length}</small>
+         
+            <div
+              className={`${classes["coin-box"]} rounded-4`}
+              style={{ background: "#bb5cc2", padding: "10px" }}
+              onClick={ModalHandler}
+            >
+              <img src={LifeLineIcons} height={28} sx={{ color: "yellow" }} />
             </div>
-          </Badge>
           <p
             className={`${classes["username"]} fs-5 mt-3 px-3 fw-semibold d-sm-inline d-none`}
           >
@@ -203,7 +190,7 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
                 background: "#3d3189",
                 color: "#fada65",
                 cursor: "pointer",
-                padding: "0px"
+                padding: "0px",
               }}
               src={fullImagePath}
             ></Avatar>
@@ -218,7 +205,7 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
             PaperProps={{
               elevation: 0,
               sx: {
-                overflow: "visible",
+                overflow: "",
                 filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
                 mt: 1.5,
                 "& .MuiAvatar-root": {
@@ -241,6 +228,7 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
                 },
               },
             }}
+            disableScrollLock
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
@@ -258,7 +246,7 @@ const QuizHeader = ({ firstName, lastName, uploadCount, userName }) => {
         </Box>
       </AppBar>
       {isOpen && (
-        <Quiz
+        <BuyLifelines
           isOpen={isOpen}
           closeHandler={closeHandler}
           coinsAndLifelinesDetails={userCoinsAndLifeline?.data}

@@ -15,7 +15,7 @@ import CreateQuizModal from "../components/dialog-boxes/create-quiz";
 import ViewQuizModal from "../components/dialog-boxes/view-quiz";
 import QuizDescription from "../pages/problem-description";
 import QuizList from "../pages/quiz-list";
-import Quiz from "../pages/QuizHub";
+import Quiz from "../pages/buy-lifelines";
 import LiveQuiz from "../pages/live-quiz";
 import LiveQuestions from "../components/live-questions";
 import ViewQuizResult from "../pages/view-quiz-result";

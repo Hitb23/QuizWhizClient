@@ -34,7 +34,6 @@ export const checkUsername = async (data) => {
 };
 
 export const sendResetPasswordLink = async (data) => {
-  //debugger;
   return await axios.post(API_URLS.FORGOT_PASSWORD_URL, JSON.stringify(data), {
     headers: {
       "Content-Type": "application/json",
@@ -82,12 +81,17 @@ export const uploadProfilePhoto = async (ProfilePhoto, Username) => {
 };
 
 export const getUserDetails = async (userName) => {
-  return await axios.get(API_URLS.GET_USER_DATA + userName, {
-    headers: {
-      "Content-Type": "application/json",
-      // token: "Bearer " + localStorage.getItem("token")
-    },
-  });
+  try {
+    return await axios.get(API_URLS.GET_USER_DATA + userName, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        // token: "Bearer " + localStorage.getItem("token")
+      },
+    });
+  } catch (error) {
+    return error;
+  }
 };
 
 export const editProfile = async (data) => {
@@ -107,18 +111,20 @@ export const getContestRecords = async (data) => {
   });
 };
 
-export const createNewQuiz = async (data) =>{
+export const createNewQuiz = async (data) => {
   try {
     const CurrentToken = localStorage.getItem("token");
-    const response = await axios.post(API_URLS.CREATE_NEW_QUIZ, JSON.stringify(data), {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${CurrentToken}`
+    const response = await axios.post(
+      API_URLS.CREATE_NEW_QUIZ,
+      JSON.stringify(data),
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${CurrentToken}`,
+        },
       }
-    });
+    );
     return response.data;
- 
   } catch (error) {
-    console.log(error);
   }
 };

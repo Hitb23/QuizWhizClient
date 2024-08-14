@@ -8,7 +8,7 @@ import * as yup from "yup";
 import { checkToken } from "../../services/auth.service";
 import { RoutePaths } from "../../utils/enum";
 import { resetPassword } from "../../services/auth.service";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
 const ResetPassword = () => {
@@ -73,137 +73,147 @@ const ResetPassword = () => {
         ConfirmNewPassword: confirmNewPassword,
       });
       // console.log(data);
-      if (data.status === 200) {
-        navigate(RoutePaths.Login);
-      } else {
-        navigate(RoutePaths.Login);
-      }
-  
+      toast.success("Password Reseted Successfully!!", { autoClose: 3000 });
+      setTimeout(() => {
+        if (data.status === 200) {
+          toast.dismiss();
+          navigate(RoutePaths.Login);
+        } else {
+          toast.dismiss();
+          navigate(RoutePaths.Login);
+        }
+      }, 4000);
     } catch (error) {
-      // console.log(error);
-      navigate(RoutePaths.Login);
+      toast.error("Something Went Wrong", { autoClose: 3000 });
+      setTimeout(() => {
+        toast.dismiss();
+        navigate(RoutePaths.Login);
+      }, 4000);
     }
   };
 
   return (
     <React.Fragment>
-      <div className={classes['full-screen']}>
-      <AuthHeader />
-      <main className={`${classes["main-component"]} container-fluid`}>
-        <div className={`row justify-content-center`}>
-          <div
-            className={`${classes["reset-password-title"]} col-md-6 col-sm-8 col-10 text-center fw-bold`}
-          >
-            Reset Password
-          </div>
-          <div>
-            <Formik
-              initialValues={initialValues}
-              validationSchema={validationSchema}
-              onSubmit={handleSubmit}
+      <div className={classes["full-screen"]}>
+        <AuthHeader />
+        <main className={`${classes["main-component"]} container-fluid`}>
+          <div className={`row justify-content-center`}>
+            <div
+              className={`${classes["reset-password-title"]} col-md-6 col-sm-8 col-10 text-center fw-bold`}
             >
-              {({ errors, touched, isValid, isSubmitting }) => (
-                <Form>
-                  <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                      <label
-                        htmlFor="password"
-                        className={`form-label fw-bold ${classes["black-font"]}`}
-                      >
-                        Password
-                      </label>
-                      <Field as="input" name="password">
-                        {({ field, form }) => (
-                          <div className={classes["password-field"]}>
-                            <input
-                              {...field}
-                              type={showPassword ? "text" : "password"}
-                              className={`${classes["form-input"]} form-control form-control-md p-3`}
-                              placeholder="Password"
-                              id="password"
-                              autoComplete="off"
-                            />
-                            <button
-                              type="button"
-                              onClick={handleTogglePasswordVisibility}
-                              className={classes["visibility-toggle"]}
-                            >
-                              {showPassword ? (
-                                <MdVisibilityOff size={20} />
-                              ) : (
-                                <MdVisibility size={20} />
-                              )}
-                            </button>
-                          </div>
-                        )}
-                      </Field>
-                      {touched.password && errors.password ? (
-                        <span className={classes["error-message"]}>{errors.password}</span>
-                      ) : null}
+              Reset Password
+            </div>
+            <div>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+              >
+                {({ errors, touched, isValid, isSubmitting }) => (
+                  <Form>
+                    <div className={`d-flex justify-content-center`}>
+                      <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                        <label
+                          htmlFor="password"
+                          className={`form-label fw-bold ${classes["black-font"]}`}
+                        >
+                          Password
+                        </label>
+                        <Field as="input" name="password">
+                          {({ field, form }) => (
+                            <div className={classes["password-field"]}>
+                              <input
+                                {...field}
+                                type={showPassword ? "text" : "password"}
+                                className={`${classes["form-input"]} form-control form-control-md p-3`}
+                                placeholder="Password"
+                                id="password"
+                                autoComplete="off"
+                              />
+                              <button
+                                type="button"
+                                onClick={handleTogglePasswordVisibility}
+                                className={classes["visibility-toggle"]}
+                              >
+                                {showPassword ? (
+                                  <MdVisibilityOff size={20} />
+                                ) : (
+                                  <MdVisibility size={20} />
+                                )}
+                              </button>
+                            </div>
+                          )}
+                        </Field>
+                        {touched.password && errors.password ? (
+                          <span className={classes["error-message"]}>
+                            {errors.password}
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
-                  <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
-                      <label
-                        htmlFor="confirmpassword"
-                        className={`form-label fw-bold ${classes["black-font"]}`}
-                      >
-                        Confirm Password
-                      </label>
-                      <Field as="input" name="confirmPassword">
-                        {({ field, form }) => (
-                          <div className={classes["password-field"]}>
-                            <input
-                              {...field}
-                              type={showConfirmPassword ? "text" : "password"}
-                              className={`${classes["form-input"]} form-control form-control-md p-3`}
-                              placeholder="Password"
-                              id="confirmPassword"
-                              autoComplete="off"
-                            />
-                            <button
-                              type="button"
-                              onClick={handleToggleConfirmPasswordVisibility}
-                              className={classes["visibility-toggle"]}
-                            >
-                              {showConfirmPassword ? (
-                                <MdVisibilityOff size={20} />
-                              ) : (
-                                <MdVisibility size={20} />
-                              )}
-                            </button>
-                          </div>
-                        )}
-                      </Field>
-                      {touched.confirmPassword && errors.confirmPassword ? (
-                        <span className={classes["error-message"]}>
-                          {errors.confirmPassword}
-                        </span>
-                      ) : null}
+                    <div className={`d-flex justify-content-center`}>
+                      <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3">
+                        <label
+                          htmlFor="confirmpassword"
+                          className={`form-label fw-bold ${classes["black-font"]}`}
+                        >
+                          Confirm Password
+                        </label>
+                        <Field as="input" name="confirmPassword">
+                          {({ field, form }) => (
+                            <div className={classes["password-field"]}>
+                              <input
+                                {...field}
+                                type={showConfirmPassword ? "text" : "password"}
+                                className={`${classes["form-input"]} form-control form-control-md p-3`}
+                                placeholder="Password"
+                                id="confirmPassword"
+                                autoComplete="off"
+                              />
+                              <button
+                                type="button"
+                                onClick={handleToggleConfirmPasswordVisibility}
+                                className={classes["visibility-toggle"]}
+                              >
+                                {showConfirmPassword ? (
+                                  <MdVisibilityOff size={20} />
+                                ) : (
+                                  <MdVisibility size={20} />
+                                )}
+                              </button>
+                            </div>
+                          )}
+                        </Field>
+                        {touched.confirmPassword && errors.confirmPassword ? (
+                          <span className={classes["error-message"]}>
+                            {errors.confirmPassword}
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
-                  <div className={`d-flex justify-content-center`}>
-                    <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
-                      <button
-                        type="submit"
-                        disabled={!isValid || isSubmitting}
-                        className={`${classes["reset-password-button"]} ${
-                          !isValid || isSubmitting
-                            ? classes["disabled-button"]
-                            : ""
-                        }`}
-                      >
-                        Reset Password
-                      </button>
+                    <div className={`d-flex justify-content-center`}>
+                      <div className="col-xl-3 col-md-6 col-sm-8 col-10 pt-3 pb-3 d-flex justify-content-center">
+                        <button
+                          type="submit"
+                          disabled={!isValid || isSubmitting}
+                          className={`${classes["reset-password-button"]} ${
+                            !isValid || isSubmitting
+                              ? classes["disabled-button"]
+                              : ""
+                          }`}
+                        >
+                          Reset Password
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </Form>
-              )}
-            </Formik>
+                  </Form>
+                )}
+              </Formik>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
       </div>
+      <ToastContainer />
     </React.Fragment>
   );
 };

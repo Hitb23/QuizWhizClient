@@ -9,7 +9,7 @@ import {
   Pagination,
   TextField,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
@@ -24,6 +24,7 @@ import {
 } from "../../services/admindashboard.service";
 import AdminSlider from "../../components/header/admin-header";
 import { NoDataFound } from "../../assets";
+import { RoutePaths } from "../../utils/enum";
 
 const ViewQuizResult = () => {
   const { quizLink } = useParams();
@@ -37,39 +38,48 @@ const ViewQuizResult = () => {
   const [totalParticipant, setTotalParticipant] = useState(0);
   const [searchedWord, SetSearchedWord] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   const getParticipantsByRank = (rank) => {
     return PaticipantDetails.filter((participant) => participant.rank === rank);
   };
   const fetchQuizDetails = async () => {
-    const response = await getQuizDetailsByLink(quizLink);
-    if (response) {
-      setIsUrlValid(true);
-      setQuizDetail(response.data);
-      const result = await changeLeaderboardRecordsSize({
-        recordSize: Records,
-      });
-      const CountData = await getQuizParticipantsCount(quizLink);
-      if (CountData) {
-        setTotalParticipant(CountData.data);
+    try {
+      const response = await getQuizDetailsByLink(quizLink);
+      if (response) {
+        setIsUrlValid(true);
+        setQuizDetail(response.data);
+        const result = await changeLeaderboardRecordsSize({
+          recordSize: Records,
+        });
+        const CountData = await getQuizParticipantsCount(quizLink);
+        if (CountData) {
+          setTotalParticipant(CountData.data);
+        }
+        const ress = await getQuizLeaderboard({
+          QuizLink: quizLink,
+          SearchedWord: searchedWord.trim(),
+          CurrentPage: currentPage,
+          PageSize: PageSize,
+        });
+        if (ress.status == 401) {
+          navigate(RoutePaths.PageNotFound);
+        }
+        if (ress != null && ress.data != null) {
+          setParticipant(ress?.data?.QuizParticipants);
+          SetPageSize(ress?.data?.Pagination.PageSize);
+          SetCurrentPage(ress?.data?.Pagination.CurrentPage);
+          SetTotalPage(ress?.data?.Pagination.TotalPages);
+        }
+      } else {
+        setIsUrlValid(false);
       }
-      const ress = await getQuizLeaderboard({
-        QuizLink: quizLink,
-        SearchedWord: searchedWord,
-        CurrentPage: currentPage,
-        PageSize: PageSize,
-      });
-
-      if (ress != null && ress.data != null) {
-        setParticipant(ress?.data?.QuizParticipants);
-        SetPageSize(ress?.data?.Pagination.PageSize);
-        SetCurrentPage(ress?.data?.Pagination.CurrentPage);
-        SetTotalPage(ress?.data?.Pagination.TotalPages);
+      setIsLoading(false);
+    } catch (error) {
+      if (error.statusCode == 401) {
+        navigate(RoutePaths.PageNotFound);
       }
-    } else {
-      setIsUrlValid(false);
     }
-    setIsLoading(false);
   };
   useEffect(() => {
     fetchQuizDetails();
