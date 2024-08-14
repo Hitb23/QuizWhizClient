@@ -8,11 +8,12 @@ import Imgurl from '../../../assets/gk.jpg';
 import { IoTimeOutline } from "react-icons/io5";
 import { LuFileSpreadsheet } from "react-icons/lu";
 import { FaListCheck } from "react-icons/fa6";
+import {image} from "../../../src/assets/gk.jpg"
 const QuizCard = ({ title, description, date, categoryName, time,Link,onClickHandler }) => {
   var name = categoryName.toLowerCase();
-  var imageUrl = `${import.meta.env.VITE_PUBLIC_URL}src/assets/${name}.jpg`;
+  var imageUrl = `${import.meta.env.VITE_ASSETS_URL}/${name}.jpg`;
   if(name == "general knowledge"){
-    imageUrl = `${import.meta.env.VITE_PUBLIC_URL}src/assets/gk.jpg`;
+    imageUrl = `../../../src/assets/gk.jpg`;
   }
 
   const formattedDate = new Date(date).toLocaleDateString("en-US", {
@@ -29,8 +30,7 @@ const QuizCard = ({ title, description, date, categoryName, time,Link,onClickHan
   );
   return (
     <div className="col-lg-3 col-md-6 col-12 mb-2" onClick={()=> onClickHandler(Link)}>
-      <Card
-      
+      <Card     
         className="rounded-3 custom-card"
         sx={{
           cursor: "pointer",

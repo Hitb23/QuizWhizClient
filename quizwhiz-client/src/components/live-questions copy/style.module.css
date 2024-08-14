@@ -157,7 +157,6 @@
 .coin-box:hover {
   transform: scale(1.1);
 }
-
 @media (max-width: 700px) {
   .questionText {
     font-size: 25px;

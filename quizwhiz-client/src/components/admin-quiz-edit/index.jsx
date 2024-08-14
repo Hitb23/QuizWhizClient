@@ -44,7 +44,7 @@ const QuizEditTable = ({ data, Status, reload, parentFunction, onClose }) => {
   };
 
   const OnDeleteHandler = async (QuizLink) => {
-    debugger;
+
     const result = await MySwal.fire({
       title: "Are you sure?",
       text: "Do you really want to delete this item?",
@@ -59,7 +59,6 @@ const QuizEditTable = ({ data, Status, reload, parentFunction, onClose }) => {
         await DeleteQuiz(QuizLink);
         reload();
       } catch (error) {
-        console.log(error);
       }
       MySwal.fire("Deleted!", "Your item has been deleted.", "success");
     } else if (result.isDismissed) {
@@ -69,7 +68,6 @@ const QuizEditTable = ({ data, Status, reload, parentFunction, onClose }) => {
   };
 
   const OnPublishHandler = async (QuizLink) => {
-    debugger;
     try {
       const result = await PublishQuiz(QuizLink);
       if (result.statusCode === 200) {

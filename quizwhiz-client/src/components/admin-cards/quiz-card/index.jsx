@@ -11,6 +11,11 @@ import QuizDescription from "../quiz-description";
 import CountdownTimer from "../../countdown-timer";
 import QuizCompletion from "../../quiz-completion";
 import jwtDecoder from "../../../services/jwtDecoder";
+import gk from "../../../assets/gk.jpg";
+import sports from "../../../assets/sports.jpg";
+import education from "../../../assets/education.jpg";
+import entertainment from "../../../assets/entertainment.jpg";
+import technology from "../../../assets/technology.jpg";
 
 const QuizCard = ({
   title,
@@ -20,24 +25,35 @@ const QuizCard = ({
   totalMarks,
   totalQuestions,
   quizLink,
-  statusId
+  statusId,
 }) => {
   const [minutes, setMinutes] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(0);
+  const [imageUrl, setImageUrl] = useState();
   var quizDate = new Date(scheduledDate);
   const navigate = useNavigate();
   const data = jwtDecoder();
   const username = data["Username"];
+  //const technology = 'http://192.168'
 
   useEffect(() => {
-    setMinutes(Math.round((quizDate.getTime() - new Date().getTime()) / 60000));
+    setMinutes(Math.ceil((quizDate.getTime() - new Date().getTime()) / 60000));
   });
 
-  var categoryName = CATEGORIES[categoryId];
-  var imageUrl = `/src/assets/${categoryName.toLowerCase()}.jpg`;
-  if (categoryName == "General Knowledge") {
-    imageUrl = `/src/assets/gk.jpg`;
-  }
+  useEffect(() => {
+    var categoryName = CATEGORIES[categoryId];
+    if (categoryName == "General Knowledge") {
+      setImageUrl(gk);
+    } else if (categoryName == "Sports") {
+      setImageUrl(sports);
+    } else if (categoryName == "Education") {
+      setImageUrl(education);
+    } else if (categoryName == "Entertainment") {
+      setImageUrl(entertainment);
+    } else if (categoryName == "Technology") {
+      setImageUrl(technology);
+    }
+  }, [categoryId]);
 
   const formattedDate = new Date(scheduledDate).toLocaleDateString("en-US", {
     year: "numeric",
@@ -68,7 +84,7 @@ const QuizCard = ({
 
   const navigateToQuiz = () => {
     navigate(`/user-dashboard/${quizLink}`);
-  }
+  };
   const viewDetailsHandler = () => {
     setIsModalOpen(1);
   };
@@ -83,7 +99,7 @@ const QuizCard = ({
 
   const leaderboardHandler = () => {
     navigate(`/quizzes/leaderboard/${quizLink}`);
-  }
+  };
 
   return (
     <>
@@ -118,7 +134,9 @@ const QuizCard = ({
               <div className="d-none d-lg-inline d-flex justify-content-center align-items-center flex-wrap">
                 {" "}
                 <IoTimeOutline color="#fada65" size={25} />
-                <small className="m-2">{Math.ceil(totalQuestions / 3)} Minutes</small>{" "}
+                <small className="m-2">
+                  {Math.ceil(totalQuestions / 3)} Minutes
+                </small>{" "}
               </div>
               <div className="d-none d-lg-inline d-flex justify-content-center align-items-center flex-wrap">
                 {" "}
@@ -147,7 +165,11 @@ const QuizCard = ({
           ) : null}
           {statusId == 4 ? (
             <div className="d-none d-xl-inline">
-              <button type="submit" className={classes["join-now-button"]} onClick={leaderboardHandler}>
+              <button
+                type="submit"
+                className={classes["join-now-button"]}
+                onClick={leaderboardHandler}
+              >
                 Leaderboard
               </button>
             </div>
@@ -203,7 +225,11 @@ const QuizCard = ({
           ) : null}
           {statusId == 4 ? (
             <div>
-              <button type="submit" className={classes["join-now-button"]} onClick={leaderboardHandler}>
+              <button
+                type="submit"
+                className={classes["join-now-button"]}
+                onClick={leaderboardHandler}
+              >
                 Leaderboard
               </button>
             </div>
@@ -221,10 +247,10 @@ const QuizCard = ({
       </div>
       {isModalOpen == 1 ? (
         <QuizDescription quizLink={quizLink} modalClose={closeModalHandler} />
-        // <QuizCompletion quizLink={quizLink} username={username} modalClose={closeModalHandler}/>
-      ) : null}
+      ) : // <QuizCompletion quizLink={quizLink} username={username} modalClose={closeModalHandler}/>
+      null}
     </>
-  )
+  );
 };
 
 export default QuizCard;

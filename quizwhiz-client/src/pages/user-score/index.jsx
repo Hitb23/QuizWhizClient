@@ -14,19 +14,7 @@ import classes from "./style.module.css";
 import confetti from "canvas-confetti";
 
 import {
-  Skip,
-  Shield,
-  Time,
-  Priceicon,
-  Heart,
-  CoinIcon,
-  Knapsack,
   CrossMoney,
-  LifeLineBG,
-  Clock,
-  Summary,
-  Customer,
-  Crowd,
   Growth,
   Celebration,
   Man,

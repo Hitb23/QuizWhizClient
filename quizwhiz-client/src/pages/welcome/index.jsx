@@ -6,8 +6,11 @@ import classes from "./style.module.css";
 import {
   AttemptQuizMobile,
   AttemptQuizPc,
+  FiftyPY,
+  HeartPY,
   JoinQuizMobile,
   JoinQuizPc,
+  SkipPY,
   SummaryQuizMobile,
   SummaryQuizPc,
   WelcomePoster,
@@ -57,7 +60,7 @@ const Welcome = () => {
           </div>
           <div className={classes["poster"]}>
             <img
-              className={`img-responsive ${classes["poster-img"]}`}
+              className={`img-responsive ${classes["poster-img"]} img-fluid`}
               src={LandingImage}
               alt="logo"
             />
@@ -155,6 +158,81 @@ const Welcome = () => {
                 Once you finish, get instant access to your score, rank, and
                 winnings. See how you fared and celebrate your success!
               </p>
+            </div>
+          </div>
+        </div>
+        <div className="d-flex justify-content-center align-items-center py-3 gap-3">
+          <div className={classes["lines"]}></div>
+          <div className={classes["circle"]}></div>
+          <h3 className={`${classes["heading-of-list"]}`}>
+            the Game Savers
+          </h3>
+          <div className={classes["circle"]}></div>
+          <div className={classes["lines"]}></div>
+        </div>
+        <div className="container p-5">
+          <div className="container">
+            <div className="d-flex flex-column justify-content-between">
+              <div className="row mt-5 flex-wrap">
+                <div className="col-sm-12 col-md-4 mb-4">
+                  <div className={`card h-100 ${classes["lifeline-card"]}`}>
+                    <img
+                      className={`card-img-top mx-auto mt-4 ${classes["lifeline-image"]} img-fluid`}
+                      src={FiftyPY}
+                      alt="Card image cap"
+                    />
+                    <div
+                      className={`card-body mb-3 ${classes["lifeline-text"]}`}
+                    >
+                      <h3 className="mb-4 card-title">Cut the Odds</h3>
+                      <p className="card-text">
+                        Stuck between options? Use the 50/50 lifeline to
+                        eliminate two incorrect answers and double your chances
+                        of getting it right!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-12 col-md-4 mb-4">
+                  <div className={`card h-100 ${classes["lifeline-card"]}`}>
+                    <img
+                      className={`card-img-top mx-auto mt-4 ${classes["lifeline-image"]} img-fluid`}
+                      src={SkipPY}
+                      alt="Card image cap"
+                    />
+                    <div
+                      className={`card-body mb-3 ${classes["lifeline-text"]}`}
+                    >
+                      <h3 className="mb-4 card-title">Skip and Score</h3>
+                      <p className="card-text">
+                        Unsure about a question? Skip it with this lifeline and
+                        still earn points as if you answered it correctly. Keep
+                        your momentum going!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-sm-12 col-md-4 mb-4 ">
+                  <div className={`card h-100 ${classes["lifeline-card"]}`}>
+                    <img
+                      className={`card-img-top mx-auto mt-4 ${classes["lifeline-image"]} img-fluid`}
+                      src={HeartPY}
+                      alt="Card image cap"
+                    />
+                    <div
+                      className={`card-body mb-3 ${classes["lifeline-text"]}`}
+                    >
+                      <h3 className="mb-4 card-title">The Second Chance</h3>
+                      <p className="card-text">
+                        Don't let one mistake end your game. Use the Heart
+                        lifeline to stay in the game even after a wrong answer,
+                        and continue your journey to the top!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

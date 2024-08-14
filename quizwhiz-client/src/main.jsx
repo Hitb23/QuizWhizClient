@@ -17,9 +17,7 @@ root.render(
   <>
   <ToastContainer />
   <Provider store={store}>
-    
     <App />
-    
   </Provider>
   </>
 );

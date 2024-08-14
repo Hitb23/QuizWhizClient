@@ -361,6 +361,43 @@ export default function CreateQuizModal({ onClose }) {
                     }}
                   ></Field>
                 </LocalizationProvider>
+
+                {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Field
+                    as={DateTimePicker}
+                    name="scheduledDateTime"
+                    label="Schedule Date and Time"
+                    value={values.scheduledDateTime}
+                    onChange={(value) =>
+                      setFieldValue("scheduledDateTime", value)
+                    }
+                    sx={{
+                      width: "100%",
+                      marginTop: "1rem",
+                      "& .MuiFormHelperText-root": { marginLeft: "0px" },
+                    }}
+                    onBlur={handleBlur}
+                    minDateTime={dayjs().add(1, "hour")}
+                    // disablePortal
+                    // desktopModeMediaQuery="@media (min-width: 600px)"
+                    renderInput={(props) => (
+                      <TextField
+                        {...props}
+                        margin="normal"
+                        variant="outlined"
+                        error={
+                          touched.scheduledDateTime &&
+                          Boolean(errors.scheduledDateTime)
+                        }
+                        helperText={
+                          touched.scheduledDateTime
+                            ? errors.scheduledDateTime
+                            : ""
+                        }
+                      />
+                    )}
+                  />
+                </LocalizationProvider> */}
               </DialogContent>
               <DialogActions>
                 <Button

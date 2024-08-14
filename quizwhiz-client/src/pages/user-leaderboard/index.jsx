@@ -23,6 +23,7 @@ import { BsFillTrophyFill } from "react-icons/bs";
 import { MdCurrencyRupee } from "react-icons/md";
 import { changeLeaderboardRecordsSize } from "../../services/admindashboard.service";
 import { border } from "@mui/system";
+import { RoutePaths } from "../../utils/enum";
 
 const UserSideLeaderboard = () => {
   const params = useParams();
@@ -52,14 +53,13 @@ const UserSideLeaderboard = () => {
       const data = {
         QuizLink: params.quizLink,
         Username: username,
-        SearchedWord: searchedWord,
+        SearchedWord: searchedWord.trim(),
         CurrentPage: currentPage,
         PageSize: pageSize,
       };
       try {
         const participantsData = await getQuizLeaderboardData(data).then(
           (leaderBoardData) => {
-            console.log(leaderBoardData);
             setLeaderBoardData(leaderBoardData?.data?.QuizParticipants);
             setQuizTitle(leaderBoardData?.data?.QuizParticipants[0]?.QuizTitle);
             setUserScore(
@@ -86,9 +86,6 @@ const UserSideLeaderboard = () => {
             else if (userrank === 2) superText = "nd";
             else if (userrank === 3) superText = "rd";
             setSuperText(superText);
-            console.log(
-              leaderBoardData?.data?.QuizParticipants[0]?.TotalParticipants
-            );
             if (isNoParticipation == null) {
               if (
                 leaderBoardData?.data?.QuizParticipants[0]?.TotalParticipants ==
@@ -96,10 +93,8 @@ const UserSideLeaderboard = () => {
                 leaderBoardData?.data?.QuizParticipants[0]?.TotalParticipants ==
                   0
               ) {
-                console.log("true");
                 setIsNoParticipation(true);
               } else {
-                console.log("false");
                 setIsNoParticipation(false);
               }
             }
@@ -108,8 +103,10 @@ const UserSideLeaderboard = () => {
           }
         );
       } catch (error) {
+        if (error.statusCode == 401) {
+          navigate(RoutePaths.PageNotFound);
+        }
         setIsLoading(false);
-        console.log(error);
       }
     };
     getleaderBoardData();
@@ -131,7 +128,7 @@ const UserSideLeaderboard = () => {
     const data = {
       QuizLink: params.quizLink,
       Username: username,
-      SearchedWord: searchedWord,
+      SearchedWord: searchedWord.trim(),
       CurrentPage: value,
       PageSize: pageSize,
     };
@@ -152,7 +149,7 @@ const UserSideLeaderboard = () => {
     const data = {
       QuizLink: params.quizLink,
       Username: username,
-      SearchedWord: word,
+      SearchedWord: word.trim(),
       CurrentPage: 1,
       PageSize: pageSize,
     };
@@ -161,7 +158,6 @@ const UserSideLeaderboard = () => {
       setLeaderBoardData(leaderBoardData?.data?.QuizParticipants);
       setPageSize(leaderBoardData?.data?.Pagination?.TotalPages);
     } catch (error) {
-      console.log("error:", error);
       setleaderBoardData([]);
     }
   };

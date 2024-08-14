@@ -115,7 +115,6 @@ const AdminDashboard = () => {
         setFirstName(response.data.data.FirstName);
         setLastName(response.data.data.LastName);
       } catch (error) {
-        console.log(error);
       }
     };
     fetchUserDetails();
@@ -141,7 +140,7 @@ const AdminDashboard = () => {
         DifficultyId: event.target.value,
         CategoryId: category,
         CurrentPage: currentPage,
-        SearchValue: searchedWord,
+        SearchValue: searchedWord.trim(),
       });
       const filteredData = result.data.data.GetQuizzes;
       SetFilteredData(filteredData);
@@ -157,7 +156,7 @@ const AdminDashboard = () => {
       DifficultyId: difficulty,
       CategoryId: category,
       CurrentPage: value,
-      SearchValue: searchedWord,
+      SearchValue: searchedWord.trim(),
     });
     SetFilteredData(result.data.data.GetQuizzes);
   };
@@ -170,11 +169,10 @@ const AdminDashboard = () => {
         DifficultyId: difficulty,
         CategoryId: category,
         CurrentPage: currentPage,
-        SearchValue: searchedWord,
+        SearchValue: searchedWord.trim(),
       });
       SetFilteredData(result.data.data.GetQuizzes);
     } catch (error) {
-      console.log("error:", error);
       SetFilteredData([]);
     }
   };
@@ -186,7 +184,7 @@ const AdminDashboard = () => {
         DifficultyId: difficulty,
         CategoryId: e.target.value,
         CurrentPage: currentPage,
-        SearchValue: searchedWord,
+        SearchValue: searchedWord.trim(),
       });
       const filteredData = result.data.data.GetQuizzes;
       SetFilteredData(filteredData);
@@ -207,7 +205,6 @@ const AdminDashboard = () => {
         setLastName(response.data.data.LastName);
         setIsDataFetched(true);
       } catch (error) {
-        console.log(error);
       }
     };
 

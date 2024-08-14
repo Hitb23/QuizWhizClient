@@ -59,6 +59,7 @@ export const API_URLS = {
   QUIZ_LEADERBOARD_RECORDS:'/auth/change-leaderboard-record-size',
   GET_QUIZ_PARTICIPANT_COUNT:'/quiz/get-quiz-participants-count?quizLink=',
   GET_USER_QUIZ_LEADERBOARD: '/quiz/get-user-leaderboard',
+  BUY_LIFELINE:'/quiz/buy-lifeline',
 };
 
 export const statusEnum={

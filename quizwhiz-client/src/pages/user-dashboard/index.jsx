@@ -27,7 +27,7 @@ const UserDashboard = () => {
     fetchQuizData();
 
     const connection = new HubConnectionBuilder()
-      .withUrl("https://localhost:44361/quizhub")
+      .withUrl("http://192.168.1.20:8002/quizhub")
       .build();
     setConnection(connection);
 

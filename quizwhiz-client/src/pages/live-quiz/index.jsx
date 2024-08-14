@@ -13,9 +13,11 @@ import { HubConnectionBuilder } from "@microsoft/signalr";
 import LiveQuestions from "../../components/live-questions";
 import jwtDecoder from "../../services/jwtDecoder";
 import useSound from "use-sound";
-import { Theme } from "../../assets/index";
+import { HeartPY, Theme } from "../../assets/index";
 import UserScoreModal from "../user-score";
 import { jwtDecode } from "jwt-decode";
+import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
 
 const LiveQuiz = () => {
   const [datetime, setDateTime] = useState();
@@ -27,11 +29,13 @@ const LiveQuiz = () => {
   const [remainingSeconds, setRemainingSeconds] = useState();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
+  const [wrongAnswers, setWrongAnswers] = useState([]);
   const [answerList, setAnswerList] = useState([]);
   const [questionCountdown, setQuestionCountdown] = useState(0);
   const [questionDetails, setQuestionDetails] = useState({});
   const [questionId, setQuestionId] = useState();
   const [totalQuestions, setTotalQuestions] = useState();
+  const [isCountdownOn, setIsCountdownOn] = useState();
   const [isClock, setIsClock] = useState(false);
   const [isOut, setIsOut] = useState(false);
   const params = useParams();
@@ -42,15 +46,21 @@ const LiveQuiz = () => {
   const [totalScore, setTotalScore] = useState(0);
   const [winningAmount, setWinningAmount] = useState(0);
   const [rank, setRank] = useState(0);
+  const [isHeartUsed, setIsHeartUsed] = useState(true);
+  const [isFiftyUsed, setIsFiftyUsed] = useState(true);
+  const [isSkipUsed, setIsSkipUsed] = useState(true);
   const navigate = useNavigate();
   const data = jwtDecoder();
   const username = data["Username"];
+  const MySwal = withReactContent(Swal);
+  const [isRegistered, setIsRegistered] = useState();
+  const [isSkipQuestion, setIsSkipQuestion] = useState(false);
   const [playSound, { stop }] = useSound(Theme, { loop: true });
 
   useEffect(() => {
     setIsLoading(true);
     const conn = new HubConnectionBuilder()
-      .withUrl(`https://localhost:44361/quizhub`)
+      .withUrl(`http://192.168.1.20:8002/quizhub`)
       .withAutomaticReconnect()
       .build();
 
@@ -62,6 +72,9 @@ const LiveQuiz = () => {
       if (minutes >= 0 && seconds >= 0) {
         setRemainingMinutes(minutes);
         setRemainingSeconds(seconds);
+        if (isCountdownOn == null) {
+          setIsCountdownOn(true);
+        }
       }
       setIsLoading(false);
     });
@@ -69,7 +82,6 @@ const LiveQuiz = () => {
     conn.on(
       `ReceiveQuestion_${params.quizLink}`,
       (questionNo, question, timerSeconds, disqualifiedUsers) => {
-        
         if (questionNo) {
           setQuestionId(question?.question?.questionId);
           localStorage.setItem("questionId", question?.question?.questionId);
@@ -81,6 +93,8 @@ const LiveQuiz = () => {
           setQuestionCountdown(timerSeconds);
           setIsOut(false);
           setIsLoading(false);
+          setWrongAnswers([]);
+          setIsSkipQuestion(false);
           if (disqualifiedUsers.data.includes(username)) {
             setIsOut(true);
           }
@@ -95,6 +109,7 @@ const LiveQuiz = () => {
         setIsLoading(false);
         setAnswers(answers);
         setQuestionCountdown(timerSeconds);
+        setIsCountdownOn(false);
       }
     );
 
@@ -102,18 +117,44 @@ const LiveQuiz = () => {
       setIsLoading(false);
       setIsClock(false);
       setQuestionCountdown(timerSeconds);
+      setIsCountdownOn(false);
     });
 
     conn.on(`QuizCompleted_${params.quizLink}`, (isTrue) => {
+      
+      function removeExistingItem(key) {
+        if (localStorage.getItem(key) === null) return false;
+        localStorage.removeItem(key);
+        return true;
+      }
+
+      removeExistingItem("isHeartUsed");
+      removeExistingItem("isSkipUsed");
+      removeExistingItem("isFiftyUsed");
+      removeExistingItem("isRegistered");
+      removeExistingItem("current");
+      removeExistingItem("totalQuestions");
+      removeExistingItem("questionId");
+      removeExistingItem("questionText");
+      removeExistingItem("options");
+      removeExistingItem("isOutCheck");
+      removeExistingItem("questionTypeId");
       setIsQuizCompleted(isTrue);
     });
 
-    conn.start().then(() => {
-      var result = conn
-        .invoke("RegisterUser", params.quizLink, username)
-        .catch(function (err) {
-          //return console.error(err.toString());
-        });
+    conn.on(`RegisterUserResponse_${username}`, (data) => {
+      // setIsHeartUsed(data.data);
+      if (data.isSuccess == true) {
+        setIsHeartUsed(data.data.isHeartUsed);
+        localStorage.setItem("isHeartUsed", data.data.isHeartUsed);
+        setIsSkipUsed(data.data.isSkipUsed);
+        localStorage.setItem("isSkipUsed", data.data.isSkipUsed);
+        setIsFiftyUsed(data.data.isFiftyUsed);
+        localStorage.setItem("isFiftyUsed", data.data.isFiftyUsed);
+        setIsRegistered(true);
+        localStorage.setItem("isRegistered", "true");
+      } else {
+      }
     });
 
     conn.on(`ResponseOfUserScoreboard_${username}`, (data) => {
@@ -124,10 +165,59 @@ const LiveQuiz = () => {
       setIsLoading(false);
     });
 
+    conn.on(`ResponseOfHeartLifeline_${username}`, (data) => {
+      if (data.isSuccess == true) {
+        setIsOut(false);
+        setIsHeartUsed(true);
+        localStorage.setItem("isHeartUsed", true);
+      } else {
+        toast.error("You don't have Lifeline!");
+      }
+    });
+
+    conn.on(`FetchFiftyOptions_${username}`, (data) => {
+      if (data.isSuccess == true) {
+        setIsFiftyUsed(true);
+        localStorage.setItem("isFiftyUsed", true);
+        var list = [];
+        data.data.map((element, index) => {
+          var number = element.optionNo;
+          list = list.concat(number);
+        });
+        setWrongAnswers(list);
+      } else {
+        toast.error("You don't have Lifeline!");
+      }
+    });
+
     // conn.invoke(`UpdateScore`, (params.quizLink, username, currentQuestion, ))
 
-    conn.start().catch((error) => console.error("Connection failed: ", error));
+    conn.start().catch((error) => {});
   }, []);
+
+  useEffect(() => {
+    const registerUser = async () => {
+      try {
+        if (isCountdownOn == true && connections) {
+          await connections
+            .invoke("RegisterUser", params.quizLink, username)
+            .catch(function (err) {
+              //return console.error(err.toString());
+            });
+        }
+      } catch (err) {
+      }
+    };
+
+    registerUser();
+
+    if (isCountdownOn != null) {
+      var checkRegister = localStorage.getItem("isRegistered");
+      if (checkRegister != "true" && isCountdownOn != true) {
+        navigate("/quizzes");
+      }
+    }
+  }, [isCountdownOn]);
 
   // const handleonUnload = (e) => {
   // };
@@ -146,7 +236,6 @@ const LiveQuiz = () => {
           });
       }
     } catch (err) {
-      console.log(err);
     }
   };
 
@@ -166,7 +255,6 @@ const LiveQuiz = () => {
         setDateTime(data.ScheduledDate);
         setCountdownStart(1);
       } catch (error) {
-        console.error("Error fetching data", error);
       }
     };
     setData();
@@ -188,15 +276,91 @@ const LiveQuiz = () => {
   }, [isQuizCompleted]);
 
   useEffect(() => {
-    const handleBeforeUnload = (event) => {
-      event.preventDefault();
-      event.returnValue = "";
+    const useLifeline = async () => {
+      var list = [];
+      answers.map((element, index) => {
+        var number = element.optionNo;
+        list = list.concat(number);
+      });
+
+      const checkHeartUsed = localStorage.getItem("isHeartUsed");
+      const checkCurrent = localStorage.getItem("current");
+      const checkTotalQuestions = localStorage.getItem("totalQuestions");
+      if (
+        JSON.stringify(list) != JSON.stringify(sendAnswers) &&
+        isOut == false &&
+        questionCountdown >= 17 &&
+        checkCurrent < checkTotalQuestions &&
+        connections &&
+        checkHeartUsed == "false" &&
+        isSkipQuestion == false
+      ) {
+        const result = await MySwal.fire({
+          title: "Stay in the Game",
+          text: "Use the Heart Lifeline to avoid disqualification.",
+          iconHtml: `<img src=${HeartPY} style="width: 200px">`,
+          customClass: {
+            icon: "no-border",
+          },
+          showCancelButton: true,
+          confirmButtonText: "Yes",
+          cancelButtonText: "No",
+          color: "#fada65",
+          background: "#3d3189",
+          timer: 5000,
+          timerProgressBar: true,
+          willOpen: () => {
+            const timerProgressBar = document.querySelector(
+              ".swal2-container .swal2-timer-progress-bar"
+            );
+            if (timerProgressBar) {
+              timerProgressBar.style.backgroundColor = "#fada65";
+            }
+            const swal2Icon = document.querySelector(
+              ".swal2-container .swal2-icon.swal2-question"
+            );
+            if (swal2Icon) {
+              swal2Icon.style.color = "#fada65";
+              swal2Icon.style.borderColor = "#fada65";
+            }
+            const cancelButton = document.querySelector(
+              ".swal2-container .swal2-cancel"
+            );
+            if (cancelButton) {
+              cancelButton.style.color = "#fada65"; // Change this to desired color
+              cancelButton.style.border = "none"; // Optional: Remove border if needed
+            }
+
+            // Style the confirm button
+            const confirmButton = document.querySelector(
+              ".swal2-container .swal2-confirm"
+            );
+            if (confirmButton) {
+              confirmButton.style.color = "#fada65"; // Change this to desired color
+              confirmButton.style.border = "none"; // Optional: Remove border if needed
+            }
+          },
+          focusConfirm: false,
+          focusCancel: false,
+        });
+
+        if (result.isConfirmed) {
+          try {
+            if (connections) {
+              await connections
+                .invoke("HeartLifeline", params.quizLink, username)
+                .catch(function (err) {
+                  return console.error(err.toString());
+                });
+            }
+          } catch (err) {
+          }
+        } else if (result.isDismissed) {
+        }
+      }
     };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
+    useLifeline();
+  }, [sendAnswers]);
 
   const getAnswersHandler = async (answerIds) => {
     setSendAnswers(answerIds);
@@ -208,12 +372,35 @@ const LiveQuiz = () => {
           params.quizLink,
           username,
           tempQuestionId,
-          answerIds
+          answerIds,
+          isSkipQuestion
         )
         .catch(function (err) {
           return console.error(err.toString());
         });
     }
+  };
+
+  const onFiftyHandler = async (questionId) => {
+    try {
+      if (
+        connections &&
+        localStorage.getItem("isFiftyUsed") == "false" &&
+        localStorage.getItem("questionTypeId") == 1 &&
+        questionId
+      ) {
+        await connections
+          .invoke("FiftyLifeline", params.quizLink, username, questionId)
+          .catch(function (err) {
+            return console.error(err.toString());
+          });
+      }
+    } catch (err) {
+    }
+  };
+
+  const onSkipHandler = () => {
+    setIsSkipQuestion(true);
   };
 
   return (
@@ -225,7 +412,9 @@ const LiveQuiz = () => {
         />
       )}
       {countdownStart == 1 && isClock == true && (
-        <div className={` ${classes["live-quiz"]} d-flex justify-content-center align-items-center row-gap-2 row min-vh-100 m-0 p-0`}>
+        <div
+          className={` ${classes["live-quiz"]} d-flex justify-content-center align-items-center row-gap-2 row min-vh-100 m-0 p-0`}
+        >
           <div className="d-flex justify-content-center align-items-center row row-gap-5 m-0 p-0">
             <div
               className={`${classes["timer-header"]} d-flex justify-content-center align-items-center m-0 p-0`}
@@ -255,16 +444,24 @@ const LiveQuiz = () => {
                   setIsLoading(true);
                 }}
                 getAnswer={getAnswersHandler}
+                onSkipClick={onSkipHandler}
+                onFiftyClick={onFiftyHandler}
+                sendWrongAnswers={wrongAnswers}
               />
             </>
           </div>
         </div>
       )}
-      {(rank != null) && (rank != 0) && (
+      {rank != null && rank != 0 && (
         <div className="d-flex justify-content-center align-items-center row-gap-2 row min-vh-100 m-0">
           <div className="d-flex justify-content-center align-items-center row row-gap-5 m-0 p-0">
             <>
-            <UserScoreModal score={score} totalScore={totalScore} winningAmount={winningAmount} rank={rank} />
+              <UserScoreModal
+                score={score}
+                totalScore={totalScore}
+                winningAmount={winningAmount}
+                rank={rank}
+              />
             </>
           </div>
         </div>

@@ -9,17 +9,12 @@ import LandingImage from "./landing-image.svg";
 import Skip from "./skip.png";
 import LifeLineBG from "./LifeLineBGUpdated.png";
 import Shield from "./shield.png";
-import Time from "./save-time.png";
 import Priceicon from "./price.png";
 import Heart from "./Heart.svg";
 import CoinIcon from "./coins-logo.svg";
 import Knapsack from "./knapsack.png";
 import CrossMoney from "./payment.png";
-import Clock from "./clock.png";
 import Theme from "./theme.mp3";
-import Summary from "./contract.png";
-import Customer from "./customer.png"; 
-import Crowd from "./crowd.png"; 
 import Growth from "./growth.png";
 import Celebration from "./confetti.png";
 import Man from "./man.png";
@@ -32,15 +27,15 @@ import SummaryQuizPc from "./summary-quiz-pc.png";
 import SummaryQuizMobile from "./summary-quiz-mobile.png";
 import Trophy from "./trophy.png";
 import Money from "./money.png";
+import FiftyPY from "./FiftyPY.jpg";
+import HeartPY from "./HeartPY.png";
+import SkipPY from "./SkipQuestionPY.jpg";
 
 export {
   Man,
   Celebration,
   Growth,
-  Crowd,
   AdminPageLogo,
-  Customer,
-  Summary,
   Facebook,
   LinkedIn,
   Youtube,
@@ -50,7 +45,6 @@ export {
   LandingImage,
   Skip,
   Shield,
-  Time,
   Priceicon,
   Heart,
   CoinIcon,
@@ -58,7 +52,6 @@ export {
   CrossMoney,
   LifeLineBG,
   Theme,
-  Clock,
   NoDataFound,
   JoinQuizPc,
   JoinQuizMobile,
@@ -68,4 +61,7 @@ export {
   SummaryQuizMobile,
   Trophy,
   Money,
+  FiftyPY,
+  HeartPY,
+  SkipPY,
 };
