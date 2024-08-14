@@ -1,69 +1,47 @@
-@import url("https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap'); 
+
 .coin-btn {
   padding: 0.1rem 0.5rem 0.1rem 0.5rem;
   background-color: #3d3189 !important;
   border-radius: 0.5rem;
-  color: white;
+  color: #fada65 !important;
   border: none;
   transition: transform 120ms;
 }
 
 .coin-btn:hover {
   box-shadow: inset;
-  color: white;
+  color: #fada65 !important;
   transform: scale(0.9);
 }
+
 .count-of-lifeline {
   padding: 0.3rem 1.3rem 0.3rem 1.3rem;
   background-color: #3d3189 !important;
   border-radius: 0.5rem;
-  color: white;
+  color: #fada65 !important;
 }
+
 .Shoptext {
-  font-family: "Luckiest Guy", cursive;
-  font-style: normal;
-  background: rgb(191, 219, 35);
-  background: linear-gradient(
-    81deg,
-    rgba(35, 219, 164, 1) 0%,
-    rgb(209, 230, 28) 62%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 400;
+  font-family: 'Rubik', Courier, monospace;
+  color: #fada65 !important;
+  font-weight: 700;
   font-size: 50px;
   text-align: center;
 }
+
 .rank-text {
-  font-family: "Luckiest Guy", cursive;
   font-weight: 300;
   font-style: normal;
-  background: rgb(191, 219, 35);
-  background: linear-gradient(
-    81deg,
-    rgba(35, 219, 164, 1) 0%,
-    rgb(209, 230, 28) 62%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   font-weight: 700;
   font-size: 40px;
   text-align: center;
-  text-transform: lowercase;
+  color: #fada65 !important;
 }
+
 .username-text {
-  font-family: "Luckiest Guy", cursive;
-  font-weight: 300;
-  font-style: normal;
-  background: rgb(191, 219, 35);
-  background: linear-gradient(
-    81deg,
-    rgba(35, 219, 164, 1) 0%,
-    rgb(209, 230, 28) 62%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 500;
+  color: #fada65 !important;
+  font-weight: 700;
   font-size: 28;
   text-align: center;
   text-transform: lowercase;
@@ -81,7 +59,6 @@
   transform: translateX(-50%);
   width: 80%;
   height: 10px; /* Adjust based on the desired shadow size */
-  background: rgba(0, 0, 0, 0.2);
   border-radius: 50%;
   z-index: -1;
   opacity: 0.8;
@@ -100,6 +77,7 @@
 .score-card {
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: #fada65 !important;
   border-radius: 15px;
   text-align: center;
   transition: transform 0.2s;
@@ -107,19 +85,10 @@
 }
 
 .text-bg {
-  font-family: "Luckiest Guy", cursive;
-  font-weight: 400;
-  font-style: normal;
-  background: rgb(191, 219, 35);
-  background: linear-gradient(
-    81deg,
-    rgba(35, 219, 164, 1) 0%,
-    rgb(209, 230, 28) 62%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-weight: 900;
   font-size: 40px;
 }
+
 .lifeLineShadow {
   box-shadow: inset -1px -2px 14px black;
 }

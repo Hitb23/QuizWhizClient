@@ -30,6 +30,8 @@ import AttemptQuizPc from "./attempt-quiz-pc.png";
 import AttemptQuizMobile from "./attempt-quiz-mobile.png";
 import SummaryQuizPc from "./summary-quiz-pc.png";
 import SummaryQuizMobile from "./summary-quiz-mobile.png";
+import Trophy from "./trophy.png";
+import Money from "./money.png";
 
 export {
   Man,
@@ -64,4 +66,6 @@ export {
   AttemptQuizMobile,
   SummaryQuizPc,
   SummaryQuizMobile,
+  Trophy,
+  Money,
 };

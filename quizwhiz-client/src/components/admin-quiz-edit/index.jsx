@@ -96,7 +96,7 @@ const QuizEditTable = ({ data, Status, reload, parentFunction, onClose }) => {
     return formattedDate;
   };
   const handleViewQuizResult = (quizLink) => {
-    //navigate(`${RoutePaths.ViewQuizResult}/${quizLink}`);
+    navigate(`${RoutePaths.ViewQuizResult}/${quizLink}`);
   };
   const formatTime = (timestamp) => {
     const date = new Date(timestamp);

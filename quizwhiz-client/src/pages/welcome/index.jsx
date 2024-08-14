@@ -43,7 +43,7 @@ const Welcome = () => {
   }, []);
   return (
     <React.Fragment>
-      <div className={`${classes["full-screen"]}`}>
+      <main className={`${classes["full-screen"]}`}>
         <LandingHeader />
         <main className={classes["main-component"]}>
           <div className={`text-center`}>
@@ -159,7 +159,7 @@ const Welcome = () => {
           </div>
         </div>
         <LandingFooter />
-      </div>
+      </main>
     </React.Fragment>
   );
 };
